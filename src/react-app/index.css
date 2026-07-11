@@ -4,24 +4,28 @@
    ════════════════════════════════════ */
 
 :root {
-	/* ── Neutral silver — matches logo globe inner ring ── */
-	--silver-100: #e6e6ec;
-	--silver-200: #cdcdd6;
-	--silver-300: #b0b0bc;
-	--silver-400: #90909e;
-	--silver-500: #757582;
-	--silver-600: #5c5c67;
-	--silver-700: #43434d;
-	--silver-800: #2b2b33;
-	--silver-900: #16161c;
+	/* ── Discord-like surface palette ── */
+	--surface-900: #111214;
+	--surface-800: #1e1f22;
+	--surface-700: #2b2d31;
+	--surface-600: #313338;
+	--surface-500: #383a40;
+	--surface-400: #404249;
+	--surface-300: #4e5058;
+	--surface-200: #5c5e66;
 
-	/* ── Logo quadrant accent colors ── */
-	--indigo-300: #7986cb;
-	--indigo-400: #5c6bc0;
-	--indigo-500: #3f51b5;
-	--indigo-600: #3949ab;
-	--indigo-700: #303f9f;
-	--teal-400: #26a69a;
+	/* ── Accent — Discord blurple ── */
+	--blurple: #5865f2;
+	--blurple-hover: #4752c4;
+	--blurple-soft: #5865f233;
+	--red: #da373c;
+	--green: #23a55a;
+	--orange: #f0b232;
+
+	/* ── Text ── */
+	--text-primary: #dbdee1;
+	--text-secondary: #b5bac1;
+	--text-muted: #949ba4;
 
 	/* ── Neutral surface ── */
 	--surface-900: #0f0f13;
@@ -52,8 +56,7 @@
 	--rad-full: 999px;
 
 	/* ── Typography ── */
-	font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
-		Arial, sans-serif;
+	font-family: "gg sans", "Noto Sans", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 	font-size: 16px;
 	line-height: 1.6;
 	font-weight: 400;
@@ -75,25 +78,22 @@
 
 /* ── Light theme ── */
 html.light {
-	--surface-900: #f8f9fc;
-	--surface-800: #f0f1f6;
-	--surface-700: #e8eaf0;
-	--surface-600: #dce0ea;
-	--surface-500: #ccd0dc;
+	--surface-900: #f2f3f5;
+	--surface-800: #ebedef;
+	--surface-700: #e3e5e8;
+	--surface-600: #dbdee1;
+	--surface-500: #d2d5da;
+	--surface-400: #c4c9ce;
+	--surface-300: #b5bac1;
+	--surface-200: #a1a6ae;
 
-	--silver-100: #e6e6ec;
-	--silver-200: #cdcdd6;
-	--silver-300: #b0b0bc;
-	--silver-400: #90909e;
-	--silver-500: #757582;
-	--silver-600: #5c5c67;
-	--silver-700: #43434d;
-	--silver-800: #2b2b33;
-	--silver-900: #16161c;
+	--blurple: #5865f2;
+	--blurple-hover: #4752c4;
+	--blurple-soft: #5865f233;
 
-	--text-primary: #181a2b;
-	--text-secondary: #4a4d65;
-	--text-muted: #898da8;
+	--text-primary: #060607;
+	--text-secondary: #4e5058;
+	--text-muted: #80848e;
 
 	color-scheme: light;
 	color: var(--text-primary);
@@ -102,9 +102,9 @@ html.light {
 
 html.light .hero-bg {
 	background:
-		radial-gradient(ellipse 60% 45% at 0% 20%, rgba(92,107,192,0.06), transparent),
-		radial-gradient(ellipse 50% 40% at 100% 20%, rgba(38,166,154,0.04), transparent),
-		radial-gradient(ellipse 70% 40% at 50% 100%, rgba(63,81,181,0.03), transparent);
+		radial-gradient(ellipse 60% 45% at 0% 20%, rgba(88,101,242,0.06), transparent),
+		radial-gradient(ellipse 50% 40% at 100% 20%, rgba(35,165,90,0.04), transparent),
+		radial-gradient(ellipse 70% 40% at 50% 100%, rgba(88,101,242,0.03), transparent);
 }
 
 html.light .header {
@@ -136,7 +136,7 @@ html.light .usage-note {
 }
 
 html.light ::selection {
-	background: var(--indigo-400);
+	background: var(--blurple-hover);
 	color: #fff;
 }
 
@@ -165,23 +165,23 @@ img {
 }
 
 a {
-	color: var(--indigo-400);
+	color: var(--blurple);
 	text-decoration: none;
 	transition: color var(--transition-fast);
 }
 a:hover {
-	color: var(--indigo-500);
+	color: var(--blurple);
 }
 
 /* ── Focus ── */
 :focus-visible {
-	outline: 2px solid var(--indigo-400);
+	outline: 2px solid var(--blurple);
 	outline-offset: 2px;
 }
 
 /* ── Selection ── */
 ::selection {
-	background: var(--indigo-400);
+	background: var(--blurple);
 	color: #fff;
 }
 

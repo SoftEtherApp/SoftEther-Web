@@ -233,7 +233,7 @@
 }
 
 .hero-accent {
-	background: linear-gradient(135deg, var(--indigo-400), var(--teal-400));
+	background: linear-gradient(135deg, var(--blurple), var(--green));
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-clip: text;
@@ -270,7 +270,7 @@
 	color: var(--text-muted);
 }
 .hero-trust a:hover {
-	color: var(--indigo-400);
+	color: var(--blurple);
 }
 
 /* ── Library hero (centered) ── */
@@ -291,7 +291,7 @@
 	font-weight: 500;
 	letter-spacing: 0.02em;
 	background: var(--surface-600);
-	color: var(--indigo-400);
+	color: var(--blurple);
 	margin-bottom: var(--sp-lg);
 }
 
@@ -323,13 +323,13 @@
 }
 
 .btn-primary {
-	background: var(--indigo-600);
+	background: var(--blurple);
 	color: #fff;
 }
 .btn-primary:hover {
-	background: var(--indigo-700);
+	background: var(--blurple-hover);
 	transform: translateY(-1px);
-	box-shadow: 0 4px 20px rgba(63, 81, 181, 0.35);
+	box-shadow: 0 4px 20px rgba(88, 101, 242, 0.35);
 	color: #fff;
 }
 
@@ -385,13 +385,13 @@
 .feature-card {
 	background: var(--surface-800);
 	border: 0.5px solid var(--surface-600);
-	border-radius: var(--rad-lg);
+	border-radius: var(--rad-md);
 	padding: var(--sp-xl);
 	transition: border-color var(--transition-base), transform var(--transition-base);
 }
 
 .feature-card:hover {
-	border-color: var(--indigo-400);
+	border-color: var(--blurple);
 	transform: translateY(-2px);
 }
 
@@ -403,7 +403,7 @@
 	height: 48px;
 	border-radius: var(--rad-md);
 	background: var(--surface-700);
-	color: var(--indigo-400);
+	color: var(--blurple);
 	margin-bottom: var(--sp-md);
 }
 
@@ -464,7 +464,7 @@
 	color: var(--text-primary);
 }
 .download-card:hover {
-	border-color: var(--indigo-400);
+	border-color: var(--blurple);
 	background: var(--surface-700);
 	color: var(--text-primary);
 }
@@ -477,7 +477,7 @@
 	height: 44px;
 	border-radius: var(--rad-sm);
 	background: var(--surface-700);
-	color: var(--indigo-400);
+	color: var(--blurple);
 	flex-shrink: 0;
 }
 
@@ -598,7 +598,7 @@
 .library-promo-card {
 	background: var(--surface-800);
 	border: 0.5px solid var(--surface-600);
-	border-radius: var(--rad-lg);
+	border-radius: var(--rad-md);
 	padding: var(--sp-2xl) var(--sp-xl);
 	text-align: center;
 }
@@ -611,7 +611,7 @@
 	height: 64px;
 	border-radius: var(--rad-full);
 	background: var(--surface-700);
-	color: var(--indigo-400);
+	color: var(--blurple);
 	margin-bottom: var(--sp-lg);
 }
 
@@ -665,7 +665,7 @@
 	transition: border-color var(--transition-fast);
 }
 .target-card:hover {
-	border-color: var(--indigo-400);
+	border-color: var(--blurple);
 }
 
 .target-title {

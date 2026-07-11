@@ -9,7 +9,6 @@ export default function HeroIllustration({ size = 500 }: { size?: number }) {
 			src="/hero.png"
 			alt="SoftEther App — VPN connection illustration"
 			width={s}
-			height={s * (1500 / 1000)}
 			style={{ maxWidth: "100%", height: "auto", objectFit: "contain" }}
 		/>
 	);

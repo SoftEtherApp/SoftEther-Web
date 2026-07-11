@@ -42,25 +42,15 @@
 	border: none;
 	color: var(--text-primary);
 	cursor: pointer;
-	padding: var(--sp-sm);
+	padding: 6px;
 	border-radius: var(--rad-sm);
+	line-height: 0;
 }
 .menu-btn:hover {
 	background: var(--surface-600);
 }
 
-.menu-btn-end {
-	display: none;
-	background: none;
-	border: none;
-	color: var(--text-primary);
-	cursor: pointer;
-	padding: var(--sp-sm);
-	border-radius: var(--rad-sm);
-}
-.menu-btn-end:hover {
-	background: var(--surface-600);
-}
+
 
 .logo-link {
 	display: flex;
@@ -106,19 +96,6 @@
 	padding: 6px 14px;
 }
 
-.menu-btn {
-	display: none;
-	background: none;
-	border: none;
-	color: var(--text-primary);
-	cursor: pointer;
-	padding: var(--sp-sm);
-	border-radius: var(--rad-sm);
-}
-.menu-btn:hover {
-	background: var(--surface-600);
-}
-
 /* ── Theme toggle ── */
 
 .theme-btn {
@@ -140,22 +117,54 @@
 	background: var(--surface-500);
 }
 
-.nav-mobile-theme {
-	padding: var(--sp-sm) var(--sp-sm) 0;
+.sidebar {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 260px;
+	z-index: 200;
+	background: var(--surface-900);
+	border-left: 0.5px solid var(--surface-600);
 	display: flex;
-	border-top: 0.5px solid var(--surface-600);
-	margin-top: var(--sp-sm);
+	flex-direction: column;
+	transform: translateX(100%);
+	transition: transform var(--transition-base);
 }
-.nav-mobile-theme .theme-btn {
+.sidebar--open {
+	transform: translateX(0);
+}
+.sidebar-header {
+	display: flex;
+	align-items: center;
+	padding: 12px var(--sp-md);
+	border-bottom: 0.5px solid var(--surface-600);
+}
+.sidebar-nav {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	padding: var(--sp-sm);
+	gap: 2px;
+}
+.sidebar-link {
+	padding: 10px var(--sp-md);
+	font-size: 0.95rem;
+	border-radius: var(--rad-sm);
+}
+.sidebar-footer {
+	padding: var(--sp-md);
+	border-top: 0.5px solid var(--surface-600);
+}
+.sidebar-footer .theme-btn {
 	margin-left: 0;
 }
 
-.nav-mobile {
-	display: none;
-	flex-direction: column;
-	padding: var(--sp-sm) var(--sp-lg) var(--sp-md);
-	gap: var(--sp-sm);
-	border-top: 0.5px solid var(--surface-600);
+.sidebar-backdrop {
+	position: fixed;
+	inset: 0;
+	z-index: 199;
+	background: rgba(0,0,0,0.4);
 }
 
 @media (max-width: 640px) {
@@ -164,9 +173,6 @@
 	}
 	.menu-btn {
 		display: block;
-	}
-	.nav-mobile {
-		display: flex;
 	}
 }
 

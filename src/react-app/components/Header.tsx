@@ -55,13 +55,6 @@ export default function Header() {
 	return (
 		<header className="header">
 			<div className="header-inner">
-				<button
-					className="menu-btn"
-					onClick={() => setOpen(!open)}
-					aria-label="Toggle menu"
-				>
-					<Icon name={open ? "x-circle" : "menu"} />
-				</button>
 				<a href="/" className="logo-link">
 					<img src="/logo.png" alt="SoftEther App" width={32} height={32} />
 					<span className="logo-text">SoftEther App</span>
@@ -76,41 +69,43 @@ export default function Header() {
 				<span className="header-spacer" />
 				<div className="header-end">
 					<ThemeToggle />
+					<button
+						className="menu-btn"
+						onClick={() => setOpen(!open)}
+						aria-label="Toggle menu"
+					>
+						<Icon name="menu" size={20} />
+					</button>
 				</div>
-				<button
-					className="menu-btn-end"
-					onClick={() => setOpen(!open)}
-					aria-label="Toggle menu"
-				>
-					<Icon name={open ? "x-circle" : "menu"} />
-				</button>
 			</div>
-			{open && (
-				<nav className="nav-mobile">
+			{/* Mobile sidebar overlay */}
+			{open && <div className="sidebar-backdrop" onClick={() => setOpen(false)} />}
+			<aside className={`sidebar ${open ? "sidebar--open" : ""}`}>
+				<div className="sidebar-header">
+					<button
+						className="menu-btn"
+						onClick={() => setOpen(false)}
+						aria-label="Close menu"
+					>
+						<Icon name="x-circle" size={20} />
+					</button>
+				</div>
+				<nav className="sidebar-nav">
 					{LINKS.map((l) => (
 						<a
 							key={l.href}
 							href={l.href}
-							className="nav-link"
+							className="nav-link sidebar-link"
 							onClick={(e) => { e.preventDefault(); setOpen(false); navigate(l.href); }}
 						>
 							{l.label}
 						</a>
 					))}
-					{/* <a
-						href={LIBRARY_REPO_URL}
-						target="_blank"
-						rel="noopener noreferrer"
-						className="nav-link"
-					>
-						<Icon name="github" size={18} />
-						GitHub
-					</a> */}
-					<div className="nav-mobile-theme">
-						<ThemeToggle />
-					</div>
 				</nav>
-			)}
+				<div className="sidebar-footer">
+					<ThemeToggle />
+				</div>
+			</aside>
 		</header>
 	);
 }

@@ -55,6 +55,13 @@ export default function Header() {
 	return (
 		<header className="header">
 			<div className="header-inner">
+				<button
+					className="menu-btn"
+					onClick={() => setOpen(!open)}
+					aria-label="Toggle menu"
+				>
+					<Icon name="menu" size={20} />
+				</button>
 				<a href="/" className="logo-link">
 					<img src="/logo.png" alt="SoftEther App" width={32} height={32} />
 					<span className="logo-text">SoftEther App</span>
@@ -69,13 +76,6 @@ export default function Header() {
 				<span className="header-spacer" />
 				<div className="header-end">
 					<ThemeToggle />
-					<button
-						className="menu-btn"
-						onClick={() => setOpen(!open)}
-						aria-label="Toggle menu"
-					>
-						<Icon name="menu" size={20} />
-					</button>
 				</div>
 			</div>
 			{/* Mobile sidebar overlay */}

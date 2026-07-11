@@ -120,15 +120,15 @@
 .sidebar {
 	position: fixed;
 	top: 0;
-	right: 0;
+	left: 0;
 	bottom: 0;
 	width: 260px;
 	z-index: 200;
 	background: var(--surface-900);
-	border-left: 0.5px solid var(--surface-600);
+	border-right: 0.5px solid var(--surface-600);
 	display: flex;
 	flex-direction: column;
-	transform: translateX(100%);
+	transform: translateX(-100%);
 	transition: transform var(--transition-base);
 }
 .sidebar--open {

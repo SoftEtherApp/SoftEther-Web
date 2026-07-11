@@ -28,7 +28,7 @@ const LIB_FEATURES: LibFeature[] = [
 	},
 	{
 		title: "C ABI Exports",
-		desc: "Exposes a clean C ABI \u2014 callable from any language: Dart, Kotlin, Swift, C#, Python, and more.",
+		desc: "Exposes a clean C ABI — callable from any language: Dart, Kotlin, Swift, C#, Python, and more.",
 		icon: "code",
 	},
 	{
@@ -48,7 +48,7 @@ const LIB_FEATURES: LibFeature[] = [
 	},
 	{
 		title: "Lightweight",
-		desc: "Minimal binary footprint. No heavy frameworks \u2014 just the protocol, the tunnel, and your data.",
+		desc: "Minimal binary footprint. No heavy frameworks — just the protocol, the tunnel, and your data.",
 		icon: "zap",
 	},
 ];
@@ -58,7 +58,7 @@ const TARGETS: Target[] = [
 	{ name: "iOS / macOS", desc: "Link as a static framework via Xcode; FFI access from Swift or Dart." },
 	{ name: "Linux", desc: "Shared library (.so) with standard C ABI; package via CMake or Zig build." },
 	{ name: "Windows", desc: "DLL with C ABI exports; consume from C#, C++, or Dart." },
-	{ name: "Flutter / Dart", desc: "Pre-built FFI bindings and client abstraction layer \u2014 drop in and connect." },
+	{ name: "Flutter / Dart", desc: "Pre-built FFI bindings and client abstraction layer — drop in and connect." },
 ];
 
 /* ── Components ── */
@@ -109,7 +109,7 @@ function LibFeaturesSection() {
 				<h2 className="section-title">The Missing Mobile VPN Architecture</h2>
 				<p className="section-desc" style={{ marginBottom: "var(--sp-xl)" }}>
 					The existing SoftEther ecosystem has zero architecture for mobile or
-					embeddable clients \u2014 and no viable community contributions toward one.
+					embeddable clients — and no viable community contributions toward one.
 					SoftEtherZig is the first clean-runtime library purpose-built to fill
 					that gap.
 				</p>
@@ -149,7 +149,7 @@ zig build -Doptimize=ReleaseSafe
 zig build -Dtarget=aarch64-linux-android -Doptimize=ReleaseSafe
 
 # Generated in zig-out/lib/
-#   libsoftether.so \u2014 shared library with C ABI`}</code>
+#   libsoftether.so — shared library with C ABI`}</code>
 					</pre>
 				</div>
 				<div className="usage-note">

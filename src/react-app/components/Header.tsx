@@ -55,6 +55,13 @@ export default function Header() {
 	return (
 		<header className="header">
 			<div className="header-inner">
+				<button
+					className="menu-btn"
+					onClick={() => setOpen(!open)}
+					aria-label="Toggle menu"
+				>
+					<Icon name={open ? "x-circle" : "menu"} />
+				</button>
 				<a href="/" className="logo-link">
 					<img src="/logo.png" alt="SoftEther App" width={32} height={32} />
 					<span className="logo-text">SoftEther App</span>
@@ -65,19 +72,13 @@ export default function Header() {
 							{l.label}
 						</a>
 					))}
-					{/* <a
-						href={LIBRARY_REPO_URL}
-						target="_blank"
-						rel="noopener noreferrer"
-						className="nav-link nav-github"
-					>
-						<Icon name="github" size={18} />
-						GitHub
-					</a> */}
 				</nav>
-				<ThemeToggle />
+				<span className="header-spacer" />
+				<div className="header-end">
+					<ThemeToggle />
+				</div>
 				<button
-					className="menu-btn"
+					className="menu-btn-end"
 					onClick={() => setOpen(!open)}
 					aria-label="Toggle menu"
 				>

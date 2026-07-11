@@ -44,7 +44,7 @@ const FEATURES: Feature[] = [
 	},
 	{
 		title: "Lightweight",
-		desc: "Built on a lean native library \u2014 minimal overhead, maximum throughput for your tunnel.",
+		desc: "Built on a lean native library — minimal overhead, maximum throughput for your tunnel.",
 		icon: "cpu",
 	},
 	{
@@ -112,11 +112,12 @@ function FeaturesSection() {
 	return (
 		<section id="features" className="section">
 			<div className="section-inner">
-				<h2 className="section-title">The First Modern SoftEther VPN Client</h2>
+				<h2 className="section-title">Modern SoftEther for Every Device</h2>
 				<p className="section-desc">
-					The SoftEther ecosystem never had a clean, modern mobile client \u2014
-					until now. SoftEther App is built from scratch for Android, iOS, macOS,
-					Windows, and Linux, with the same experience everywhere.
+					The official SoftEther VPN has clients for Windows, Mac, and Linux
+					— but mobile and a unified cross-platform experience were always
+					missing. SoftEther App fills that gap, built from scratch for
+					Android, iOS, macOS, Windows, and Linux from a shared codebase.
 				</p>
 				<div className="features-grid">
 					{FEATURES.map((f) => (

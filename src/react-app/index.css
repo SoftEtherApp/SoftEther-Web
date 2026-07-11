@@ -1,68 +1,197 @@
+/* ════════════════════════════════════
+   SoftEther App — Landing Page
+   Design Tokens & Base Styles
+   ════════════════════════════════════ */
+
 :root {
-	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-	line-height: 1.5;
+	/* ── Neutral silver — matches logo globe inner ring ── */
+	--silver-100: #e6e6ec;
+	--silver-200: #cdcdd6;
+	--silver-300: #b0b0bc;
+	--silver-400: #90909e;
+	--silver-500: #757582;
+	--silver-600: #5c5c67;
+	--silver-700: #43434d;
+	--silver-800: #2b2b33;
+	--silver-900: #16161c;
+
+	/* ── Logo quadrant accent colors ── */
+	--indigo-400: #5c6bc0;
+	--teal-400: #26a69a;
+
+	/* ── Neutral surface ── */
+	--surface-900: #0f0f13;
+	--surface-800: #1a1a22;
+	--surface-700: #24242e;
+	--surface-600: #2e2e3a;
+	--surface-500: #3a3a48;
+
+	--text-primary: #f5f5fa;
+	--text-secondary: #b0b0c8;
+	--text-muted: #787890;
+
+	/* ── Spacing ── */
+	--sp-xs: 4px;
+	--sp-sm: 8px;
+	--sp-md: 16px;
+	--sp-lg: 24px;
+	--sp-xl: 32px;
+	--sp-2xl: 48px;
+	--sp-3xl: 64px;
+	--sp-4xl: 96px;
+
+	/* ── Radii ── */
+	--rad-sm: 6px;
+	--rad-md: 12px;
+	--rad-lg: 16px;
+	--rad-pill: 24px;
+	--rad-full: 999px;
+
+	/* ── Typography ── */
+	font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
+		Arial, sans-serif;
+	font-size: 16px;
+	line-height: 1.6;
 	font-weight: 400;
-
-	color-scheme: light dark;
-	color: rgba(255, 255, 255, 0.87);
-	background-color: #242424;
-
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+
+	/* ── Color scheme ── */
+	color-scheme: dark;
+	color: var(--text-primary);
+	background-color: var(--surface-900);
+
+	/* ── Transitions ── */
+	--transition-fast: 150ms ease;
+	--transition-base: 250ms ease;
+	--transition-slow: 400ms ease;
 }
 
-a {
-	font-weight: 500;
-	color: #646cff;
-	text-decoration: inherit;
+/* ── Light theme ── */
+html.light {
+	--surface-900: #f8f9fc;
+	--surface-800: #f0f1f6;
+	--surface-700: #e8eaf0;
+	--surface-600: #dce0ea;
+	--surface-500: #ccd0dc;
+
+	--silver-100: #e6e6ec;
+	--silver-200: #cdcdd6;
+	--silver-300: #b0b0bc;
+	--silver-400: #90909e;
+	--silver-500: #757582;
+	--silver-600: #5c5c67;
+	--silver-700: #43434d;
+	--silver-800: #2b2b33;
+	--silver-900: #16161c;
+
+	--text-primary: #181a2b;
+	--text-secondary: #4a4d65;
+	--text-muted: #898da8;
+
+	color-scheme: light;
+	color: var(--text-primary);
+	background-color: var(--surface-900);
 }
-a:hover {
-	color: #535bf2;
+
+html.light .hero-bg {
+	background:
+		radial-gradient(ellipse 80% 60% at 50% -10%, var(--silver-600), transparent),
+		radial-gradient(ellipse 40% 50% at 80% 80%, var(--silver-700), transparent);
+	opacity: 0.3;
+}
+
+html.light .header {
+	background: rgba(248, 249, 252, 0.85);
+	border-bottom-color: var(--surface-500);
+}
+
+html.light .nav-link:hover {
+	background: var(--surface-600);
+}
+
+html.light .nav-github {
+	background: var(--surface-600);
+}
+
+html.light .feature-card,
+html.light .download-card,
+html.light .library-promo-card,
+html.light .target-card {
+	background: var(--surface-800);
+}
+
+html.light .code-block {
+	background: var(--surface-700);
+}
+
+html.light .usage-note {
+	background: var(--surface-700);
+}
+
+html.light ::selection {
+	background: var(--indigo-400);
+	color: #fff;
+}
+
+/* ── Reset ── */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	scroll-behavior: smooth;
 }
 
 body {
-	margin: 0;
-	display: flex;
-	place-items: center;
 	min-width: 320px;
 	min-height: 100vh;
 }
 
-h1 {
-	font-size: 3.2em;
-	line-height: 1.1;
+img {
+	max-width: 100%;
+	height: auto;
+	display: block;
 }
 
-button {
-	border-radius: 8px;
-	border: 1px solid transparent;
-	padding: 0.6em 1.2em;
-	font-size: 1em;
-	font-weight: 500;
-	font-family: inherit;
-	background-color: #1a1a1a;
-	cursor: pointer;
-	transition: border-color 0.25s;
+a {
+	color: var(--indigo-400);
+	text-decoration: none;
+	transition: color var(--transition-fast);
 }
-button:hover {
-	border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-	outline: 4px auto -webkit-focus-ring-color;
+a:hover {
+	color: #5c6bc0;
 }
 
-@media (prefers-color-scheme: light) {
-	:root {
-		color: #213547;
-		background-color: #ffffff;
-	}
-	a:hover {
-		color: #747bff;
-	}
-	button {
-		background-color: #f9f9f9;
-	}
+/* ── Focus ── */
+:focus-visible {
+	outline: 2px solid var(--indigo-400);
+	outline-offset: 2px;
+}
+
+/* ── Selection ── */
+::selection {
+	background: var(--indigo-400);
+	color: #fff;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+	width: 8px;
+}
+::-webkit-scrollbar-track {
+	background: var(--surface-900);
+}
+::-webkit-scrollbar-thumb {
+	background: var(--surface-500);
+	border-radius: var(--rad-pill);
+}
+::-webkit-scrollbar-thumb:hover {
+	background: var(--surface-600);
 }

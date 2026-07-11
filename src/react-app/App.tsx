@@ -1,65 +1,67 @@
-// src/App.tsx
+/* ════════════════════════════════════════════════
+   SoftEther App — Multi-Page SPA Router
+   ════════════════════════════════════════════════ */
 
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import cloudflareLogo from "./assets/Cloudflare_Logo.svg";
-import honoLogo from "./assets/hono.svg";
+import { lazy, Suspense, useCallback, useEffect, useState, type JSX } from "react";
 import "./App.css";
 
-function App() {
-	const [count, setCount] = useState(0);
-	const [name, setName] = useState("unknown");
+type Page = "app" | "library" | "loading";
+
+/* SPA navigation: push state + notify listeners */
+const NAV_EVENT = "spa:navigate";
+
+export function navigate(href: string) {
+	const [path, hash] = href.split("#");
+	const currentPath = window.location.pathname;
+
+	// Same-pathname anchor nav: just scroll, no remount
+	if (!path || path === currentPath) {
+		if (hash) {
+			window.history.pushState(null, "", href);
+			const el = document.getElementById(hash);
+			if (el) el.scrollIntoView({ behavior: "smooth" });
+		}
+		return;
+	}
+
+	window.history.pushState(null, "", href);
+	window.dispatchEvent(new CustomEvent(NAV_EVENT));
+}
+
+function getPage(): Page {
+	const p = window.location.pathname;
+	if (p === "/library" || p === "/library/") return "library";
+	return "app";
+}
+
+function App(): JSX.Element {
+	const [page, setPage] = useState<Page>("loading");
+
+	const sync = useCallback(() => {
+		setPage(getPage());
+	}, []);
+
+	useEffect(() => {
+		sync();
+		window.addEventListener("popstate", sync);
+		window.addEventListener(NAV_EVENT, sync);
+		return () => {
+			window.removeEventListener("popstate", sync);
+			window.removeEventListener(NAV_EVENT, sync);
+		};
+	}, [sync]);
+
+	if (page === "loading") return null;
+
+	const PageComponent = lazy(() => {
+		if (page === "library") return import("./pages/LibraryLanding");
+		return import("./pages/AppLanding");
+	});
 
 	return (
-		<>
-			<div>
-				<a href="https://vite.dev" target="_blank">
-					<img src={viteLogo} className="logo" alt="Vite logo" />
-				</a>
-				<a href="https://react.dev" target="_blank">
-					<img src={reactLogo} className="logo react" alt="React logo" />
-				</a>
-				<a href="https://hono.dev/" target="_blank">
-					<img src={honoLogo} className="logo cloudflare" alt="Hono logo" />
-				</a>
-				<a href="https://workers.cloudflare.com/" target="_blank">
-					<img
-						src={cloudflareLogo}
-						className="logo cloudflare"
-						alt="Cloudflare logo"
-					/>
-				</a>
-			</div>
-			<h1>Vite + React + Hono + Cloudflare</h1>
-			<div className="card">
-				<button
-					onClick={() => setCount((count) => count + 1)}
-					aria-label="increment"
-				>
-					count is {count}
-				</button>
-				<p>
-					Edit <code>src/App.tsx</code> and save to test HMR
-				</p>
-			</div>
-			<div className="card">
-				<button
-					onClick={() => {
-						fetch("/api/")
-							.then((res) => res.json() as Promise<{ name: string }>)
-							.then((data) => setName(data.name));
-					}}
-					aria-label="get name"
-				>
-					Name from API is: {name}
-				</button>
-				<p>
-					Edit <code>worker/index.ts</code> to change the name
-				</p>
-			</div>
-			<p className="read-the-docs">Click on the logos to learn more</p>
-		</>
+		<Suspense fallback={null}>
+			<PageComponent />
+		</Suspense>
 	);
 }
 

@@ -14,7 +14,7 @@ export default function Footer() {
 					<span>SoftEther App</span>
 				</div>
 				<p className="footer-copy">
-					Copyright &copy; {new Date().getFullYear()} Powered by Devstroop. Built with
+					Copyright &copy; {new Date().getFullYear()} Devstroop. Built with
 					open-source SoftEtherZig library.
 				</p>
 				<div className="footer-links">

@@ -6,6 +6,7 @@ import { useEffect, type JSX } from "react";
 import Icon from "../components/Icon";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import HeroIllustration from "../components/HeroIllustration";
 
 /* ── Data ── */
 
@@ -27,7 +28,7 @@ const FEATURES: Feature[] = [
 		icon: "layers",
 	},
 	{
-		title: "Native Performance",
+		title: "Native",
 		desc: "Tunnel your traffic through a lean, fast native engine with minimal overhead.",
 		icon: "zap",
 	},
@@ -37,19 +38,14 @@ const FEATURES: Feature[] = [
 		icon: "monitor",
 	},
 	{
-		title: "Self-Managed",
+		title: "Self-Hosted",
 		desc: "Bring your own SoftEther server. No vendor lock-in, no subscription, no data leaving your control.",
 		icon: "server",
 	},
 	{
-		title: "Fast & Light",
-		desc: "Built on a lean native library — minimal overhead, maximum throughput for your tunnel.",
-		icon: "zap",
-	},
-	{
-		title: "Open Trust",
-		desc: "Built with SoftEtherZig, an open-source VPN library you can inspect, verify, and rely on.",
-		icon: "code",
+		title: "Lightweight",
+		desc: "Built on a lean native library \u2014 minimal overhead, maximum throughput for your tunnel.",
+		icon: "cpu",
 	},
 	{
 		title: "Modern UI",
@@ -73,29 +69,39 @@ function Hero() {
 	return (
 		<section className="hero">
 			<div className="hero-bg" />
-			<div className="hero-content">
-				<div className="hero-badge">v0.3.0 — Built with SoftEtherZig</div>
-				<h1 className="hero-title">
-					<span className="hero-accent">
-						#Modern
+			<div className="hero-inner">
+				<div className="hero-text">
+					<h1 className="hero-title">
+						Your Server.
 						<br />
-						#Cross-Platform
-					</span>
-					<br />
-					SoftEther VPN Client
-				</h1>
-				<p className="hero-desc">
-					Manage your own SoftEther VPN server from any device. Self-hosted,
-					private, and built for mobile and desktop alike.
-				</p>
-				<div className="hero-actions">
-					<a href="#download" className="btn btn-primary">
-						Download App
-					</a>
-					<a href="/library" className="btn btn-secondary">
-						<Icon name="code" size={20} />
-						Get Library
-					</a>
+						<span className="hero-accent">Your Rules.</span>
+					</h1>
+					<p className="hero-desc">
+						A self-hosted SoftEther VPN client that runs on all your devices.
+						Private, open transport, and yours to control.
+					</p>
+					<div className="hero-actions">
+						<a href="#download" className="btn btn-primary">
+							Download App
+						</a>
+						<a href="/library" className="btn btn-secondary">
+							<Icon name="code" size={20} />
+							Open-Source Engine
+						</a>
+					</div>
+					<div className="hero-trust">
+						<Icon name="code" size={14} />
+						<span>
+							Built with{" "}
+							<a href="/library" style={{ color: "inherit", textDecoration: "underline", textUnderlineOffset: "3px" }}>
+								SoftEtherZig
+							</a>
+							, an open-source VPN library.
+						</span>
+					</div>
+				</div>
+				<div className="hero-visual">
+					<HeroIllustration size={260} />
 				</div>
 			</div>
 		</section>
@@ -143,24 +149,6 @@ function PlatformsSection() {
 							<span>{p.name}</span>
 						</div>
 					))}
-				</div>
-			</div>
-		</section>
-	);
-}
-
-function LibraryPromo() {
-	return (
-		<section className="section section-alt">
-			<div className="section-inner">
-				<div className="library-promo-card">
-					<p className="section-desc" style={{ margin: 0 }}>
-						Every connection runs on{" "}
-						<a href="/library" style={{ color: "var(--indigo-400)", fontWeight: 500 }}>
-							SoftEtherZig
-						</a>
-						, an open-source VPN library.
-					</p>
 				</div>
 			</div>
 		</section>
@@ -253,7 +241,6 @@ export default function AppLanding(): JSX.Element {
 				<Hero />
 				<FeaturesSection />
 				<PlatformsSection />
-				<LibraryPromo />
 				<DownloadSection />
 			</main>
 			<Footer />

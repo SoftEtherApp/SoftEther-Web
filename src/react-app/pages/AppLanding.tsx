@@ -72,7 +72,7 @@ function Hero() {
 			<div className="hero-inner">
 				<div className="hero-text">
 					<h1 className="hero-title">
-						<span className="hero-accent">Modern Cross-Platform</span>
+						<span className="hero-accent">Modern <br />Cross-Platform</span>
 						<br />
 						SoftEther VPN Client
 					</h1>
@@ -101,7 +101,7 @@ function Hero() {
 					</div>
 				</div>
 				<div className="hero-visual">
-					<HeroIllustration size={260} />
+					<HeroIllustration size={500} />
 				</div>
 			</div>
 		</section>

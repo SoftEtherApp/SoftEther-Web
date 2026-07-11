@@ -218,12 +218,14 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 260px;
-	height: 260px;
+	max-width: 500px;
+}
+.hero-visual img {
+	filter: drop-shadow(0 0 40px rgba(92, 107, 192, 0.3));
 }
 
 .hero-title {
-	font-size: clamp(2rem, 4vw, 3rem);
+	font-size: clamp(1.5rem, 4vw, 2.5rem);
 	font-weight: 800;
 	line-height: 1.15;
 	letter-spacing: -0.03em;
@@ -310,7 +312,7 @@
 	display: inline-flex;
 	align-items: center;
 	gap: var(--sp-sm);
-	padding: 12px 28px;
+	padding: 10px 20px;
 	border-radius: var(--rad-pill);
 	font-size: 0.95rem;
 	font-weight: 600;
@@ -558,8 +560,7 @@
 	}
 	.hero-visual {
 		order: -1;
-		width: 160px;
-		height: 160px;
+		max-width: 180px;
 	}
 	.hero-actions {
 		justify-content: center;

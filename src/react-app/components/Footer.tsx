@@ -14,7 +14,7 @@ export default function Footer() {
 					<span>SoftEther App</span>
 				</div>
 				<p className="footer-copy">
-					&copy; {new Date().getFullYear()} Devstroop. Powered by the
+					Copyright &copy; {new Date().getFullYear()} Powered by Devstroop. Built with
 					open-source SoftEtherZig library.
 				</p>
 				<div className="footer-links">
@@ -26,7 +26,7 @@ export default function Footer() {
 						<Icon name="github" size={18} />
 					</a>
 					<a href="https://softether.app" target="_blank" rel="noopener noreferrer">
-						softether.app
+						SoftEther.app
 					</a>
 					<a href="/library">Library</a>
 				</div>

@@ -48,7 +48,7 @@ const FEATURES: Feature[] = [
 	},
 	{
 		title: "Open Trust",
-		desc: "Powered by SoftEtherZig, an open-source VPN library you can inspect, verify, and rely on.",
+		desc: "Built with SoftEtherZig, an open-source VPN library you can inspect, verify, and rely on.",
 		icon: "code",
 	},
 	{

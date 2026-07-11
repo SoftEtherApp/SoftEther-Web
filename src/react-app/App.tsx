@@ -1,9 +1,11 @@
-/* ════════════════════════════════════════════════
+/* ═���══════════════════════════════════════════════
    SoftEther App — Multi-Page SPA Router
-   ════════════════════════════════════════════════ */
+   ═══════���════════════════════════════════════════ */
 
-import { lazy, Suspense, useCallback, useEffect, useState, type JSX } from "react";
+import { useCallback, useEffect, useState, type JSX } from "react";
 import "./App.css";
+import AppLanding from "./pages/AppLanding";
+import LibraryLanding from "./pages/LibraryLanding";
 
 type Page = "app" | "library" | "loading";
 
@@ -53,16 +55,7 @@ function App(): JSX.Element {
 
 	if (page === "loading") return <></>;
 
-	const PageComponent = lazy(() => {
-		if (page === "library") return import("./pages/LibraryLanding");
-		return import("./pages/AppLanding");
-	});
-
-	return (
-		<Suspense fallback={null}>
-			<PageComponent />
-		</Suspense>
-	);
+	return page === "library" ? <LibraryLanding /> : <AppLanding />;
 }
 
 export default App;

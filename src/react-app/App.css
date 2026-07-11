@@ -22,7 +22,7 @@
 	padding: 0 var(--sp-lg);
 	display: flex;
 	align-items: center;
-	gap: var(--sp-sm);
+	gap: var(--sp-md);
 	height: 56px;
 }
 
@@ -71,7 +71,7 @@
 .nav-desktop {
 	display: flex;
 	align-items: center;
-	gap: var(--sp-lg);
+	gap: var(--sp-sm);
 }
 
 .nav-link {

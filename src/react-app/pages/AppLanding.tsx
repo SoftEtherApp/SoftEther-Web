@@ -79,7 +79,7 @@ function Hero() {
 					<span className="hero-accent">
 						#Modern
 						<br />
-						Cross-Platform
+						#Cross-Platform
 					</span>
 					<br />
 					SoftEther VPN Client

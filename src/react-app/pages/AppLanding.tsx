@@ -72,12 +72,12 @@ function Hero() {
 			<div className="hero-inner">
 				<div className="hero-text">
 					<h1 className="hero-title">
-						Your Server.
+						<span className="hero-accent">Modern Cross-Platform</span>
 						<br />
-						<span className="hero-accent">Your Rules.</span>
+						SoftEther VPN client
 					</h1>
 					<p className="hero-desc">
-						A self-hosted SoftEther VPN client that runs on all your devices.
+						A self-managed SoftEther VPN client that runs on all your devices.
 						Private, open transport, and yours to control.
 					</p>
 					<div className="hero-actions">
@@ -86,7 +86,7 @@ function Hero() {
 						</a>
 						<a href="/library" className="btn btn-secondary">
 							<Icon name="code" size={20} />
-							Open-Source Engine
+							Open-Source Library
 						</a>
 					</div>
 					<div className="hero-trust">

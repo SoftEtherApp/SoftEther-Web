@@ -210,6 +210,10 @@
 	margin-bottom: var(--sp-lg);
 }
 
+.hero-text .hero-actions {
+	justify-content: flex-start;
+}
+
 .hero-trust {
 	display: flex;
 	align-items: center;
@@ -223,6 +227,39 @@
 }
 .hero-trust a:hover {
 	color: var(--indigo-400);
+}
+
+/* ── Library hero (centered) ── */
+
+.hero-content {
+	position: relative;
+	text-align: center;
+	max-width: 720px;
+}
+
+.hero-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--sp-sm);
+	padding: 4px 14px;
+	border-radius: var(--rad-pill);
+	font-size: 0.78rem;
+	font-weight: 500;
+	letter-spacing: 0.02em;
+	background: var(--surface-600);
+	color: var(--indigo-400);
+	margin-bottom: var(--sp-lg);
+}
+
+.hero-badges {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--sp-sm);
+	margin-bottom: var(--sp-lg);
+}
+.hero-badges .hero-badge {
+	margin-bottom: 0;
 }
 
 /* ── Buttons ── */

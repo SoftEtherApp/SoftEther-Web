@@ -68,7 +68,10 @@ function LibHero() {
 		<section id="library" className="hero hero-tall">
 			<div className="hero-bg" />
 			<div className="hero-content">
-				<div className="hero-badge">Open Source &middot; Apache-2.0 License</div>
+				<div className="hero-badges">
+					<span className="hero-badge">Open Source</span>
+					<span className="hero-badge">Apache-2.0 License</span>
+				</div>
 				<h1 className="hero-title">
 					SoftEtherZig
 					<br />

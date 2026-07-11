@@ -1,90 +1,67 @@
-# React + Vite + Hono + Cloudflare Workers
+# softether.app — Landing Website
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/vite-react-template)
+This is the source code for [softether.app](https://softether.app), the official
+landing website for **SoftEther App** — a self-managed, multi-platform SoftEther
+VPN client built with Flutter, and its open-source Zig engine **SoftEtherZig**.
 
-This template provides a minimal setup for building a React application with TypeScript and Vite, designed to run on Cloudflare Workers. It features hot module replacement, ESLint integration, and the flexibility of Workers deployments.
+## Tech Stack
 
-![React + TypeScript + Vite + Cloudflare Workers](https://imagedelivery.net/wSMYJvS3Xw-n339CbDyDIA/fc7b4b62-442b-4769-641b-ad4422d74300/public)
+- **React 19** — UI framework
+- **Vite 7** — build tool and dev server
+- **TypeScript 5** — type safety
+- **Hono 4** — lightweight API router
+- **Cloudflare Workers** — edge deployment (assets + SPA fallback)
 
-<!-- dash-content-start -->
+## Project Structure
 
-🚀 Supercharge your web development with this powerful stack:
-
-- [**React**](https://react.dev/) - A modern UI library for building interactive interfaces
-- [**Vite**](https://vite.dev/) - Lightning-fast build tooling and development server
-- [**Hono**](https://hono.dev/) - Ultralight, modern backend framework
-- [**Cloudflare Workers**](https://developers.cloudflare.com/workers/) - Edge computing platform for global deployment
-
-### ✨ Key Features
-
-- 🔥 Hot Module Replacement (HMR) for rapid development
-- 📦 TypeScript support out of the box
-- 🛠️ ESLint configuration included
-- ⚡ Zero-config deployment to Cloudflare's global network
-- 🎯 API routes with Hono's elegant routing
-- 🔄 Full-stack development setup
-- 🔎 Built-in Observability to monitor your Worker
-
-Get started in minutes with local development or deploy directly via the Cloudflare dashboard. Perfect for building modern, performant web applications at the edge.
-
-<!-- dash-content-end -->
-
-## Getting Started
-
-To start a new project with this template, run:
-
-```bash
-npm create cloudflare@latest -- --template=cloudflare/templates/vite-react-template
+```
+src/
+├── react-app/               # React SPA
+│   ├── App.tsx              # Route switch (/, /library)
+│   ├── App.css              # Component styles
+│   ├── index.css            # Design tokens + base styles
+│   ���── main.tsx             # Entry point
+│   ├── components/
+│   │   ├── Header.tsx       # Nav bar + theme toggle
+│   │   ��── Footer.tsx       # Footer + legal disclaimer
+���   │   ├── Icon.tsx         # SVG icon system (Lucide + brand logos)
+│   │   └── HeroIllustration.tsx  # Hero visual (app logo + rings)
+│   └── pages/
+│       ├── AppLanding.tsx   # Root page — SoftEther App landing
+│       └── LibraryLanding.tsx  # /library page — SoftEtherZig engine
+└── worker/
+    └── index.ts             # Hono worker + SPA fallback
 ```
 
-A live deployment of this template is available at:
-[https://react-vite-template.templates.workers.dev](https://react-vite-template.templates.workers.dev)
+## Pages
+
+| Route | Page | Description |
+|---|---|---|
+| `/` | AppLanding | SoftEther App: hero, features, platforms, download |
+| `/library` | LibraryLanding | SoftEtherZig: features, quick start, integration targets |
 
 ## Development
 
-Install dependencies:
-
 ```bash
 npm install
+npm run dev        # Vite dev server at localhost:5173
 ```
 
-Start the development server with:
+## Build & Deploy
 
 ```bash
-npm run dev
+npm run build      # tsc -b && vite build (outputs dist/client/)
+npm run deploy     # wrangler deploy
 ```
 
-Your application will be available at [http://localhost:5173](http://localhost:5173).
+The `wrangler.json` configures static assets from `dist/client/` with SPA
+fallback (`not_found_handling: single-page-application`) — so `/library` and
+any client-side route serves `index.html`.
 
-## Production
+## Design System
 
-Build your project for production:
-
-```bash
-npm run build
-```
-
-Preview your build locally:
-
-```bash
-npm run preview
-```
-
-Deploy your project to Cloudflare Workers:
-
-```bash
-npm run build && npm run deploy
-```
-
-Monitor your workers:
-
-```bash
-npx wrangler tail
-```
-
-## Additional Resources
-
-- [Cloudflare Workers Documentation](https://developers.cloudflare.com/workers/)
-- [Vite Documentation](https://vitejs.dev/guide/)
-- [React Documentation](https://reactjs.org/)
-- [Hono Documentation](https://hono.dev/)
+- **Palette:** Indigo (#3F51B5 seed) + Teal accent
+- **Mode:** Dark-first with light theme toggle (localStorage-persisted)
+- **Icons:** Lucide (stroke-based) + Simple Icons / Ionicons (brand logos)
+- **Layout tokens:** scale-based spacing (xs→4xl), consistent radii
+- **Glass surface:** 14px blur with opacity tiers

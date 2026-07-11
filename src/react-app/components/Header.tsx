@@ -51,6 +51,36 @@ const LINKS = [
 
 export default function Header() {
 	const [open, setOpen] = useState(false);
+	const [path, setPath] = useState(window.location.pathname);
+
+	// Sync nav state on popstate / spa:navigate
+	useEffect(() => {
+		const sync = () => setPath(window.location.pathname);
+		window.addEventListener("popstate", sync);
+		window.addEventListener("spa:navigate", sync);
+		return () => {
+			window.removeEventListener("popstate", sync);
+			window.removeEventListener("spa:navigate", sync);
+		};
+	}, []);
+
+	// Escape to close sidebar
+	useEffect(() => {
+		if (!open) return;
+		const onKey = (e: KeyboardEvent) => {
+			if (e.key === "Escape") setOpen(false);
+		};
+		window.addEventListener("keydown", onKey);
+		return () => window.removeEventListener("keydown", onKey);
+	}, [open]);
+
+	const isActive = (href: string) => {
+		// Hash-fragment links (scroll anchors on the home page) are never
+		// marked active — marking all of them simultaneously would look
+		// broken.
+		if (href.startsWith("/#")) return false;
+		return path.startsWith(href);
+	};
 
 	return (
 		<>
@@ -60,6 +90,7 @@ export default function Header() {
 						className="menu-btn"
 						onClick={() => setOpen(!open)}
 						aria-label="Toggle menu"
+						aria-expanded={open}
 					>
 						<Icon name="menu" size={20} />
 					</button>
@@ -67,9 +98,15 @@ export default function Header() {
 						<img src="/logo.png" alt="SoftEther App" width={32} height={32} />
 						<span className="logo-text">SoftEther App</span>
 					</a>
-					<nav className="nav-desktop">
+					<nav className="nav-desktop" aria-label="Main navigation">
 						{LINKS.map((l) => (
-							<a key={l.href} href={l.href} className="nav-link" onClick={(e) => { e.preventDefault(); navigate(l.href); }}>
+							<a
+								key={l.href}
+								href={l.href}
+								className={`nav-link${isActive(l.href) ? " nav-link--active" : ""}`}
+								onClick={(e) => { e.preventDefault(); navigate(l.href); }}
+								aria-current={isActive(l.href) ? "page" : undefined}
+							>
 								{l.label}
 							</a>
 						))}
@@ -82,7 +119,12 @@ export default function Header() {
 			</header>
 			{/* Mobile sidebar overlay — outside <header> to avoid backdrop-filter clipping on iOS */}
 			{open && <div className="sidebar-backdrop" onClick={() => setOpen(false)} />}
-			<aside className={`sidebar ${open ? "sidebar--open" : ""}`}>
+			<aside
+				className={`sidebar ${open ? "sidebar--open" : ""}`}
+				role="dialog"
+				aria-modal={open ? "true" : undefined}
+				aria-label="Navigation menu"
+			>
 				<div className="sidebar-header">
 					<button
 						className="menu-btn"
@@ -92,13 +134,14 @@ export default function Header() {
 						<Icon name="x-circle" size={20} />
 					</button>
 				</div>
-				<nav className="sidebar-nav">
+				<nav className="sidebar-nav" aria-label="Mobile navigation">
 					{LINKS.map((l) => (
 						<a
 							key={l.href}
 							href={l.href}
-							className="nav-link sidebar-link"
+							className={`nav-link sidebar-link${isActive(l.href) ? " nav-link--active" : ""}`}
 							onClick={(e) => { e.preventDefault(); setOpen(false); navigate(l.href); }}
+							aria-current={isActive(l.href) ? "page" : undefined}
 						>
 							{l.label}
 						</a>

@@ -40,7 +40,9 @@ function App(): JSX.Element {
 	const [page, setPage] = useState<Page>("loading");
 
 	const sync = useCallback(() => {
-		setPage(getPage());
+		const p = getPage();
+		setPage(p);
+		document.title = p === "library" ? "SoftEtherZig — Open-Source VPN Library" : "SoftEther App — Modern Cross-Platform VPN Client";
 	}, []);
 
 	useEffect(() => {

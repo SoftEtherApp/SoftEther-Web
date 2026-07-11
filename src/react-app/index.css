@@ -4,15 +4,12 @@
    ════════════════════════════════════ */
 
 :root {
-	/* ── Discord-like surface palette ── */
-	--surface-900: #111214;
-	--surface-800: #1e1f22;
-	--surface-700: #2b2d31;
-	--surface-600: #313338;
-	--surface-500: #383a40;
-	--surface-400: #404249;
-	--surface-300: #4e5058;
-	--surface-200: #5c5e66;
+	/* ── Surface palette ── */
+	--surface-900: #0f0f13;
+	--surface-800: #1a1a22;
+	--surface-700: #24242e;
+	--surface-600: #2e2e3a;
+	--surface-500: #3a3a48;
 
 	/* ── Accent — Discord blurple ── */
 	--blurple: #5865f2;
@@ -23,17 +20,6 @@
 	--orange: #f0b232;
 
 	/* ── Text ── */
-	--text-primary: #dbdee1;
-	--text-secondary: #b5bac1;
-	--text-muted: #949ba4;
-
-	/* ── Neutral surface ── */
-	--surface-900: #0f0f13;
-	--surface-800: #1a1a22;
-	--surface-700: #24242e;
-	--surface-600: #2e2e3a;
-	--surface-500: #3a3a48;
-
 	--text-primary: #f5f5fa;
 	--text-secondary: #b0b0c8;
 	--text-muted: #787890;

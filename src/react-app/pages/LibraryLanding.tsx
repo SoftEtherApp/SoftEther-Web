@@ -43,7 +43,7 @@ const LIB_FEATURES: LibFeature[] = [
 	},
 	{
 		title: "Open Source",
-		desc: "MIT licensed. Audit, fork, contribute. Built in the open on GitHub.",
+		desc: "Apache-2.0 licensed. Audit, fork, contribute. Built in the open on GitHub.",
 		icon: "code",
 	},
 	{
@@ -68,7 +68,7 @@ function LibHero() {
 		<section id="library" className="hero hero-tall">
 			<div className="hero-bg" />
 			<div className="hero-content">
-				<div className="hero-badge">Open Source &middot; MIT License</div>
+				<div className="hero-badge">Open Source &middot; Apache-2.0 License</div>
 				<h1 className="hero-title">
 					SoftEtherZig
 					<br />

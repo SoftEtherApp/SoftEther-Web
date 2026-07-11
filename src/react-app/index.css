@@ -102,9 +102,9 @@ html.light {
 
 html.light .hero-bg {
 	background:
-		radial-gradient(ellipse 80% 60% at 50% -10%, var(--silver-600), transparent),
-		radial-gradient(ellipse 40% 50% at 80% 80%, var(--silver-700), transparent);
-	opacity: 0.3;
+		radial-gradient(ellipse 80% 60% at 50% -10%, rgba(92, 107, 192, 0.08), transparent),
+		radial-gradient(ellipse 40% 50% at 80% 80%, rgba(38, 166, 154, 0.04), transparent);
+	opacity: 1;
 }
 
 html.light .header {

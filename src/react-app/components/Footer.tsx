@@ -2,8 +2,8 @@
    Shared Footer
    ════════════════════════════════════ */
 
-import Icon from "./Icon";
-import { LIBRARY_REPO_URL } from "./Header";
+// import Icon from "./Icon";
+// import { LIBRARY_REPO_URL } from "./Header";
 
 export default function Footer() {
 	return (
@@ -18,13 +18,13 @@ export default function Footer() {
 					open-source SoftEtherZig library.
 				</p>
 				<div className="footer-links">
-					<a
+					{/* <a
 						href={LIBRARY_REPO_URL}
 						target="_blank"
 						rel="noopener noreferrer"
 					>
 						<Icon name="github" size={18} />
-					</a>
+					</a> */}
 					<a href="https://softether.app" target="_blank" rel="noopener noreferrer">
 						SoftEther.app
 					</a>

@@ -154,7 +154,7 @@ function LibraryPromo() {
 		<section className="section section-alt">
 			<div className="section-inner">
 				<div className="library-promo-card">
-					<p className="section-desc" style={{ marginBottom: "var(--sp-lg)" }}>
+					<p className="section-desc" style={{ margin: 0 }}>
 						Every connection runs on{" "}
 						<a href="/library" style={{ color: "var(--indigo-400)", fontWeight: 500 }}>
 							SoftEtherZig

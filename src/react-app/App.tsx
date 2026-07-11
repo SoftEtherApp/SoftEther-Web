@@ -51,7 +51,7 @@ function App(): JSX.Element {
 		};
 	}, [sync]);
 
-	if (page === "loading") return null;
+	if (page === "loading") return <></>;
 
 	const PageComponent = lazy(() => {
 		if (page === "library") return import("./pages/LibraryLanding");

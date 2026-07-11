@@ -65,7 +65,7 @@ export default function Header() {
 							{l.label}
 						</a>
 					))}
-					<a
+					{/* <a
 						href={LIBRARY_REPO_URL}
 						target="_blank"
 						rel="noopener noreferrer"
@@ -73,7 +73,7 @@ export default function Header() {
 					>
 						<Icon name="github" size={18} />
 						GitHub
-					</a>
+					</a> */}
 				</nav>
 				<ThemeToggle />
 				<button
@@ -96,7 +96,7 @@ export default function Header() {
 							{l.label}
 						</a>
 					))}
-					<a
+					{/* <a
 						href={LIBRARY_REPO_URL}
 						target="_blank"
 						rel="noopener noreferrer"
@@ -104,7 +104,7 @@ export default function Header() {
 					>
 						<Icon name="github" size={18} />
 						GitHub
-					</a>
+					</a> */}
 					<div className="nav-mobile-theme">
 						<ThemeToggle />
 					</div>

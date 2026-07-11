@@ -171,6 +171,7 @@ a {
 }
 a:hover {
 	color: var(--indigo-500);
+}
 
 /* ── Focus ── */
 :focus-visible {

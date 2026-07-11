@@ -74,7 +74,7 @@ function Hero() {
 					<h1 className="hero-title">
 						<span className="hero-accent">Modern Cross-Platform</span>
 						<br />
-						SoftEther VPN client
+						SoftEther VPN Client
 					</h1>
 					<p className="hero-desc">
 						A self-managed SoftEther VPN client that runs on all your devices.

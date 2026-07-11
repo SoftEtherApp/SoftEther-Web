@@ -53,32 +53,34 @@ export default function Header() {
 	const [open, setOpen] = useState(false);
 
 	return (
-		<header className="header">
-			<div className="header-inner">
-				<button
-					className="menu-btn"
-					onClick={() => setOpen(!open)}
-					aria-label="Toggle menu"
-				>
-					<Icon name="menu" size={20} />
-				</button>
-				<a href="/" className="logo-link">
-					<img src="/logo.png" alt="SoftEther App" width={32} height={32} />
-					<span className="logo-text">SoftEther App</span>
-				</a>
-				<nav className="nav-desktop">
-					{LINKS.map((l) => (
-						<a key={l.href} href={l.href} className="nav-link" onClick={(e) => { e.preventDefault(); navigate(l.href); }}>
-							{l.label}
-						</a>
-					))}
-				</nav>
-				<span className="header-spacer" />
-				<div className="header-end">
-					<ThemeToggle />
+		<>
+			<header className="header">
+				<div className="header-inner">
+					<button
+						className="menu-btn"
+						onClick={() => setOpen(!open)}
+						aria-label="Toggle menu"
+					>
+						<Icon name="menu" size={20} />
+					</button>
+					<a href="/" className="logo-link">
+						<img src="/logo.png" alt="SoftEther App" width={32} height={32} />
+						<span className="logo-text">SoftEther App</span>
+					</a>
+					<nav className="nav-desktop">
+						{LINKS.map((l) => (
+							<a key={l.href} href={l.href} className="nav-link" onClick={(e) => { e.preventDefault(); navigate(l.href); }}>
+								{l.label}
+							</a>
+						))}
+					</nav>
+					<span className="header-spacer" />
+					<div className="header-end">
+						<ThemeToggle />
+					</div>
 				</div>
-			</div>
-			{/* Mobile sidebar overlay */}
+			</header>
+			{/* Mobile sidebar overlay — outside <header> to avoid backdrop-filter clipping on iOS */}
 			{open && <div className="sidebar-backdrop" onClick={() => setOpen(false)} />}
 			<aside className={`sidebar ${open ? "sidebar--open" : ""}`}>
 				<div className="sidebar-header">
@@ -106,6 +108,6 @@ export default function Header() {
 					<ThemeToggle />
 				</div>
 			</aside>
-		</header>
+		</>
 	);
 }

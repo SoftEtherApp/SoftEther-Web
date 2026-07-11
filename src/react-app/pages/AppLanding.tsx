@@ -42,9 +42,9 @@ const FEATURES: Feature[] = [
 		icon: "server",
 	},
 	{
-		title: "Your Data, Your Rules",
-		desc: "Point at your own SoftEther server. No proxy, no middleman, no subscription \u2014 just your private tunnel.",
-		icon: "cpu",
+		title: "Fast & Light",
+		desc: "Built on a lean native library — minimal overhead, maximum throughput for your tunnel.",
+		icon: "zap",
 	},
 	{
 		title: "Open Trust",
@@ -156,7 +156,7 @@ function LibraryPromo() {
 				<div className="library-promo-card">
 					<p className="section-desc" style={{ marginBottom: "var(--sp-lg)" }}>
 						Every connection runs on{" "}
-						<a href="/library" style={{ color: "var(--indigo-300)", fontWeight: 500 }}>
+						<a href="/library" style={{ color: "var(--indigo-400)", fontWeight: 500 }}>
 							SoftEtherZig
 						</a>
 						, an open-source VPN library.

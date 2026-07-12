@@ -240,15 +240,18 @@ app.get("/download/:tag/:filename", async (c) => {
 
 /* ── SPA fallback: serve index.html for all non-file, non-API paths ── */
 app.get("*", async (c) => {
-	try {
-		// Try ASSETS first — this serves static files from dist/client
-		const resp = await c.env.ASSETS.fetch(c.req.raw);
-		if (resp.status < 400) return resp;
-	} catch {
-		// fall through to index.html
+	// For known static files with extensions, let ASSETS serve them
+	const url = new URL(c.req.url);
+	if (/\.\w{2,5}$/.test(url.pathname)) {
+		try {
+			const resp = await c.env.ASSETS.fetch(c.req.raw);
+			if (resp.status < 400) return resp;
+		} catch {
+			// fall through
+		}
 	}
-	// SPA fallback — serve index.html for client-side routes
-	return c.env.ASSETS.fetch(new Request(new URL("/index.html", c.req.url), c.req.raw));
+	// Everything else → SPA fallback
+	return c.env.ASSETS.fetch(new Request(new URL("/index.html", c.req.url)));
 });
 
 export default app;

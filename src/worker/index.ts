@@ -60,10 +60,10 @@ app.get("/api/releases/latest", async (c) => {
 
 		const release: ReleaseMeta = JSON.parse(raw);
 
-		// Point download URLs at the worker's own streaming endpoint
+		// Point download URLs at the /download/ endpoint
 		const withUrls = release.assets.map((a) => ({
 			...a,
-			downloadUrl: `/api/releases/${latestTag}/download/${encodeURIComponent(a.r2Key)}`,
+			downloadUrl: `/download/${latestTag}/${encodeURIComponent(a.r2Key)}`,
 		}));
 
 		return c.json({ ...release, assets: withUrls });
@@ -196,8 +196,8 @@ app.post("/api/webhook/release", async (c) => {
 	}
 });
 
-/* ── GET /api/releases/:tag/download/:filename — stream file from R2 ── */
-app.get("/api/releases/:tag/download/:filename", async (c) => {
+/* ── GET /download/:tag/:filename — stream file from R2 ── */
+app.get("/download/:tag/:filename", async (c) => {
 	const { tag, filename } = c.req.param();
 	try {
 		const r2Key = `${tag}/${filename}`;

@@ -85,6 +85,10 @@ const ICONS: Record<string, IconDef> = {
   "arrow-left": { children: [
     { type: "path", props: { d: "m12 19-7-7 7-7m7 7H5" } },
   ] },
+  tag: { children: [
+    { type: "path", props: { d: "M12 2H2v10l9.29 9.29a2 2 0 0 0 2.83 0l6.17-6.17a2 2 0 0 0 0-2.83z" } },
+    { type: "circle", props: { cx: 7, cy: 7, r: 1, fill: "currentColor" } },
+  ] },
   "chevron-right": { children: [
     { type: "path", props: { d: "m9 18 6-6-6-6" } },
   ] },

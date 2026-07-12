@@ -498,10 +498,23 @@
 
 /* ── Download Section ── */
 
+.dl-version {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--sp-xs);
+	margin: calc(-1 * var(--sp-sm)) auto var(--sp-lg);
+	font-size: 0.8rem;
+	color: var(--text-muted);
+}
+.dl-version-sep {
+	margin: 0 2px;
+}
+
 .download-list {
 	display: flex;
 	flex-direction: column;
-	gap: var(--sp-md);
+	gap: var(--sp-sm);
 	max-width: 520px;
 	margin: 0 auto;
 }
@@ -514,14 +527,27 @@
 	background: var(--surface-800);
 	border: 0.5px solid var(--surface-600);
 	border-radius: var(--rad-md);
-	transition: border-color var(--transition-fast), background var(--transition-fast);
+	transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
 	text-decoration: none;
 	color: var(--text-primary);
+	position: relative;
 }
-.download-card:hover {
+.download-card--dim {
+	opacity: 0.55;
+	cursor: default;
+}
+.download-card--live {
+	cursor: pointer;
+}
+.download-card--live:hover {
 	border-color: var(--blurple);
 	background: var(--surface-700);
+	box-shadow: 0 4px 24px rgba(88, 101, 242, 0.08);
+	transform: translateY(-1px);
 	color: var(--text-primary);
+}
+.download-card--live:active {
+	transform: translateY(0);
 }
 
 .download-icon {
@@ -532,21 +558,58 @@
 	height: 44px;
 	border-radius: var(--rad-sm);
 	background: var(--surface-700);
-	color: var(--blurple);
+	color: var(--text-muted);
 	flex-shrink: 0;
+}
+.download-card--live .download-icon {
+	background: var(--blurple-soft);
+	color: var(--blurple);
+}
+.download-card--live:hover .download-icon {
+	background: rgba(88, 101, 242, 0.2);
 }
 
 .download-info {
 	flex: 1;
+	min-width: 0;
 }
 .download-info h3 {
 	font-size: 1rem;
 	font-weight: 600;
-	margin-bottom: 2px;
+	margin-bottom: 1px;
 }
 .download-meta {
-	font-size: 0.8rem;
+	font-size: 0.78rem;
 	color: var(--text-muted);
+}
+.download-size {
+	font-size: 0.78rem;
+	color: var(--text-muted);
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+.download-tag {
+	font-size: 0.7rem;
+	font-weight: 500;
+	padding: 3px 10px;
+	border-radius: var(--rad-pill);
+	background: var(--surface-600);
+	color: var(--text-secondary);
+	white-space: nowrap;
+}
+.download-badge {
+	font-size: 0.72rem;
+	font-weight: 600;
+	padding: 4px 12px;
+	border-radius: var(--rad-pill);
+	background: var(--blurple);
+	color: #fff;
+	white-space: nowrap;
+	transition: background var(--transition-fast), box-shadow var(--transition-fast);
+}
+.download-card--live:hover .download-badge {
+	background: var(--blurple-hover);
+	box-shadow: 0 2px 12px rgba(88, 101, 242, 0.3);
 }
 
 /* ── Footer ── */

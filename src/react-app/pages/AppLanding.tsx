@@ -78,6 +78,7 @@ const PLATFORMS: PlatformInfo[] = [
 	{ name: "macOS", icon: "logo-apple", meta: ".dmg", platform: "macos" },
 	{ name: "Windows", icon: "logo-windows", meta: ".msi", platform: "windows" },
 	{ name: "Linux", icon: "logo-linux", meta: ".deb", platform: "linux" },
+	{ name: "iOS", icon: "logo-apple", meta: "App Store", platform: "" },
 ];
 
 /* ── Helpers ── */
@@ -213,19 +214,25 @@ function DownloadSection() {
 		<section id="download" className="section">
 			<div className="section-inner">
 				<h2 className="section-title">Get Started</h2>
+				<p className="section-desc">
+					Download the latest release for your platform.
+				</p>
 				{release && (
-					<p className="section-desc" style={{ marginBottom: "var(--sp-lg)" }}>
-						Latest release: <strong>{release.tag}</strong> &middot;{" "}
-						{new Date(release.publishedAt).toLocaleDateString()}
-					</p>
+					<div className="dl-version">
+						<Icon name="tag" size={14} />
+						<span>{release.tag}</span>
+						<span className="dl-version-sep">&middot;</span>
+						<span>{new Date(release.publishedAt).toLocaleDateString()}</span>
+					</div>
 				)}
 				<div className="download-list">
 					{PLATFORMS.map((p) => {
 						const asset = release ? pickAsset(release.assets, p.platform) : undefined;
+						const isComing = !asset && !loading;
 
 						if (!asset && loading) {
 							return (
-								<div key={p.name} className="download-card" style={{ cursor: "default", opacity: 0.5 }}>
+								<div key={p.name} className="download-card download-card--dim">
 									<div className="download-icon">
 										<Icon name={p.icon} size={28} />
 									</div>
@@ -237,9 +244,9 @@ function DownloadSection() {
 							);
 						}
 
-						if (!asset && !loading) {
+						if (isComing) {
 							return (
-								<div key={p.name} className="download-card" style={{ cursor: "default", opacity: 0.8 }}>
+								<div key={p.name} className="download-card download-card--dim">
 									<div className="download-icon">
 										<Icon name={p.icon} size={28} />
 									</div>
@@ -247,7 +254,7 @@ function DownloadSection() {
 										<h3>{p.name}</h3>
 										<span className="download-meta">{p.meta}</span>
 									</div>
-									<span className="download-meta">Coming soon</span>
+									<span className="download-tag">Coming soon</span>
 								</div>
 							);
 						}
@@ -256,7 +263,9 @@ function DownloadSection() {
 							<a
 								key={p.name}
 								href={asset!.downloadUrl}
-								className="download-card"
+								className="download-card download-card--live"
+								target="_blank"
+								rel="noopener noreferrer"
 							>
 								<div className="download-icon">
 									<Icon name={p.icon} size={28} />
@@ -265,7 +274,8 @@ function DownloadSection() {
 									<h3>{p.name}</h3>
 									<span className="download-meta">{p.meta}</span>
 								</div>
-								<span className="download-meta">{formatSize(asset!.size)}</span>
+								<span className="download-size">{formatSize(asset!.size)}</span>
+								<span className="download-badge">Download</span>
 							</a>
 						);
 					})}

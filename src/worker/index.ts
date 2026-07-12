@@ -49,6 +49,27 @@ const app = new Hono<{ Bindings: AppEnv }>();
 /* ── Health ── */
 app.get("/api/", (c) => c.json({ name: "SoftEther App API", version: "1.0.0" }));
 
+/* ── GET /download/:tag/:filename — stream file from R2 (MUST be before * wildcard) ── */
+app.get("/download/:tag/:filename", async (c) => {
+	const { tag, filename } = c.req.param();
+	try {
+		const r2Key = `${tag}/${filename}`;
+		const obj = await c.env.RELEASES.get(r2Key);
+		if (!obj) return c.json({ error: "File not found" }, 404);
+
+		const headers = new Headers();
+		obj.writeHttpMetadata(headers);
+		headers.set("etag", obj.httpEtag);
+		headers.set("Content-Disposition", `attachment; filename="${filename}"`);
+		headers.set("Cache-Control", "public, max-age=31536000, immutable");
+
+		return new Response(obj.body, { headers });
+	} catch (err) {
+		console.error("Download error:", err);
+		return c.json({ error: "Internal server error" }, 500);
+	}
+});
+
 /* ── GET /api/releases/latest — latest release metadata ── */
 app.get("/api/releases/latest", async (c) => {
 	try {

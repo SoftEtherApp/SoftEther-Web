@@ -217,27 +217,6 @@ app.post("/api/webhook/release", async (c) => {
 	}
 });
 
-/* ── GET /download/:tag/:filename — stream file from R2 ── */
-app.get("/download/:tag/:filename", async (c) => {
-	const { tag, filename } = c.req.param();
-	try {
-		const r2Key = `${tag}/${filename}`;
-		const obj = await c.env.RELEASES.get(r2Key);
-		if (!obj) return c.json({ error: "File not found" }, 404);
-
-		const headers = new Headers();
-		obj.writeHttpMetadata(headers);
-		headers.set("etag", obj.httpEtag);
-		headers.set("Content-Disposition", `attachment; filename="${filename}"`);
-		headers.set("Cache-Control", "public, max-age=31536000, immutable");
-
-		return new Response(obj.body, { headers });
-	} catch (err) {
-		console.error("Download error:", err);
-		return c.json({ error: "Internal server error" }, 500);
-	}
-});
-
 /* ── SPA fallback ── */
 app.get("*", async (c) => {
 	try {

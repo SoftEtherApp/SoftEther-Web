@@ -442,12 +442,31 @@
 	border: 0.5px solid var(--surface-600);
 	border-radius: var(--rad-md);
 	padding: var(--sp-xl);
-	transition: border-color var(--transition-base), transform var(--transition-base);
+	transition: border-color var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
+	position: relative;
+	overflow: hidden;
+}
+
+.feature-card::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 1px;
+	background: linear-gradient(90deg, transparent, var(--blurple-soft), transparent);
+	opacity: 0;
+	transition: opacity var(--transition-base);
 }
 
 .feature-card:hover {
-	border-color: var(--blurple);
-	transform: translateY(-2px);
+	border-color: var(--surface-500);
+	transform: translateY(-3px);
+	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+.feature-card:hover::after {
+	opacity: 1;
 }
 
 .feature-icon {
@@ -494,6 +513,12 @@
 	font-size: 0.95rem;
 	font-weight: 500;
 	color: var(--text-primary);
+	transition: border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+}
+.platform-chip:hover {
+	border-color: var(--blurple);
+	background: var(--surface-600);
+	transform: translateY(-1px);
 }
 
 /* ── Download Section ── */
@@ -531,23 +556,42 @@
 	text-decoration: none;
 	color: var(--text-primary);
 	position: relative;
+	overflow: hidden;
 }
 .download-card--dim {
-	opacity: 0.55;
+	opacity: 0.5;
 	cursor: default;
 }
 .download-card--live {
 	cursor: pointer;
 }
+.download-card--live::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	padding: 1px;
+	background: linear-gradient(135deg, transparent 40%, var(--blurple-soft), transparent 60%);
+	mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+	mask-composite: exclude;
+	-webkit-mask-composite: xor;
+	opacity: 0;
+	transition: opacity var(--transition-base);
+	pointer-events: none;
+}
+.download-card--live:hover::before {
+	opacity: 1;
+}
 .download-card--live:hover {
-	border-color: var(--blurple);
+	border-color: transparent;
 	background: var(--surface-700);
-	box-shadow: 0 4px 24px rgba(88, 101, 242, 0.08);
-	transform: translateY(-1px);
+	box-shadow: 0 8px 32px rgba(88, 101, 242, 0.15);
+	transform: translateY(-2px);
 	color: var(--text-primary);
 }
 .download-card--live:active {
 	transform: translateY(0);
+	box-shadow: 0 2px 12px rgba(88, 101, 242, 0.1);
 }
 
 .download-icon {
@@ -560,6 +604,7 @@
 	background: var(--surface-700);
 	color: var(--text-muted);
 	flex-shrink: 0;
+	transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
 }
 .download-card--live .download-icon {
 	background: var(--blurple-soft);
@@ -567,6 +612,7 @@
 }
 .download-card--live:hover .download-icon {
 	background: rgba(88, 101, 242, 0.2);
+	transform: scale(1.05);
 }
 
 .download-info {
@@ -583,14 +629,16 @@
 	color: var(--text-muted);
 }
 .download-size {
-	font-size: 0.78rem;
+	font-size: 0.75rem;
 	color: var(--text-muted);
 	font-variant-numeric: tabular-nums;
 	white-space: nowrap;
 }
 .download-tag {
-	font-size: 0.7rem;
-	font-weight: 500;
+	font-size: 0.65rem;
+	font-weight: 600;
+	letter-spacing: 0.03em;
+	text-transform: uppercase;
 	padding: 3px 10px;
 	border-radius: var(--rad-pill);
 	background: var(--surface-600);
@@ -600,23 +648,24 @@
 .download-badge {
 	font-size: 0.72rem;
 	font-weight: 600;
-	padding: 4px 12px;
+	padding: 5px 14px;
 	border-radius: var(--rad-pill);
 	background: var(--blurple);
 	color: #fff;
 	white-space: nowrap;
-	transition: background var(--transition-fast), box-shadow var(--transition-fast);
+	transition: background var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
 }
 .download-card--live:hover .download-badge {
 	background: var(--blurple-hover);
-	box-shadow: 0 2px 12px rgba(88, 101, 242, 0.3);
+	box-shadow: 0 4px 16px rgba(88, 101, 242, 0.35);
+	transform: scale(1.04);
 }
 
 /* ── Footer ── */
 
 .footer {
 	border-top: 0.5px solid var(--surface-600);
-	padding: var(--sp-xl) var(--sp-lg);
+	padding: var(--sp-2xl) var(--sp-lg) var(--sp-xl);
 }
 
 .footer-inner {
@@ -640,6 +689,7 @@
 .footer-copy {
 	font-size: 0.82rem;
 	color: var(--text-muted);
+	line-height: 1.6;
 }
 
 .footer-links {
@@ -652,9 +702,11 @@
 	color: var(--text-secondary);
 	display: flex;
 	align-items: center;
+	transition: color var(--transition-fast), transform var(--transition-fast);
 }
 .footer-links a:hover {
 	color: var(--text-primary);
+	transform: translateY(-1px);
 }
 
 .footer-legal {

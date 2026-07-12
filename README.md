@@ -20,11 +20,11 @@ src/
 │   ├── App.tsx              # Route switch (/, /library)
 │   ├── App.css              # Component styles
 │   ├── index.css            # Design tokens + base styles
-│   ���── main.tsx             # Entry point
+│   ───── main.tsx             # Entry point
 │   ├── components/
 │   │   ├── Header.tsx       # Nav bar + theme toggle
-│   │   ��── Footer.tsx       # Footer + legal disclaimer
-���   │   ├── Icon.tsx         # SVG icon system (Lucide + brand logos)
+│   │   └── Footer.tsx       # Footer + legal disclaimer
+│   ├── Icon.tsx         # SVG icon system (Lucide + brand logos)
 │   │   └── HeroIllustration.tsx  # Hero visual (app logo + rings)
 │   └── pages/
 │       ├── AppLanding.tsx   # Root page — SoftEther App landing

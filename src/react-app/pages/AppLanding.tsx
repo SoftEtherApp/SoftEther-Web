@@ -8,7 +8,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import HeroIllustration from "../components/HeroIllustration";
 
-/* ���─ Types ── */
+/* ── Types ── */
 
 interface ReleaseAsset {
 	name: string;

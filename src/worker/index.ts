@@ -238,17 +238,17 @@ app.get("/download/:tag/:filename", async (c) => {
 	}
 });
 
-/* ── SPA fallback ── */
+/* ── SPA fallback: serve index.html for all non-file, non-API paths ── */
 app.get("*", async (c) => {
 	try {
+		// Try ASSETS first — this serves static files from dist/client
 		const resp = await c.env.ASSETS.fetch(c.req.raw);
-		if (resp.status === 404) {
-			return c.env.ASSETS.fetch(new Request(new URL("/index.html", c.req.url), c.req.raw));
-		}
-		return resp;
+		if (resp.status < 400) return resp;
 	} catch {
-		return c.env.ASSETS.fetch(new Request(new URL("/index.html", c.req.url), c.req.raw));
+		// fall through to index.html
 	}
+	// SPA fallback — serve index.html for client-side routes
+	return c.env.ASSETS.fetch(new Request(new URL("/index.html", c.req.url), c.req.raw));
 });
 
 export default app;

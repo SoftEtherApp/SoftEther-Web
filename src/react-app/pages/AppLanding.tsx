@@ -2,22 +2,41 @@
    SoftEther App — Main Landing Page
    ════════════════════════════════════ */
 
-import { useEffect, type JSX } from "react";
+import { useEffect, useState, type JSX } from "react";
 import Icon from "../components/Icon";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import HeroIllustration from "../components/HeroIllustration";
+
+/* ���─ Types ── */
+
+interface ReleaseAsset {
+	name: string;
+	platform: string;
+	size: number;
+	downloadUrl: string;
+}
+
+interface Release {
+	tag: string;
+	version: string;
+	publishedAt: string;
+	body: string;
+	assets: ReleaseAsset[];
+}
+
+interface PlatformInfo {
+	name: string;
+	icon: string;
+	meta: string;
+	platform: string; // matches worker's detectPlatform() output
+}
 
 /* ── Data ── */
 
 interface Feature {
 	title: string;
 	desc: string;
-	icon: string;
-}
-
-interface Platform {
-	name: string;
 	icon: string;
 }
 
@@ -54,16 +73,36 @@ const FEATURES: Feature[] = [
 	},
 ];
 
-const PLATFORMS: Platform[] = [
-	{ name: "Android", icon: "logo-android" },
-	{ name: "iOS", icon: "logo-apple" },
-	{ name: "macOS", icon: "logo-apple" },
-	{ name: "Windows", icon: "logo-windows" },
-	{ name: "Linux", icon: "logo-linux" },
+const PLATFORMS: PlatformInfo[] = [
+	{ name: "Android", icon: "logo-android", meta: "APK", platform: "android" },
+	{ name: "macOS", icon: "logo-apple", meta: ".dmg", platform: "macos" },
+	{ name: "Windows", icon: "logo-windows", meta: ".msi", platform: "windows" },
+	{ name: "Linux", icon: "logo-linux", meta: ".deb", platform: "linux" },
 ];
 
+/* ── Helpers ── */
 
-/* ── Components ── */
+function formatSize(bytes: number): string {
+	if (bytes < 1024) return `${bytes} B`;
+	if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+	return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+/* Pick the best asset for a platform, preferring "App"-branded files and .msi over .zip */
+function pickAsset(assets: ReleaseAsset[], platform: string): ReleaseAsset | undefined {
+	const matches = assets.filter((a) => a.platform === platform);
+	if (matches.length === 0) return undefined;
+	// Prefer files whose name references the App (not the raw VPN/vpn variant)
+	const appBranded = matches.filter((a) => /app/i.test(a.name));
+	const pool = appBranded.length > 0 ? appBranded : matches;
+	// For windows prefer .msi installer over .zip portable
+	const msi = pool.find((a) => a.name.endsWith(".msi"));
+	if (platform === "windows" && msi) return msi;
+	// For android prefer arm64
+	const arm64 = pool.find((a) => /arm64|aarch64|v8a/i.test(a.name));
+	if (platform === "android" && arm64) return arm64;
+	return pool[0];
+}
 
 function Hero() {
 	return (
@@ -157,65 +196,79 @@ function PlatformsSection() {
 }
 
 function DownloadSection() {
+	const [release, setRelease] = useState<Release | null>(null);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		fetch("/api/releases/latest")
+			.then((r) => (r.ok ? r.json() : null))
+			.then((data) => {
+				setRelease(data);
+				setLoading(false);
+			})
+			.catch(() => setLoading(false));
+	}, []);
+
 	return (
 		<section id="download" className="section">
 			<div className="section-inner">
 				<h2 className="section-title">Get Started</h2>
-				<p className="section-desc">
-					Download the latest release for your platform. Available via app stores
-					and direct download.
-				</p>
+				{release && (
+					<p className="section-desc" style={{ marginBottom: "var(--sp-lg)" }}>
+						Latest release: <strong>{release.tag}</strong> &middot;{" "}
+						{new Date(release.publishedAt).toLocaleDateString()}
+					</p>
+				)}
 				<div className="download-list">
-					<div className="download-card" style={{ cursor: "default", opacity: 0.8 }}>
-						<div className="download-icon">
-							<Icon name="logo-android" size={28} />
-						</div>
-						<div className="download-info">
-							<h3>Android</h3>
-							<span className="download-meta">Google Play &middot; Direct APK</span>
-						</div>
-						<span className="download-meta">Coming soon</span>
-					</div>
-					<div className="download-card" style={{ cursor: "default", opacity: 0.8 }}>
-						<div className="download-icon">
-							<Icon name="logo-apple" size={28} />
-						</div>
-						<div className="download-info">
-							<h3>iOS</h3>
-							<span className="download-meta">App Store &middot; TestFlight</span>
-						</div>
-						<span className="download-meta">Coming soon</span>
-					</div>
-					<div className="download-card" style={{ cursor: "default", opacity: 0.8 }}>
-						<div className="download-icon">
-							<Icon name="logo-apple" size={28} />
-						</div>
-						<div className="download-info">
-							<h3>macOS</h3>
-							<span className="download-meta">Mac App Store &middot; .dmg</span>
-						</div>
-						<span className="download-meta">Coming soon</span>
-					</div>
-					<div className="download-card" style={{ cursor: "default", opacity: 0.8 }}>
-						<div className="download-icon">
-							<Icon name="logo-windows" size={28} />
-						</div>
-						<div className="download-info">
-							<h3>Windows</h3>
-							<span className="download-meta">Microsoft Store &middot; .msi</span>
-						</div>
-						<span className="download-meta">Coming soon</span>
-					</div>
-					<div className="download-card" style={{ cursor: "default", opacity: 0.8 }}>
-						<div className="download-icon">
-							<Icon name="logo-linux" size={28} />
-						</div>
-						<div className="download-info">
-							<h3>Linux</h3>
-							<span className="download-meta">.AppImage &middot; .deb &middot; .rpm</span>
-						</div>
-						<span className="download-meta">Coming soon</span>
-					</div>
+					{PLATFORMS.map((p) => {
+						const asset = release ? pickAsset(release.assets, p.platform) : undefined;
+
+						if (!asset && loading) {
+							return (
+								<div key={p.name} className="download-card" style={{ cursor: "default", opacity: 0.5 }}>
+									<div className="download-icon">
+										<Icon name={p.icon} size={28} />
+									</div>
+									<div className="download-info">
+										<h3>{p.name}</h3>
+										<span className="download-meta">Checking for releases...</span>
+									</div>
+								</div>
+							);
+						}
+
+						if (!asset && !loading) {
+							return (
+								<div key={p.name} className="download-card" style={{ cursor: "default", opacity: 0.8 }}>
+									<div className="download-icon">
+										<Icon name={p.icon} size={28} />
+									</div>
+									<div className="download-info">
+										<h3>{p.name}</h3>
+										<span className="download-meta">{p.meta}</span>
+									</div>
+									<span className="download-meta">Coming soon</span>
+								</div>
+							);
+						}
+
+						return (
+							<a
+								key={p.name}
+								href={asset!.downloadUrl}
+								className="download-card"
+							>
+								<div className="download-icon">
+									<Icon name={p.icon} size={28} />
+								</div>
+								<div className="download-info">
+									<h3>{p.name}</h3>
+									<span className="download-meta">{p.meta}</span>
+								</div>
+								<span className="download-meta">{formatSize(asset!.size)}</span>
+							</a>
+						);
+					})}
 				</div>
 			</div>
 		</section>

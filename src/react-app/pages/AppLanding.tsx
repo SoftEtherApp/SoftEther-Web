@@ -183,15 +183,42 @@ function PlatformsSection() {
 function DownloadSection() {
 	const [release, setRelease] = useState<Release | null>(null);
 	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+	const [showNotes, setShowNotes] = useState(false);
+
+	async function fetchRelease() {
+		setLoading(true);
+		setError(null);
+		// localStorage cache with 5-min TTL
+		const cacheKey = "cache:releases:latest";
+		try {
+			const cached = localStorage.getItem(cacheKey);
+			if (cached) {
+				const { data, ts } = JSON.parse(cached);
+				if (Date.now() - ts < 300_000) {
+					setRelease(data);
+					setLoading(false);
+					return;
+				}
+			}
+		} catch { /* ignore corrupt cache */ }
+
+		try {
+			const r = await fetch("/api/releases/latest");
+			if (!r.ok) throw new Error(`Server returned ${r.status}`);
+			const data = await r.json();
+			if (data) {
+				localStorage.setItem(cacheKey, JSON.stringify({ data, ts: Date.now() }));
+			}
+			setRelease(data);
+		} catch (err) {
+			setError(err instanceof Error ? err.message : "Failed to load releases");
+		}
+		setLoading(false);
+	}
 
 	useEffect(() => {
-		fetch("/api/releases/latest")
-			.then((r) => (r.ok ? r.json() : null))
-			.then((data) => {
-				setRelease(data);
-				setLoading(false);
-			})
-			.catch(() => setLoading(false));
+		fetchRelease();
 	}, []);
 
 	return (
@@ -207,6 +234,35 @@ function DownloadSection() {
 						<span>{release.tag}</span>
 						<span className="dl-version-sep">&middot;</span>
 						<span>{new Date(release.publishedAt).toLocaleDateString()}</span>
+						<button
+							className="dl-notes-toggle"
+							onClick={() => setShowNotes(!showNotes)}
+							aria-expanded={showNotes ? "true" : "false"}
+						>
+							<Icon name={showNotes ? "chevron-up" : "chevron-down"} size={14} />
+							{showNotes ? "Hide" : "View"} release notes
+						</button>
+					</div>
+				)}
+				{release && showNotes && release.body && (
+					<div className="dl-notes">
+						{release.body.split("\n").map((line, i) => (
+							<p key={i} className="dl-notes-line">{line || "\u00A0"}</p>
+						))}
+					</div>
+				)}
+				{error && (
+					<div className="download-error">
+						<div className="download-error-content">
+							<span className="download-error-icon">!</span>
+							<div>
+								<p className="download-error-title">Could not load releases</p>
+								<p className="download-error-desc">{error}</p>
+							</div>
+						</div>
+						<button className="btn btn-secondary" onClick={() => { setLoading(true); setError(null); fetchRelease(); }}>
+							Retry
+						</button>
 					</div>
 				)}
 				<div className="download-list">
@@ -216,14 +272,13 @@ function DownloadSection() {
 
 						if (!asset && loading) {
 							return (
-								<div key={p.name} className="download-card download-card--dim">
-									<div className="download-icon">
-										<Icon name={p.icon} size={28} />
-									</div>
+								<div key={p.name} className="download-card">
+									<div className="skeleton skeleton-icon" />
 									<div className="download-info">
-										<h3>{p.name}</h3>
-										<span className="download-meta">Checking for releases...</span>
+										<div className="skeleton skeleton-line skeleton-line--title" />
+										<div className="skeleton skeleton-line skeleton-line--meta" />
 									</div>
+									<div className="skeleton skeleton-badge" />
 								</div>
 							);
 						}
@@ -271,24 +326,60 @@ function DownloadSection() {
 
 /* ── Page ── */
 
+const STEPS = [
+	{
+		num: 1,
+		title: "Download the App",
+		desc: "Choose your platform above and grab the latest release — no sign-up required.",
+	},
+	{
+		num: 2,
+		title: "Add Your Server",
+		desc: "Enter your SoftEther server's hostname, port, and credentials. The app supports advanced settings like QoS, NAT traversal, and certificate verification.",
+	},
+	{
+		num: 3,
+		title: "Connect & Go",
+		desc: "Tap to connect. Your traffic is now tunneled through your own encrypted VPN — private, secure, and self-managed.",
+	},
+];
+
+function GetConnectedSection() {
+	return (
+		<section className="section section-alt">
+			<div className="section-inner">
+				<h2 className="section-title">Get Connected in 3 Steps</h2>
+				<p className="section-desc">
+					From zero to secure tunnel in a few clicks. No accounts, no subscriptions — just your own server.
+				</p>
+				<div className="steps-list">
+					{STEPS.map((s) => (
+						<div key={s.num} className="step-card">
+							<span className="step-number">{s.num}</span>
+							<div className="step-content">
+								<h3 className="step-title">{s.title}</h3>
+								<p className="step-desc">{s.desc}</p>
+							</div>
+						</div>
+					))}
+				</div>
+			</div>
+		</section>
+	);
+}
+
 export default function AppLanding(): JSX.Element {
-	useEffect(() => {
-		const hash = window.location.hash;
-		if (hash) {
-			const el = document.getElementById(hash.slice(1));
-			if (el) {
-				setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 100);
-			}
-		}
-	}, []);
+	useScrollToHash(100);
 
 	return (
 		<>
 			<Header />
-			<main>
+			<a href="#main-content" className="skip-link">Skip to content</a>
+			<main id="main-content">
 				<Hero />
 				<FeaturesSection />
 				<PlatformsSection />
+				<GetConnectedSection />
 				<DownloadSection />
 			</main>
 			<Footer />

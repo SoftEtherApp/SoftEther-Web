@@ -92,6 +92,12 @@ const ICONS: Record<string, IconDef> = {
   "chevron-right": { children: [
     { type: "path", props: { d: "m9 18 6-6-6-6" } },
   ] },
+  "chevron-down": { children: [
+    { type: "path", props: { d: "m6 9 6 6 6-6" } },
+  ] },
+  "chevron-up": { children: [
+    { type: "path", props: { d: "m18 15-6-6-6 6" } },
+  ] },
   "share-2": { children: [
     { type: "circle", props: { cx: 18, cy: 5, r: 3 } },
     { type: "circle", props: { cx: 6, cy: 12, r: 3 } },

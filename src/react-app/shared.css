@@ -72,7 +72,6 @@
 	filter: drop-shadow(0 0 40px rgba(92, 107, 192, 0.3));
 }
 
-/* Desktop: hero actions & trust align start (inside .hero-text) */
 .hero-text .hero-actions {
 	justify-content: flex-start;
 }
@@ -87,7 +86,6 @@
 	justify-content: flex-start;
 }
 
-/* ── Mobile/tablet: stack hero vertically ── */
 @media (max-width: 900px) {
 	.hero-inner {
 		flex-direction: column;
@@ -173,7 +171,7 @@
 	color: var(--blurple);
 }
 
-/* ── Library hero (centered) ── */
+/* ── Library hero (centered variant) ── */
 
 .hero-content {
 	position: relative;
@@ -272,6 +270,17 @@
 	margin: 0 auto var(--sp-2xl);
 	font-size: 1.05rem;
 	line-height: 1.7;
+}
+.section-desc--spaced {
+	margin-bottom: var(--sp-xl);
+}
+
+.hero-actions--top {
+	margin-top: var(--sp-xl);
+}
+
+.section-inner--center {
+	text-align: center;
 }
 
 /* ── Features Grid ── */
@@ -636,7 +645,7 @@
 	min-height: 100vh;
 }
 
-/* ── Library: promo card ── */
+/* ���─ Library: promo card ── */
 
 .library-promo-card {
 	background: var(--surface-800);

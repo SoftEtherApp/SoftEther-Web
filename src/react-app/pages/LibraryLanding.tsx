@@ -2,7 +2,8 @@
    SoftEtherZig — Open-Source Library
    ════════════════════════════════════ */
 
-import { useEffect, type JSX } from "react";
+import { type JSX } from "react";
+import { useScrollToHash } from "../hooks/useScrollToHash";
 import Icon from "../components/Icon";
 import Footer from "../components/Footer";
 import Header, { LIBRARY_REPO_URL } from "../components/Header";
@@ -107,7 +108,7 @@ function LibFeaturesSection() {
 		<section id="features" className="section">
 			<div className="section-inner">
 				<h2 className="section-title">The Missing Mobile VPN Architecture</h2>
-				<p className="section-desc" style={{ marginBottom: "var(--sp-xl)" }}>
+				<p className="section-desc section-desc--spaced">
 					The existing SoftEther ecosystem has zero architecture for mobile or
 					embeddable clients — and no viable community contributions toward one.
 					SoftEtherZig is the first clean-runtime library purpose-built to fill
@@ -159,7 +160,7 @@ zig build -Dtarget=aarch64-linux-android -Doptimize=ReleaseSafe
 						are available on GitHub.
 					</span>
 				</div>
-				<div className="hero-actions" style={{ marginTop: "var(--sp-xl)" }}>
+				<div className="hero-actions hero-actions--top">
 					<a
 						href={LIBRARY_REPO_URL}
 						target="_blank"
@@ -208,7 +209,7 @@ function TargetsSection() {
 function LibCtaSection() {
 	return (
 		<section className="section">
-			<div className="section-inner" style={{ textAlign: "center" }}>
+			<div className="section-inner section-inner--center">
 				<h2 className="section-title">Ready to build with it?</h2>
 				<p className="section-desc">
 					Star the repo, open an issue, or submit a PR. The VPN library is yours.
@@ -241,21 +242,13 @@ function LibCtaSection() {
 /* ── Page ── */
 
 export default function LibraryLanding(): JSX.Element {
-	useEffect(() => {
-		const hash = window.location.hash;
-		if (hash) {
-			requestAnimationFrame(() => {
-				setTimeout(() => {
-					document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: "smooth" });
-				}, 200);
-			});
-		}
-	}, []);
+	useScrollToHash(200);
 
 	return (
 		<>
 			<Header />
-			<main>
+			<a href="#main-content" className="skip-link">Skip to content</a>
+			<main id="main-content">
 				<LibHero />
 				<LibFeaturesSection />
 				<UsageSection />

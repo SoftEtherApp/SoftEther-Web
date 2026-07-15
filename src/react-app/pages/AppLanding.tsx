@@ -63,7 +63,7 @@ const FEATURES: Feature[] = [
 const PLATFORMS: PlatformInfo[] = [
 	{ name: "Android", icon: "logo-android", meta: "APK (64-bit)", platform: "android" },
 	{ name: "Android (32-bit)", icon: "logo-android", meta: "APK (32-bit)", platform: "android-armv7" },
-	{ name: "macOS (Apple Silicon)", icon: "logo-apple", meta: ".dmg", platform: "macos-arm64" },
+	{ name: "macOS (Apple Silicon)", icon: "logo-apple", meta: ".dmg", platform: "macos-aarch64" },
 	{ name: "macOS (Intel)", icon: "logo-apple", meta: ".dmg", platform: "macos-x64" },
 	{ name: "Windows", icon: "logo-windows", meta: ".msi", platform: "windows" },
 	{ name: "Windows (Portable)", icon: "logo-windows", meta: ".zip", platform: "windows-portable" },

@@ -28,7 +28,7 @@ function detectPlatform(filename: string): string {
 		if (filename.endsWith(`.${ext}`)) {
 			// Sub-classify macOS by arch
 			if (plat === "macos") {
-				if (/\barm64\b/i.test(filename)) return "macos-arm64";
+				if (/\barm64\b|\baarch64\b/i.test(filename)) return "macos-aarch64";
 				if (/\bx64\b|\bx86_64\b|intel/i.test(filename)) return "macos-x64";
 				return plat;
 			}

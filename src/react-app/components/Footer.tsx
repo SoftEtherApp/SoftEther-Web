@@ -4,6 +4,7 @@
 
 import Icon from "./Icon";
 import { LIBRARY_REPO_URL } from "./Header";
+import "./Footer.css";
 
 export default function Footer() {
 	return (

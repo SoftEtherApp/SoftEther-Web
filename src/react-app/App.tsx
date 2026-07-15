@@ -3,9 +3,10 @@
    ══════════════════════════════════════════════════ */
 
 import { useCallback, useEffect, useState, type JSX } from "react";
-import "./App.css";
+import "./shared.css";
 import AppLanding from "./pages/AppLanding";
 import LibraryLanding from "./pages/LibraryLanding";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 type Page = "app" | "library" | "loading";
 

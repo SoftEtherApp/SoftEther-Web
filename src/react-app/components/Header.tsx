@@ -5,6 +5,7 @@
 import { useState, useEffect } from "react";
 import Icon from "./Icon";
 import { navigate } from "../App";
+import "./Header.css";
 
 export const LIBRARY_REPO_URL = "https://github.com/devstroop/SoftEtherZig";
 

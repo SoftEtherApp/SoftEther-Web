@@ -3,27 +3,14 @@
    ════════════════════════════════════ */
 
 import { useEffect, useState, type JSX } from "react";
+import { useScrollToHash } from "../hooks/useScrollToHash";
+import type { Release, ReleaseAsset } from "../../shared/types";
 import Icon from "../components/Icon";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import HeroIllustration from "../components/HeroIllustration";
 
 /* ── Types ── */
-
-interface ReleaseAsset {
-	name: string;
-	platform: string;
-	size: number;
-	downloadUrl: string;
-}
-
-interface Release {
-	tag: string;
-	version: string;
-	publishedAt: string;
-	body: string;
-	assets: ReleaseAsset[];
-}
 
 interface PlatformInfo {
 	name: string;

@@ -47,6 +47,27 @@ function detectPlatform(filename: string): string {
 
 const app = new Hono<{ Bindings: AppEnv }>();
 
+/* ── Security headers middleware ── */
+app.use("*", async (c, next) => {
+	await next();
+	const isDev = c.env.ENVIRONMENT === "development" || c.req.url.includes("localhost");
+	const cspPolicies = [
+		"default-src 'self'",
+		isDev ? "script-src 'self' 'unsafe-inline'" : "script-src 'self'",
+		isDev ? "style-src 'self' 'unsafe-inline'" : "style-src 'self'",
+		"img-src 'self' data:",
+		"font-src 'self'",
+		"connect-src 'self'",
+		"frame-ancestors 'none'",
+		"base-uri 'self'",
+	];
+	c.res.headers.set("Content-Security-Policy", cspPolicies.join("; "));
+	c.res.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
+	c.res.headers.set("X-Content-Type-Options", "nosniff");
+	c.res.headers.set("X-Frame-Options", "DENY");
+	c.res.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+});
+
 /* ── Health ── */
 app.get("/api/", (c) => c.json({ name: "SoftEther App API", version: "1.0.0" }));
 

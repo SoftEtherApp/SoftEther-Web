@@ -799,3 +799,64 @@
 	color: var(--text-secondary);
 	line-height: 1.6;
 }
+
+/* ── Light theme overrides ── */
+
+html.light .hero-bg {
+	background:
+		radial-gradient(ellipse 60% 45% at 0% 20%, rgba(88,101,242,0.06), transparent),
+		radial-gradient(ellipse 50% 40% at 100% 20%, rgba(35,165,90,0.04), transparent),
+		radial-gradient(ellipse 70% 40% at 50% 100%, rgba(88,101,242,0.03), transparent);
+}
+
+html.light .header {
+	background: rgba(248, 249, 252, 0.85);
+	border-bottom-color: var(--surface-500);
+}
+
+html.light .nav-link:hover {
+	background: var(--surface-600);
+}
+
+html.light .nav-github {
+	background: var(--surface-600);
+}
+
+html.light .feature-card,
+html.light .download-card,
+html.light .library-promo-card,
+html.light .target-card {
+	background: var(--surface-800);
+}
+
+html.light .code-block {
+	background: var(--surface-700);
+}
+
+html.light .usage-note {
+	background: var(--surface-700);
+}
+
+html.light ::selection {
+	background: var(--blurple-hover);
+	color: #fff;
+}
+
+/* ── Responsive overrides ── */
+
+@media (max-width: 640px) {
+	.section {
+		padding: var(--sp-2xl) var(--sp-md);
+	}
+	.features-grid {
+		grid-template-columns: 1fr;
+	}
+	.footer-inner {
+		flex-direction: column;
+		text-align: center;
+	}
+	.hero {
+		padding-top: 100px;
+		min-height: 90vh;
+	}
+}

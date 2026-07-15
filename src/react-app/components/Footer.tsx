@@ -25,6 +25,7 @@ export default function Footer() {
 						href={LIBRARY_REPO_URL}
 						target="_blank"
 						rel="noopener noreferrer"
+						aria-label="SoftEtherZig on GitHub"
 					>
 						<Icon name="github" size={18} />
 					</a>

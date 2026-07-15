@@ -365,8 +365,54 @@
 	background: var(--surface-600);
 	transform: translateY(-1px);
 }
+.platform-chip:focus-visible {
+	outline: 2px solid var(--blurple);
+	outline-offset: 2px;
+}
 
 /* ── Download Section ── */
+
+/* ── Skeleton loading placeholders ── */
+
+@keyframes skeleton-pulse {
+	0% { opacity: 1; }
+	50% { opacity: 0.4; }
+	100% { opacity: 1; }
+}
+
+.skeleton {
+	background: var(--surface-600);
+	border-radius: var(--rad-sm);
+	animation: skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+.skeleton-icon {
+	width: 44px;
+	height: 44px;
+	border-radius: var(--rad-sm);
+	flex-shrink: 0;
+}
+
+.skeleton-line {
+	height: 14px;
+	margin-bottom: 8px;
+}
+.skeleton-line--title {
+	width: 60%;
+}
+.skeleton-line--meta {
+	width: 40%;
+	margin-bottom: 0;
+}
+
+.skeleton-badge {
+	width: 72px;
+	height: 28px;
+	border-radius: var(--rad-pill);
+	flex-shrink: 0;
+}
+
+/* ── Download version info ── */
 
 .dl-version {
 	display: flex;

@@ -22,7 +22,7 @@
 	/* ── Text ── */
 	--text-primary: #f5f5fa;
 	--text-secondary: #b0b0c8;
-	--text-muted: #787890;
+	--text-muted: #9090aa;
 
 	/* ── Spacing ── */
 	--sp-xs: 4px;
@@ -184,4 +184,10 @@ a:hover {
 }
 ::-webkit-scrollbar-thumb:hover {
 	background: var(--surface-600);
+}
+
+/* ── Firefox scrollbar ── */
+html {
+	scrollbar-color: var(--surface-500) var(--surface-900);
+	scrollbar-width: thin;
 }

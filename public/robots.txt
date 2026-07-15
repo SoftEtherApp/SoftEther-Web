@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://softether.app/sitemap.xml

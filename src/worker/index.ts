@@ -7,23 +7,10 @@ interface AppEnv extends Env {
 	RELEASES: R2Bucket;
 	RELEASE_META: KVNamespace;
 	WEBHOOK_SECRET: string;
+	ENVIRONMENT?: string;
 }
 
-interface ReleaseAsset {
-	name: string;
-	platform: string;
-	size: number;
-	r2Key: string;
-	downloadUrl: string;
-}
-
-interface ReleaseMeta {
-	tag: string;
-	version: string;
-	publishedAt: string;
-	body: string;
-	assets: ReleaseAsset[];
-}
+import type { ReleaseAsset, Release } from "../shared/types";
 
 /* ── Helpers ── */
 
@@ -93,7 +80,7 @@ app.get("/api/releases/latest", async (c) => {
 		const raw = await c.env.RELEASE_META.get(`releases:${latestTag}`);
 		if (!raw) return c.json({ error: "Release data not found" }, 404);
 
-		const release: ReleaseMeta = JSON.parse(raw);
+		const release: Release = JSON.parse(raw);
 
 		// Point download URLs at the /download/ endpoint
 		const withUrls = release.assets.map((a) => ({
@@ -118,7 +105,7 @@ app.get("/api/releases", async (c) => {
 			tags.map(async (tag) => {
 				const raw = await c.env.RELEASE_META.get(`releases:${tag}`);
 				if (!raw) return null;
-				const r: ReleaseMeta = JSON.parse(raw);
+				const r: Release = JSON.parse(raw);
 				return { tag: r.tag, version: r.version, publishedAt: r.publishedAt, assetCount: r.assets.length };
 			}),
 		);
@@ -204,7 +191,7 @@ app.post("/api/webhook/release", async (c) => {
 		}
 
 		// Build release metadata
-		const meta: ReleaseMeta = {
+		const meta: Release = {
 			tag,
 			version,
 			publishedAt: ghRelease.published_at,

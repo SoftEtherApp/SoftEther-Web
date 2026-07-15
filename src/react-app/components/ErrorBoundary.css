@@ -1,0 +1,39 @@
+/* ════════════════════════════════════
+   Error boundary fallback UI
+   ════════════════════════════════════ */
+
+.error-fallback {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 60vh;
+	padding: var(--sp-2xl);
+	text-align: center;
+}
+
+.error-fallback-icon {
+	width: 56px;
+	height: 56px;
+	border-radius: var(--rad-full);
+	background: var(--red);
+	color: #fff;
+	font-size: 1.5rem;
+	font-weight: 700;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: var(--sp-lg);
+}
+
+.error-fallback-title {
+	font-size: 1.3rem;
+	font-weight: 700;
+	margin-bottom: var(--sp-sm);
+}
+
+.error-fallback-desc {
+	color: var(--text-secondary);
+	margin-bottom: var(--sp-lg);
+	max-width: 400px;
+}

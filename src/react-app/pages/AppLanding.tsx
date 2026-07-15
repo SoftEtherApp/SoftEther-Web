@@ -53,7 +53,7 @@ const FEATURES: Feature[] = [
 	},
 	{
 		title: "Cross-Platform",
-		desc: "Runs on Android, iOS, macOS, Windows, and Linux from a shared Flutter codebase.",
+		desc: "Runs on Android, macOS, Windows, and Linux from a shared Flutter codebase.",
 		icon: "monitor",
 	},
 	{
@@ -74,11 +74,13 @@ const FEATURES: Feature[] = [
 ];
 
 const PLATFORMS: PlatformInfo[] = [
-	{ name: "Android", icon: "logo-android", meta: "APK", platform: "android" },
-	{ name: "macOS", icon: "logo-apple", meta: ".dmg", platform: "macos" },
+	{ name: "Android", icon: "logo-android", meta: "APK (64-bit)", platform: "android" },
+	{ name: "Android (32-bit)", icon: "logo-android", meta: "APK (32-bit)", platform: "android-armv7" },
+	{ name: "macOS (Apple Silicon)", icon: "logo-apple", meta: ".dmg", platform: "macos-arm64" },
+	{ name: "macOS (Intel)", icon: "logo-apple", meta: ".dmg", platform: "macos-x64" },
 	{ name: "Windows", icon: "logo-windows", meta: ".msi", platform: "windows" },
+	{ name: "Windows (Portable)", icon: "logo-windows", meta: ".zip", platform: "windows-portable" },
 	{ name: "Linux", icon: "logo-linux", meta: ".deb", platform: "linux" },
-	{ name: "iOS", icon: "logo-apple", meta: "App Store", platform: "" },
 ];
 
 /* ── Helpers ── */
@@ -89,20 +91,15 @@ function formatSize(bytes: number): string {
 	return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-/* Pick the best asset for a platform, preferring "App"-branded files and .msi over .zip */
+/* Pick the best asset for a platform.
+   With separate platform slots (android, android-armv7, windows, windows-portable),
+   each slot maps to exactly one asset type so direct match is sufficient. */
 function pickAsset(assets: ReleaseAsset[], platform: string): ReleaseAsset | undefined {
 	const matches = assets.filter((a) => a.platform === platform);
 	if (matches.length === 0) return undefined;
-	// Prefer files whose name references the App (not the raw VPN/vpn variant)
+	// Prefer "App"-branded files (e.g. "SoftEther-App-..." over generic)
 	const appBranded = matches.filter((a) => /app/i.test(a.name));
-	const pool = appBranded.length > 0 ? appBranded : matches;
-	// For windows prefer .msi installer over .zip portable
-	const msi = pool.find((a) => a.name.endsWith(".msi"));
-	if (platform === "windows" && msi) return msi;
-	// For android prefer arm64
-	const arm64 = pool.find((a) => /arm64|aarch64|v8a/i.test(a.name));
-	if (platform === "android" && arm64) return arm64;
-	return pool[0];
+	return (appBranded.length > 0 ? appBranded : matches)[0];
 }
 
 function Hero() {
@@ -155,9 +152,9 @@ function FeaturesSection() {
 				<h2 className="section-title">Modern SoftEther for Every Device</h2>
 				<p className="section-desc">
 					The official SoftEther VPN has clients for Windows, Mac, and Linux
-					— but mobile and a unified cross-platform experience were always
-					missing. SoftEther App fills that gap, built from scratch for
-					Android, iOS, macOS, Windows, and Linux from a shared codebase.
+				��� but mobile and a unified cross-platform experience were always
+				missing. SoftEther App fills that gap, built from scratch for
+				Android, macOS, Windows, and Linux from a shared codebase.
 				</p>
 				<div className="features-grid">
 					{FEATURES.map((f) => (

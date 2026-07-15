@@ -31,13 +31,27 @@ const PLATFORM_MAP: Record<string, string> = {
 	dmg: "macos",
 	deb: "linux",
 	msi: "windows",
-	zip: "windows",
+	zip: "windows-portable",
+	apk: "android",
 };
 
 function detectPlatform(filename: string): string {
+	// Check extension-based map first
 	for (const [ext, plat] of Object.entries(PLATFORM_MAP)) {
-		if (filename.endsWith(`.${ext}`)) return plat;
+		if (filename.endsWith(`.${ext}`)) {
+			// Sub-classify macOS by arch
+			if (plat === "macos") {
+				if (/\barm64\b/i.test(filename)) return "macos-arm64";
+				if (/\bx64\b|\bx86_64\b|intel/i.test(filename)) return "macos-x64";
+				return plat;
+			}
+			// Sub-classify Android by ABI
+			if (plat === "android" && /armv7|armeabi/i.test(filename)) return "android-armv7";
+			return plat;
+		}
 	}
+	// Fallback for .tar.gz or unknown archive formats
+	if (filename.endsWith(".tar.gz")) return "linux";
 	if (filename.includes("android") || filename.includes("apk")) return "android";
 	return "other";
 }

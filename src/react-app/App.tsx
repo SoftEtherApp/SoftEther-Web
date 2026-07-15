@@ -58,7 +58,11 @@ function App(): JSX.Element {
 
 	if (page === "loading") return <></>;
 
-	return page === "library" ? <LibraryLanding /> : <AppLanding />;
+	return (
+		<ErrorBoundary>
+			{page === "library" ? <LibraryLanding /> : <AppLanding />}
+		</ErrorBoundary>
+	);
 }
 
 export default App;

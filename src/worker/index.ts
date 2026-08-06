@@ -1,9 +1,10 @@
 import { Hono } from "hono";
+import indexHtml from "../../index.html?raw";
 
 /* ── Types ── */
 
 interface AppEnv extends Env {
-	ASSETS: { fetch: (req: Request) => Promise<Response> };
+	ASSETS?: { fetch: (req: Request) => Promise<Response> };
 	RELEASES: R2Bucket;
 	RELEASE_META: KVNamespace;
 	WEBHOOK_SECRET: string;
@@ -273,15 +274,37 @@ app.post("/api/webhook/release", async (c) => {
 });
 
 /* ── SPA fallback ── */
+
+// Inlined at build time via `?raw` import. Used ONLY when the ASSETS
+// binding is missing (e.g. worker deployed without static assets) so
+// direct navigations (/library etc.) still render. When ASSETS exists,
+// the deployed index.html is served through the binding so the shell
+// always matches the deployed hashed bundles.
+const FALLBACK_HTML = indexHtml;
+const FALLBACK_HEADERS = { "Content-Type": "text/html; charset=utf-8" };
+
 app.get("*", async (c) => {
+	const assets = c.env.ASSETS;
+
+	// No ASSETS binding → serve the SPA shell from the inline bundle. No
+	// subrequest is made, so this cannot re-enter the Worker.
+	if (!assets) {
+		return new Response(FALLBACK_HTML, { headers: FALLBACK_HEADERS });
+	}
+
+	const indexRequest = new Request(new URL("/index.html", c.req.url), c.req.raw);
+
 	try {
-		const resp = await c.env.ASSETS.fetch(c.req.raw);
+		const resp = await assets.fetch(c.req.raw);
 		if (resp.status === 404) {
-			return c.env.ASSETS.fetch(new Request(new URL("/index.html", c.req.url), c.req.raw));
+			return assets.fetch(indexRequest);
 		}
 		return resp;
-	} catch {
-		return c.env.ASSETS.fetch(new Request(new URL("/index.html", c.req.url), c.req.raw));
+	} catch (err) {
+		// Fall back to the deployed index.html so deep links still render;
+		// log the failure so asset-serving issues stay observable.
+		console.error("ASSETS fetch failed, serving index.html fallback:", err);
+		return assets.fetch(indexRequest);
 	}
 });
 

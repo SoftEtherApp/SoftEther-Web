@@ -50,6 +50,11 @@ const app = new Hono<{ Bindings: AppEnv }>();
 /* ── Security headers middleware ── */
 app.use("*", async (c, next) => {
 	await next();
+
+	// 101 Switching Protocols (WebSocket upgrade) responses cannot be
+	// reconstructed via `new Response()` — skip header injection entirely.
+	if (c.res.status === 101) return;
+
 	const isDev = c.env.ENVIRONMENT === "development" || c.req.url.includes("localhost");
 	const cspPolicies = [
 		"default-src 'self'",
@@ -61,11 +66,39 @@ app.use("*", async (c, next) => {
 		"frame-ancestors 'none'",
 		"base-uri 'self'",
 	];
-	c.res.headers.set("Content-Security-Policy", cspPolicies.join("; "));
-	c.res.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
-	c.res.headers.set("X-Content-Type-Options", "nosniff");
-	c.res.headers.set("X-Frame-Options", "DENY");
-	c.res.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+
+	const securityHeaders: [string, string][] = [
+		["Content-Security-Policy", cspPolicies.join("; ")],
+		["Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload"],
+		["X-Content-Type-Options", "nosniff"],
+		["X-Frame-Options", "DENY"],
+		["Referrer-Policy", "strict-origin-when-cross-origin"],
+	];
+
+	// Prefer mutating the original response's headers in place — this keeps
+	// the body stream and any response metadata (status, cf, webSocket)
+	// untouched. Rebuild only when the original headers are immutable
+	// (e.g. responses passed through from ASSETS fetch), and only then.
+	try {
+		for (const [key, value] of securityHeaders) {
+			c.res.headers.set(key, value);
+		}
+		return;
+	} catch {
+		// Headers are immutable — reconstruct the response so we can still
+		// inject security headers. Rebuilding disturbs the body stream, so
+		// this path is only for simple, fully-read bodies (asset fetches).
+	}
+
+	const res = new Response(c.res.body, {
+		status: c.res.status,
+		statusText: c.res.statusText,
+		headers: c.res.headers,
+	});
+	for (const [key, value] of securityHeaders) {
+		res.headers.set(key, value);
+	}
+	c.res = res;
 });
 
 /* ── Health ── */

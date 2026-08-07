@@ -1,5 +1,4 @@
 import { Hono } from "hono";
-import indexHtml from "../../index.html?raw";
 
 /* ── Types ── */
 
@@ -275,36 +274,41 @@ app.post("/api/webhook/release", async (c) => {
 
 /* ── SPA fallback ── */
 
-// Inlined at build time via `?raw` import. Used ONLY when the ASSETS
-// binding is missing (e.g. worker deployed without static assets) so
-// direct navigations (/library etc.) still render. When ASSETS exists,
-// the deployed index.html is served through the binding so the shell
-// always matches the deployed hashed bundles.
-const FALLBACK_HTML = indexHtml;
-const FALLBACK_HEADERS = { "Content-Type": "text/html; charset=utf-8" };
-
 app.get("*", async (c) => {
 	const assets = c.env.ASSETS;
 
-	// No ASSETS binding → serve the SPA shell from the inline bundle. No
-	// subrequest is made, so this cannot re-enter the Worker.
+	// No ASSETS binding (misconfigured deployment): fail loudly (404) rather
+	// than serve an un-built template — the built shell lives in the assets
+	// directory and can only be served through this binding.
 	if (!assets) {
-		return new Response(FALLBACK_HTML, { headers: FALLBACK_HEADERS });
+		return c.notFound();
 	}
 
 	const indexRequest = new Request(new URL("/index.html", c.req.url), c.req.raw);
 
+	// Serve the SPA shell for unknown paths while preserving the requested
+	// URL. The assets runtime only exposes index.html via a canonical 307
+	// redirect to "/", so returning that redirect as-is would bounce the
+	// browser to the home page; follow it here instead so the client router
+	// boots on the deep link (/library) itself.
+	const serveShell = async () => {
+		const shell = await assets.fetch(indexRequest);
+		const location = shell.headers.get("location");
+		if (shell.status >= 300 && shell.status < 400 && location) {
+			return assets.fetch(new Request(new URL(location, c.req.url), c.req.raw));
+		}
+		return shell;
+	};
+
 	try {
 		const resp = await assets.fetch(c.req.raw);
 		if (resp.status === 404) {
-			return assets.fetch(indexRequest);
+			return serveShell();
 		}
 		return resp;
 	} catch (err) {
-		// Fall back to the deployed index.html so deep links still render;
-		// log the failure so asset-serving issues stay observable.
 		console.error("ASSETS fetch failed, serving index.html fallback:", err);
-		return assets.fetch(indexRequest);
+		return serveShell();
 	}
 });
 

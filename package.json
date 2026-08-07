@@ -40,7 +40,8 @@
     "deploy": "wrangler deploy",
     "dev": "vite",
     "lint": "eslint .",
-    "preview": "npm run build && vite preview"
+    "preview": "npm run build && vite preview",
+    "test:deeplinks": "bash scripts/test-deeplinks.sh"
   },
   "type": "module"
 }

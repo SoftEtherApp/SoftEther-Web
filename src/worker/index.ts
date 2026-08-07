@@ -274,6 +274,16 @@ app.post("/api/webhook/release", async (c) => {
 
 /* ── SPA fallback ── */
 
+// Routes the SPA router knows. Any other path is a genuine 404: the server
+// answers 404 (so crawlers, link checkers, and no-JS clients get honest
+// semantics) while still shipping the shell for client-side rendering.
+const SPA_ROUTES = new Set(["/", "/library", "/changelog", "/privacy", "/security"]);
+
+function spaStatus(pathname: string): number {
+	const p = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+	return SPA_ROUTES.has(p) ? 200 : 404;
+}
+
 app.get("*", async (c) => {
 	const assets = c.env.ASSETS;
 
@@ -284,6 +294,7 @@ app.get("*", async (c) => {
 		return c.notFound();
 	}
 
+	const status = spaStatus(new URL(c.req.url).pathname);
 	const indexRequest = new Request(new URL("/index.html", c.req.url), c.req.raw);
 
 	// Serve the SPA shell for unknown paths while preserving the requested
@@ -294,10 +305,16 @@ app.get("*", async (c) => {
 	const serveShell = async () => {
 		const shell = await assets.fetch(indexRequest);
 		const location = shell.headers.get("location");
-		if (shell.status >= 300 && shell.status < 400 && location) {
-			return assets.fetch(new Request(new URL(location, c.req.url), c.req.raw));
+		const body =
+			shell.status >= 300 && shell.status < 400 && location
+				? await assets.fetch(new Request(new URL(location, c.req.url), c.req.raw))
+				: shell;
+		// Rewrite the status so unknown routes report 404 while still
+		// carrying the shell body for client-side rendering.
+		if (status !== 200) {
+			return new Response(body.body, { status, headers: body.headers });
 		}
-		return shell;
+		return body;
 	};
 
 	try {

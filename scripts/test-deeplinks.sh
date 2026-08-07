@@ -49,19 +49,31 @@ fi
 
 failures=0
 
-# Deep links: serve the built shell, at the requested URL, with no dev-src marker.
-for path in /library /nope /library/; do
-  out="$(curl -sL -H 'Sec-Fetch-Mode: navigate' -w '\n__FINAL__%{url_effective}' "${BASE}${path}")"
+# Deep links: serve the built shell, at the requested URL, with no dev-src
+# marker. Known SPA routes answer 200; unknown routes (incl. the previously
+# "phantom" /features) answer real HTTP 404 while still shipping the shell so
+# the client can render the NotFound page. This makes the not-found semantics
+# visible to crawlers, link checkers, and no-JS clients.
+declare -A EXPECTED_STATUS=(
+  ["/library"]=200 ["/nope"]=404 ["/library/"]=200
+  ["/changelog"]=200 ["/privacy"]=200 ["/security"]=200 ["/features"]=404
+)
+
+for path in /library /nope /library/ /changelog /privacy /security /features; do
+  out="$(curl -s -H 'Sec-Fetch-Mode: navigate' -w '__FINAL__%{url_effective}__STATUS__%{http_code}' "${BASE}${path}")"
   body="${out%%__FINAL__*}"
-  final="${out##*__FINAL__}"
+  rest="${out#*__FINAL__}"
+  final="${rest%%__STATUS__*}"
+  status="${rest##*__STATUS__}"
 
   ok=1
+  [[ "${status}" == "${EXPECTED_STATUS[${path}]}" ]] || { echo "FAIL: ${path} status ${status} != expected ${EXPECTED_STATUS[${path}]}"; ok=0; }
   echo "${body}" | grep -q '/assets/index-' || { echo "FAIL: ${path} body has no hashed bundle"; ok=0; }
   echo "${body}" | grep -q '/src/react-app/main.tsx' && { echo "FAIL: ${path} body references dev template"; ok=0; }
   [[ "${final}" == "${BASE}${path}" ]] || { echo "FAIL: ${path} final URL ${final} != ${BASE}${path} (redirect bounce)"; ok=0; }
 
   if [[ "${ok}" == "1" ]]; then
-    echo "PASS: ${path} renders built shell at its own URL"
+    echo "PASS: ${path} -> ${status}, built shell at its own URL"
   else
     failures=$((failures + 1))
   fi

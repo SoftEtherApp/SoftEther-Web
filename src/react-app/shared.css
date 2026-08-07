@@ -52,7 +52,7 @@
 	justify-content: space-between;
 	gap: var(--sp-3xl);
 	width: 100%;
-	max-width: 960px;
+	max-width: 1100px;
 }
 
 .hero-text {
@@ -251,7 +251,7 @@
 }
 
 .section-inner {
-	max-width: 960px;
+	max-width: 1040px;
 	margin: 0 auto;
 }
 

@@ -6,9 +6,13 @@ import { useCallback, useEffect, useState, type JSX } from "react";
 import "./shared.css";
 import AppLanding from "./pages/AppLanding";
 import LibraryLanding from "./pages/LibraryLanding";
+import ChangelogPage from "./pages/ChangelogPage";
+import PrivacyPage from "./pages/PrivacyPage";
+import SecurityPage from "./pages/SecurityPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import ErrorBoundary from "./components/ErrorBoundary";
 
-type Page = "app" | "library" | "loading";
+type Page = "app" | "library" | "changelog" | "privacy" | "security" | "notfound";
 
 /* SPA navigation: push state + notify listeners */
 const NAV_EVENT = "spa:navigate";
@@ -31,19 +35,34 @@ export function navigate(href: string) {
 	window.dispatchEvent(new CustomEvent(NAV_EVENT));
 }
 
+const PAGE_TITLES: Record<Page, string> = {
+	app: "SoftEther App — Modern Cross-Platform VPN Client",
+	library: "SoftEtherZig — Open-Source VPN Library",
+	changelog: "Changelog — SoftEther App",
+	privacy: "Privacy Policy — SoftEther App",
+	security: "Security — SoftEther App",
+	notfound: "Page Not Found — SoftEther App",
+};
+
 function getPage(): Page {
 	const p = window.location.pathname;
 	if (p === "/library" || p === "/library/") return "library";
-	return "app";
+	if (p === "/changelog" || p === "/changelog/") return "changelog";
+	if (p === "/privacy" || p === "/privacy/") return "privacy";
+	if (p === "/security" || p === "/security/") return "security";
+	if (p === "/" || p === "") return "app";
+	return "notfound";
 }
 
 function App(): JSX.Element {
-	const [page, setPage] = useState<Page>("loading");
+	// Lazily initialize from the current URL: the correct page renders on the
+	// very first pass (no blank loading frame) and title sync happens on mount.
+	const [page, setPage] = useState<Page>(getPage);
 
 	const sync = useCallback(() => {
 		const p = getPage();
 		setPage(p);
-		document.title = p === "library" ? "SoftEtherZig — Open-Source VPN Library" : "SoftEther App — Modern Cross-Platform VPN Client";
+		document.title = PAGE_TITLES[p];
 	}, []);
 
 	useEffect(() => {
@@ -56,11 +75,14 @@ function App(): JSX.Element {
 		};
 	}, [sync]);
 
-	if (page === "loading") return <></>;
-
 	return (
 		<ErrorBoundary>
-			{page === "library" ? <LibraryLanding /> : <AppLanding />}
+			{page === "library" && <LibraryLanding />}
+			{page === "changelog" && <ChangelogPage />}
+			{page === "privacy" && <PrivacyPage />}
+			{page === "security" && <SecurityPage />}
+			{page === "notfound" && <NotFoundPage />}
+			{page === "app" && <AppLanding />}
 		</ErrorBoundary>
 	);
 }

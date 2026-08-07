@@ -33,6 +33,9 @@ export default function Footer() {
 						SoftEther.app
 					</a>
 					<a href="/library">Library</a>
+					<a href="/changelog">Changelog</a>
+					<a href="/privacy">Privacy</a>
+					<a href="/security">Security</a>
 				</div>
 			</div>
 			<p className="footer-legal">

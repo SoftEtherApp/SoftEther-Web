@@ -149,6 +149,13 @@ if (SCREENSHOT_DIR) mkdirSync(SCREENSHOT_DIR, { recursive: true });
 // vacuously.
 const SELF_TEST_MARKER = "__RESPONSIVE_SELFTEST__";
 
+// Optional theme pre-seed via env THEME=light|dark. Validated strictly: the
+// value is interpolated into executed JS, so anything else is rejected.
+const THEME = process.env.THEME;
+if (THEME !== undefined && THEME !== "light" && THEME !== "dark") {
+	throw new Error(`THEME must be "light" or "dark", got "${THEME}"`);
+}
+
 let failures = 0;
 const consoleErrors = [];
 
@@ -173,6 +180,20 @@ for (const [vw, vh] of VIEWPORTS) {
 		}
 	});
 	await cdp.send("Emulation.setDeviceMetricsOverride", { width: vw, height: vh, deviceScaleFactor: 1, mobile: vw < 640 }, sessionId);
+
+	// Optional theme pre-seed (env THEME=light|dark): set localStorage on the
+	// real origin BEFORE the route loop so pages boot in that theme. The app
+	// reads it on mount, so no per-route class mutation is needed.
+	if (THEME) {
+		await cdp.send("Page.navigate", { url: BASE }, sessionId);
+		for (let i = 0; i < 50; i++) {
+			const st = await evaluate(sessionId, "document.readyState");
+			if (st === "complete") break;
+			await sleep(100);
+		}
+		await evaluate(sessionId, `localStorage.setItem("theme", ${JSON.stringify(THEME)})`);
+		await sleep(300); // let the page apply the theme before the first route
+	}
 
 	for (const route of ROUTES) {
 		await cdp.send("Page.navigate", { url: `${BASE}${route}` }, sessionId);

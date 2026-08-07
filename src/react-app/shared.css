@@ -364,14 +364,18 @@
 .platforms-row {
 	display: flex;
 	flex-wrap: wrap;
-	gap: var(--sp-md);
 	justify-content: center;
+	gap: var(--sp-md);
+	max-width: 780px;
+	margin: 0 auto;
 }
 
 .platform-chip {
 	display: flex;
 	align-items: center;
+	justify-content: center;
 	gap: var(--sp-sm);
+	min-width: 140px;
 	padding: 10px 22px;
 	background: var(--surface-700);
 	border: 0.5px solid var(--surface-500);

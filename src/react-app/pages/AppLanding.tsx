@@ -9,6 +9,7 @@ import Icon from "../components/Icon";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import HeroIllustration from "../components/HeroIllustration";
+import ReleaseNotes from "../lib/ReleaseNotes";
 
 /* ── Types ── */
 
@@ -245,11 +246,7 @@ function DownloadSection() {
 					</div>
 				)}
 				{release && showNotes && release.body && (
-					<div className="dl-notes">
-						{release.body.split("\n").map((line, i) => (
-							<p key={i} className="dl-notes-line">{line || "\u00A0"}</p>
-						))}
-					</div>
+					<ReleaseNotes body={release.body} className="dl-notes" lineClassName="dl-notes-line" />
 				)}
 				{error && (
 					<div className="download-error">

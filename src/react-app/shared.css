@@ -470,10 +470,32 @@
 	overflow-y: auto;
 }
 
+/* Full-height variant: no scroll box — used where the notes ARE the page
+   content (changelog) instead of a collapsible teaser (home download). */
+.dl-notes--full {
+	max-height: none;
+	overflow: visible;
+}
+
 .dl-notes-line {
 	font-size: 0.82rem;
 	color: var(--text-secondary);
 	line-height: 1.6;
+}
+
+/* Bullet groups are emitted as <ul class="dl-notes-line"> (valid HTML — a
+   <ul> must not live inside a <p>). Reset list chrome so bullets render as
+   plain text lines with a marker. */
+ul.dl-notes-line {
+	list-style: disc;
+	margin: 0 0 var(--sp-sm) 1.25em;
+	padding: 0;
+}
+ul.dl-notes-line li {
+	margin-bottom: var(--sp-xs);
+}
+ul.dl-notes-line li:last-child {
+	margin-bottom: 0;
 }
 
 .download-list {

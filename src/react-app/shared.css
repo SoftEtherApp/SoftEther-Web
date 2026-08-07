@@ -304,6 +304,9 @@
 	border: 0.5px solid var(--surface-600);
 	border-radius: var(--rad-md);
 	padding: var(--sp-xl);
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
 	transition: border-color var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
 	position: relative;
 	overflow: hidden;
@@ -344,8 +347,9 @@
 }
 
 .feature-title {
-	font-size: 1.05rem;
-	font-weight: 600;
+	font-size: 1.1rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
 	margin-bottom: var(--sp-sm);
 }
 

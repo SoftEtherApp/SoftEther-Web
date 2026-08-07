@@ -206,6 +206,31 @@ function TargetsSection() {
 	);
 }
 
+function ProvenanceSection() {
+	return (
+		<section className="section section-alt">
+			<div className="section-inner">
+				<h2 className="section-title">Where SoftEtherZig comes from</h2>
+				<p className="section-desc section-desc--spaced">
+					SoftEtherZig was sponsored into existence by WorxVPN (Globe Data Ltd.),
+					production-hardened through their deployment, and then released as an
+					independent, Apache-2.0 library. Fixes and improvements discovered in
+					production flow back into the library — and SoftEther App runs on the
+					same engine.
+				</p>
+				<div className="usage-note">
+					<Icon name="code" size={18} />
+					<span>
+						Open source (Apache-2.0) engine, freeware app. The SoftEtherZig
+						engine is fully auditable; the SoftEther App binary is free to use
+						but its source is not distributed.
+					</span>
+				</div>
+			</div>
+		</section>
+	);
+}
+
 function LibCtaSection() {
 	return (
 		<section className="section">
@@ -251,6 +276,7 @@ export default function LibraryLanding(): JSX.Element {
 			<main id="main-content">
 				<LibHero />
 				<LibFeaturesSection />
+				<ProvenanceSection />
 				<UsageSection />
 				<TargetsSection />
 				<LibCtaSection />

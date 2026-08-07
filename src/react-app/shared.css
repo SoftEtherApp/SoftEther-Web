@@ -52,7 +52,7 @@
 	justify-content: space-between;
 	gap: var(--sp-3xl);
 	width: 100%;
-	max-width: 960px;
+	max-width: 1100px;
 }
 
 .hero-text {
@@ -77,10 +77,16 @@
 }
 .hero-trust {
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	gap: var(--sp-sm);
 	color: var(--text-muted);
 	font-size: 0.8rem;
+	text-wrap: balance;
+	max-width: 560px;
+}
+.hero-trust svg {
+	flex-shrink: 0;
+	margin-top: 2px;
 }
 .hero-text .hero-trust {
 	justify-content: flex-start;
@@ -135,6 +141,7 @@
 	font-weight: 800;
 	line-height: 1.15;
 	letter-spacing: -0.03em;
+	text-wrap: balance;
 	margin-bottom: var(--sp-md);
 }
 
@@ -251,7 +258,7 @@
 }
 
 .section-inner {
-	max-width: 960px;
+	max-width: 1040px;
 	margin: 0 auto;
 }
 
@@ -260,6 +267,7 @@
 	font-weight: 700;
 	letter-spacing: -0.02em;
 	text-align: center;
+	text-wrap: balance;
 	margin-bottom: var(--sp-sm);
 }
 
@@ -296,6 +304,9 @@
 	border: 0.5px solid var(--surface-600);
 	border-radius: var(--rad-md);
 	padding: var(--sp-xl);
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
 	transition: border-color var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
 	position: relative;
 	overflow: hidden;
@@ -336,8 +347,9 @@
 }
 
 .feature-title {
-	font-size: 1.05rem;
-	font-weight: 600;
+	font-size: 1.1rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
 	margin-bottom: var(--sp-sm);
 }
 
@@ -352,14 +364,18 @@
 .platforms-row {
 	display: flex;
 	flex-wrap: wrap;
-	gap: var(--sp-md);
 	justify-content: center;
+	gap: var(--sp-md);
+	max-width: 780px;
+	margin: 0 auto;
 }
 
 .platform-chip {
 	display: flex;
 	align-items: center;
+	justify-content: center;
 	gap: var(--sp-sm);
+	min-width: 140px;
 	padding: 10px 22px;
 	background: var(--surface-700);
 	border: 0.5px solid var(--surface-500);
@@ -470,10 +486,32 @@
 	overflow-y: auto;
 }
 
+/* Full-height variant: no scroll box — used where the notes ARE the page
+   content (changelog) instead of a collapsible teaser (home download). */
+.dl-notes--full {
+	max-height: none;
+	overflow: visible;
+}
+
 .dl-notes-line {
 	font-size: 0.82rem;
 	color: var(--text-secondary);
 	line-height: 1.6;
+}
+
+/* Bullet groups are emitted as <ul class="dl-notes-line"> (valid HTML — a
+   <ul> must not live inside a <p>). Reset list chrome so bullets render as
+   plain text lines with a marker. */
+ul.dl-notes-line {
+	list-style: disc;
+	margin: 0 0 var(--sp-sm) 1.25em;
+	padding: 0;
+}
+ul.dl-notes-line li {
+	margin-bottom: var(--sp-xs);
+}
+ul.dl-notes-line li:last-child {
+	margin-bottom: 0;
 }
 
 .download-list {
@@ -825,7 +863,9 @@ html.light .nav-github {
 html.light .feature-card,
 html.light .download-card,
 html.light .library-promo-card,
-html.light .target-card {
+html.light .target-card,
+html.light .trust-card,
+html.light .confirm-note {
 	background: var(--surface-800);
 }
 
@@ -840,6 +880,116 @@ html.light .usage-note {
 html.light ::selection {
 	background: var(--blurple-hover);
 	color: #fff;
+}
+
+/* ── Trust / legal pages (Privacy, Security, Changelog, 404) ── */
+
+.trust-card {
+	background: var(--surface-800);
+	border: 1px solid var(--surface-600);
+	border-radius: var(--rad-lg, 12px);
+	padding: var(--sp-lg);
+	margin-bottom: var(--sp-lg);
+	text-align: left;
+}
+
+.trust-card-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: var(--sp-sm);
+	flex-wrap: wrap;
+	margin-bottom: var(--sp-sm);
+}
+
+.trust-card-title {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--sp-xs);
+	font-size: 1.25rem;
+	margin: 0;
+}
+
+.trust-card-meta {
+	color: var(--text-muted);
+	font-size: 0.85rem;
+}
+
+.trust-h {
+	font-size: 1.1rem;
+	margin: 0 0 var(--sp-sm);
+}
+
+.trust-p {
+	color: var(--text-secondary);
+	line-height: 1.6;
+	margin: 0 0 var(--sp-sm);
+}
+
+.trust-p:last-child,
+.trust-list li:last-child {
+	margin-bottom: 0;
+}
+
+.trust-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: var(--sp-sm);
+}
+
+.trust-list li {
+	color: var(--text-secondary);
+	line-height: 1.6;
+}
+
+.trust-list-row {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: var(--sp-sm);
+	flex-wrap: wrap;
+	padding: var(--sp-sm) var(--sp-md);
+	background: var(--surface-800);
+	border: 1px solid var(--surface-600);
+	border-radius: var(--rad-md, 10px);
+}
+
+.trust-list-title {
+	font-weight: 600;
+}
+
+.trust-list-meta {
+	color: var(--text-muted);
+	font-size: 0.85rem;
+}
+
+.confirm-note {
+	display: flex;
+	align-items: center;
+	gap: var(--sp-sm);
+	background: var(--surface-700);
+	border: 1px dashed var(--surface-500);
+	border-radius: var(--rad-md, 10px);
+	padding: var(--sp-sm) var(--sp-md);
+	color: var(--text-secondary);
+	font-size: 0.9rem;
+	margin-bottom: var(--sp-lg);
+	text-align: left;
+}
+
+.trust-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 56px;
+	height: 56px;
+	border-radius: 50%;
+	background: var(--blurple-soft);
+	color: var(--blurple);
+	margin: 0 auto var(--sp-md);
 }
 
 /* ── Responsive overrides ── */

@@ -115,15 +115,15 @@ function Hero() {
 						</a>
 					</div>
 					<div className="hero-trust">
-						<Icon name="code" size={14} />
-						<span>
-							Built with{" "}
-							<a href="/library" style={{ color: "inherit", textDecoration: "underline", textUnderlineOffset: "3px" }}>
-								SoftEtherZig
-							</a>
-							, an open-source VPN library.
-						</span>
-					</div>
+										<Icon name="code" size={14} />
+										<span>
+											Built with{" "}
+											<a href="/library" style={{ color: "inherit", textDecoration: "underline", textUnderlineOffset: "3px" }}>
+												SoftEtherZig
+											</a>
+											. The engine is open source (Apache-2.0); the app binary is freeware.
+										</span>
+									</div>
 				</div>
 				<div className="hero-visual">
 					<HeroIllustration size={500} />

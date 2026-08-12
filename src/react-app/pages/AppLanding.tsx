@@ -2,7 +2,7 @@
    SoftEther App — Main Landing Page
    ════════════════════════════════════ */
 
-import { useEffect, useState, type JSX } from "react";
+import { Fragment, useEffect, useState, type JSX } from "react";
 import { useScrollToHash } from "../hooks/useScrollToHash";
 import type { Release, ReleaseAsset } from "../../shared/types";
 import Icon from "../components/Icon";
@@ -18,6 +18,7 @@ interface PlatformInfo {
 	icon: string;
 	meta: string;
 	platform: string; // matches worker's detectPlatform() output
+	group: string;    // download group (Android, macOS, Windows, Linux)
 }
 
 /* ── Data ── */
@@ -62,14 +63,18 @@ const FEATURES: Feature[] = [
 ];
 
 const PLATFORMS: PlatformInfo[] = [
-	{ name: "Android", icon: "logo-android", meta: "APK (64-bit)", platform: "android" },
-	{ name: "Android (32-bit)", icon: "logo-android", meta: "APK (32-bit)", platform: "android-armv7" },
-	{ name: "macOS (Apple Silicon)", icon: "logo-apple", meta: ".dmg", platform: "macos-aarch64" },
-	{ name: "macOS (Intel)", icon: "logo-apple", meta: ".dmg", platform: "macos-x64" },
-	{ name: "Windows", icon: "logo-windows", meta: ".msi", platform: "windows" },
-	{ name: "Windows (Portable)", icon: "logo-windows", meta: ".zip", platform: "windows-portable" },
-	{ name: "Linux", icon: "logo-linux", meta: ".deb", platform: "linux" },
+	{ name: "Android", icon: "logo-android", meta: "APK (64-bit)", platform: "android", group: "Android" },
+	{ name: "Android (32-bit)", icon: "logo-android", meta: "APK (32-bit)", platform: "android-armv7", group: "Android" },
+	{ name: "macOS (Apple Silicon)", icon: "logo-apple", meta: ".dmg", platform: "macos-aarch64", group: "macOS" },
+	{ name: "macOS (Intel)", icon: "logo-apple", meta: ".dmg", platform: "macos-x64", group: "macOS" },
+	{ name: "Windows", icon: "logo-windows", meta: ".msi", platform: "windows", group: "Windows" },
+	{ name: "Windows (Portable)", icon: "logo-windows", meta: ".zip", platform: "windows-portable", group: "Windows" },
+	{ name: "Linux", icon: "logo-linux", meta: ".deb", platform: "linux", group: "Linux" },
 ];
+
+/* Group order follows first-appearance in PLATFORMS — derived so a new
+   platform group can never be silently omitted from the download grid. */
+const GROUPS = [...new Set(PLATFORMS.map((p) => p.group))];
 
 /* ── Helpers ── */
 
@@ -263,58 +268,63 @@ function DownloadSection() {
 					</div>
 				)}
 				<div className="download-list">
-					{PLATFORMS.map((p) => {
-						const asset = release ? pickAsset(release.assets, p.platform) : undefined;
-						const isComing = !asset && !loading;
+					{GROUPS.map((group) => (
+						<Fragment key={group}>
+							<h3 className="download-group-title">{group}</h3>
+							{PLATFORMS.filter((p) => p.group === group).map((p) => {
+								const asset = release ? pickAsset(release.assets, p.platform) : undefined;
+								const isComing = !asset && !loading;
 
-						if (!asset && loading) {
-							return (
-								<div key={p.name} className="download-card">
-									<div className="skeleton skeleton-icon" />
-									<div className="download-info">
-										<div className="skeleton skeleton-line skeleton-line--title" />
-										<div className="skeleton skeleton-line skeleton-line--meta" />
-									</div>
-									<div className="skeleton skeleton-badge" />
-								</div>
-							);
-						}
+								if (!asset && loading) {
+									return (
+										<div key={p.name} className="download-card">
+											<div className="skeleton skeleton-icon" />
+											<div className="download-info">
+												<div className="skeleton skeleton-line skeleton-line--title" />
+												<div className="skeleton skeleton-line skeleton-line--meta" />
+											</div>
+											<div className="skeleton skeleton-badge" />
+										</div>
+									);
+								}
 
-						if (isComing) {
-							return (
-								<div key={p.name} className="download-card download-card--dim">
-									<div className="download-icon">
-										<Icon name={p.icon} size={28} />
-									</div>
-									<div className="download-info">
-										<h3>{p.name}</h3>
-										<span className="download-meta">{p.meta}</span>
-									</div>
-									<span className="download-tag">Coming soon</span>
-								</div>
-							);
-						}
+								if (isComing) {
+									return (
+										<div key={p.name} className="download-card download-card--dim">
+											<div className="download-icon">
+												<Icon name={p.icon} size={28} />
+											</div>
+											<div className="download-info">
+												<h4>{p.name}</h4>
+												<span className="download-meta">{p.meta}</span>
+											</div>
+											<span className="download-tag">Coming soon</span>
+										</div>
+									);
+								}
 
-						return (
-							<a
-								key={p.name}
-								href={asset!.downloadUrl}
-								className="download-card download-card--live"
-								target="_blank"
-								rel="noopener noreferrer"
-							>
-								<div className="download-icon">
-									<Icon name={p.icon} size={28} />
-								</div>
-								<div className="download-info">
-									<h3>{p.name}</h3>
-									<span className="download-meta">{p.meta}</span>
-								</div>
-								<span className="download-size">{formatSize(asset!.size)}</span>
-								<span className="download-badge">Download</span>
-							</a>
-						);
-					})}
+								return (
+									<a
+										key={p.name}
+										href={asset!.downloadUrl}
+										className="download-card download-card--live"
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										<div className="download-icon">
+											<Icon name={p.icon} size={28} />
+										</div>
+										<div className="download-info">
+											<h4>{p.name}</h4>
+											<span className="download-meta">{p.meta}</span>
+										</div>
+										<span className="download-size">{formatSize(asset!.size)}</span>
+										<span className="download-badge">Download</span>
+									</a>
+								);
+							})}
+						</Fragment>
+					))}
 				</div>
 			</div>
 		</section>

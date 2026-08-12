@@ -397,6 +397,30 @@
 
 /* ── Download Section ── */
 
+/* Platform cards in a responsive two-column grid, grouped by OS.
+   Group titles span both columns; the grid collapses to one column
+   on small screens (see media query below). */
+.download-list {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: var(--sp-sm) var(--sp-md);
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.download-group-title {
+	grid-column: 1 / -1;
+	font-size: 0.72rem;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--text-muted);
+	margin: var(--sp-lg) 0 var(--sp-xs);
+}
+.download-list > .download-group-title:first-child {
+	margin-top: 0;
+}
+
 /* ── Skeleton loading placeholders ── */
 
 @keyframes skeleton-pulse {
@@ -514,14 +538,6 @@ ul.dl-notes-line li:last-child {
 	margin-bottom: 0;
 }
 
-.download-list {
-	display: flex;
-	flex-direction: column;
-	gap: var(--sp-sm);
-	max-width: 520px;
-	margin: 0 auto;
-}
-
 .download-card {
 	display: flex;
 	align-items: center;
@@ -601,7 +617,8 @@ ul.dl-notes-line li:last-child {
 	flex: 1;
 	min-width: 0;
 }
-.download-info h3 {
+.download-info h3,
+.download-info h4 {
 	font-size: 1rem;
 	font-weight: 600;
 	margin-bottom: 1px;
@@ -999,6 +1016,9 @@ html.light ::selection {
 		padding: var(--sp-2xl) var(--sp-md);
 	}
 	.features-grid {
+		grid-template-columns: 1fr;
+	}
+	.download-list {
 		grid-template-columns: 1fr;
 	}
 	.hero {

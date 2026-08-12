@@ -140,7 +140,7 @@ function FeaturesSection() {
 				<h2 className="section-title">Modern SoftEther for Every Device</h2>
 				<p className="section-desc">
 					The official SoftEther VPN has clients for Windows, Mac, and Linux
-				��� but mobile and a unified cross-platform experience were always
+				but mobile and a unified cross-platform experience were always
 				missing. SoftEther App fills that gap, built from scratch for
 				Android, macOS, Windows, and Linux from a shared codebase.
 				</p>

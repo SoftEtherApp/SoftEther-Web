@@ -403,7 +403,7 @@
 .download-list {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
-	gap: var(--sp-sm) var(--sp-sm);
+	gap: var(--sp-sm) var(--sp-md);
 	max-width: 800px;
 	margin: 0 auto;
 }
@@ -415,7 +415,7 @@
 	letter-spacing: 0.08em;
 	text-transform: uppercase;
 	color: var(--text-muted);
-	margin: var(--sp-lg) 0 var(--sp-xs);
+	margin: var(--sp-md) 0 var(--sp-xs);
 }
 .download-list > .download-group-title:first-child {
 	margin-top: 0;

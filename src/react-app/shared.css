@@ -403,7 +403,7 @@
 .download-list {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
-	gap: var(--sp-sm) var(--sp-md);
+	gap: var(--sp-sm) var(--sp-sm);
 	max-width: 800px;
 	margin: 0 auto;
 }

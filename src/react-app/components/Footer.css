@@ -33,6 +33,7 @@
 	font-size: 0.82rem;
 	color: var(--text-muted);
 	line-height: 1.6;
+	text-align: center;
 }
 .footer-copy a {
 	color: var(--text-secondary);
@@ -60,12 +61,12 @@
 }
 
 .footer-legal {
-	margin-top: var(--sp-lg);
+	margin-top: var(--sp-sm);
 	padding-top: var(--sp-sm);
 	border-top: 0.5px solid var(--surface-600);
 	font-size: 0.675rem;
 	color: var(--text-muted);
-	text-align: left;
+	text-align: center;
 	line-height: 1.5;
 }
 

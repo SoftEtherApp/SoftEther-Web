@@ -1,6 +1,6 @@
 /* ════════════════════════════════════
    Shared component styles — buttons, sections, hero, grids, downloads, steps
-   Shared between AppLanding and LibraryLanding pages
+   Shared between HomePage and LibraryPage pages
    ════════════════════════════════════ */
 
 /* ── Skip-to-content link (WCAG 2.4.1) ── */
@@ -72,24 +72,9 @@
 	filter: drop-shadow(0 0 40px rgba(92, 107, 192, 0.3));
 }
 
-.hero-text .hero-actions {
-	justify-content: flex-start;
-}
-.hero-trust {
-	display: flex;
-	align-items: flex-start;
-	gap: var(--sp-sm);
-	color: var(--text-muted);
-	font-size: 0.8rem;
-	text-wrap: balance;
-	max-width: 560px;
-}
 .hero-trust svg {
 	flex-shrink: 0;
 	margin-top: 2px;
-}
-.hero-text .hero-trust {
-	justify-content: flex-start;
 }
 
 @media (max-width: 900px) {
@@ -104,12 +89,6 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-	}
-	.hero-text .hero-actions {
-		justify-content: center;
-	}
-	.hero-text .hero-trust {
-		justify-content: center;
 	}
 	.hero-visual {
 		order: -1;
@@ -157,18 +136,6 @@
 	color: var(--text-secondary);
 	line-height: 1.7;
 	margin-bottom: var(--sp-lg);
-}
-
-.hero-actions {
-	display: flex;
-	gap: var(--sp-md);
-	flex-wrap: wrap;
-	justify-content: center;
-	margin-bottom: var(--sp-lg);
-}
-
-.hero-actions:only-child {
-	margin-bottom: 0;
 }
 
 .hero-trust a {
@@ -245,50 +212,6 @@
 .btn-secondary:hover {
 	background: var(--surface-500);
 	color: var(--text-primary);
-}
-
-/* ── Sections ── */
-
-.section {
-	padding: var(--sp-4xl) var(--sp-lg);
-}
-
-.section-alt {
-	background: var(--surface-800);
-}
-
-.section-inner {
-	max-width: 1040px;
-	margin: 0 auto;
-}
-
-.section-title {
-	font-size: clamp(1.5rem, 3vw, 2rem);
-	font-weight: 700;
-	letter-spacing: -0.02em;
-	text-align: center;
-	text-wrap: balance;
-	margin-bottom: var(--sp-sm);
-}
-
-.section-desc {
-	color: var(--text-secondary);
-	text-align: center;
-	max-width: 540px;
-	margin: 0 auto var(--sp-2xl);
-	font-size: 1.05rem;
-	line-height: 1.7;
-}
-.section-desc--spaced {
-	margin-bottom: var(--sp-xl);
-}
-
-.hero-actions--top {
-	margin-top: var(--sp-xl);
-}
-
-.section-inner--center {
-	text-align: center;
 }
 
 /* ── Features Grid ── */
@@ -1012,9 +935,6 @@ html.light ::selection {
 /* ── Responsive overrides ── */
 
 @media (max-width: 640px) {
-	.section {
-		padding: var(--sp-2xl) var(--sp-md);
-	}
 	.features-grid {
 		grid-template-columns: 1fr;
 	}

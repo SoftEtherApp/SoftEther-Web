@@ -1,0 +1,46 @@
+/* ════════════════════════════════════
+   AdminLayout — admin shell chrome
+   ════════════════════════════════════ */
+
+.admin-layout {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.admin-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--sp-md);
+	height: 56px;
+	padding: 0 var(--sp-xl);
+	background: var(--surface-800);
+	border-bottom: 1px solid var(--surface-600);
+}
+
+.admin-bar-brand {
+	display: flex;
+	align-items: center;
+	gap: var(--sp-sm);
+	font-weight: 700;
+	color: var(--text-primary);
+	text-decoration: none;
+}
+
+.admin-bar-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 12px;
+	border-radius: var(--rad-sm);
+	color: var(--text-secondary);
+	text-decoration: none;
+	font-size: 0.9rem;
+	transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.admin-bar-link:hover {
+	background: var(--surface-600);
+	color: var(--text-primary);
+}

@@ -6,24 +6,18 @@
 
 import { type JSX } from "react";
 import { useScrollToHash } from "../hooks/useScrollToHash";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
 
 export default function SecurityPage(): JSX.Element {
 	useScrollToHash(200);
 
 	return (
-		<>
-			<Header />
-			<a href="#main-content" className="skip-link">Skip to content</a>
-			<main id="main-content">
-				<section className="section">
-					<div className="section-inner">
-						<h1 className="section-title">Security</h1>
-						<p className="section-desc section-desc--spaced">
-							How we handle security for the SoftEther App and the SoftEtherZig
-							engine — and what you should expect from a self-hosted VPN client.
-						</p>
+		<section className="py-2xl px-lg sm:py-2xl sm:px-md">
+			<div className="m-auto mw-1040">
+				<h1 className="mb-sm text-center fw-700 fs-lg text-primary">Security</h1>
+				<p className="m-auto mb-xl text-center text-secondary mw-540 fs-base">
+					How we handle security for the SoftEther App and the SoftEtherZig
+					engine — and what you should expect from a self-hosted VPN client.
+				</p>
 
 						<article className="trust-card">
 							<h2 className="trust-h">Threat model, honestly stated</h2>
@@ -101,10 +95,7 @@ export default function SecurityPage(): JSX.Element {
 								will describe the exact mechanism once confirmed.]
 							</p>
 						</article>
-					</div>
-				</section>
-			</main>
-			<Footer />
-		</>
+				</div>
+			</section>
 	);
 }

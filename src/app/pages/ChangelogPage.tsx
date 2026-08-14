@@ -6,8 +6,6 @@
 import { useCallback, useEffect, useState, type JSX } from "react";
 import { useScrollToHash } from "../hooks/useScrollToHash";
 import Icon from "../components/Icon";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
 import ReleaseNotes from "../lib/ReleaseNotes";
 
 interface ReleaseSummary {
@@ -85,100 +83,93 @@ export default function ChangelogPage(): JSX.Element {
 	}, [load]);
 
 	return (
-		<>
-			<Header />
-			<a href="#main-content" className="skip-link">Skip to content</a>
-			<main id="main-content">
-				<section className="section">
-					<div className="section-inner">
-						<h1 className="section-title">Changelog</h1>
-						<p className="section-desc">
-							Release notes for the SoftEther App. Downloads are on the{" "}
-							<a href="/#download" style={{ color: "inherit", textDecoration: "underline", textUnderlineOffset: "3px" }}>
-								home page
-							</a>.
-						</p>
+		<section className="py-2xl px-lg sm:py-2xl sm:px-md">
+			<div className="m-auto mw-1040">
+				<h1 className="mb-sm text-center fw-700 fs-lg text-primary">Changelog</h1>
+				<p className="m-auto mb-2xl text-center text-secondary mw-540 fs-base">
+					Release notes for the SoftEther App. Downloads are on the{" "}
+					<a href="/#download" style={{ color: "inherit", textDecoration: "underline", textUnderlineOffset: "3px" }}>
+						home page
+					</a>.
+				</p>
 
-						{error && (
-							<div className="download-error">
-								<div className="download-error-content">
-									<span className="download-error-icon">!</span>
-									<div>
-										<p className="download-error-title">Could not load releases</p>
-										<p className="download-error-desc">{error}</p>
-									</div>
-								</div>
-								<button className="btn btn-secondary" onClick={() => { setLoading(true); setError(null); load(); }}>
-									Retry
-								</button>
+				{error && (
+					<div className="download-error">
+						<div className="download-error-content">
+							<span className="download-error-icon">!</span>
+							<div>
+								<p className="download-error-title">Could not load releases</p>
+								<p className="download-error-desc">{error}</p>
 							</div>
-						)}
-
-						{loading && !latest && (
-							<div className="download-list">
-								{[0, 1, 2].map((i) => (
-									<div key={i} className="download-card">
-										<div className="skeleton skeleton-icon" />
-										<div className="download-info">
-											<div className="skeleton skeleton-line skeleton-line--title" />
-											<div className="skeleton skeleton-line skeleton-line--meta" />
-										</div>
-									</div>
-								))}
-							</div>
-						)}
-
-						{latest && (
-							<article className="trust-card">
-								<header className="trust-card-head">
-									<h2 className="trust-card-title">
-										<Icon name="tag" size={16} />
-										{latest.tag}
-									</h2>
-									<span className="trust-card-meta">
-										{new Date(latest.publishedAt).toLocaleDateString()} ·{" "}
-										{latest.assets.length} binaries
-									</span>
-								</header>
-								{latest.body ? (
-									<ReleaseNotes body={latest.body} className="dl-notes dl-notes--full" lineClassName="dl-notes-line" />
-								) : (
-									<p className="trust-p">No release notes published for this version.</p>
-								)}
-							</article>
-						)}
-
-						{historyError && (
-							<div className="confirm-note">
-								<Icon name="book" size={16} />
-								<span>Release history could not be loaded ({historyError}). The latest release above is still current.</span>
-							</div>
-						)}
-
-						{history && history.length > 0 && (
-							<div className="trust-list">
-								<h2 className="trust-h">Previous releases</h2>
-								{(() => {
-									// Exclude the CURRENT release — via the fetched latest
-									// if present, else the freshest known tag (history[0]),
-									// so a partial failure (latest fetch down) cannot
-									// mislabel the current release as "previous".
-									const excludeTag = latest?.tag ?? history[0].tag;
-									return history.filter((r) => r.tag !== excludeTag).map((r) => (
-										<div key={r.tag} className="trust-list-row">
-											<span className="trust-list-title">{r.tag}</span>
-											<span className="trust-list-meta">
-												{new Date(r.publishedAt).toLocaleDateString()} · {r.assetCount} binaries
-											</span>
-										</div>
-									));
-								})()}
-							</div>
-						)}
+						</div>
+						<button className="btn btn-secondary" onClick={() => { setLoading(true); setError(null); load(); }}>
+							Retry
+						</button>
 					</div>
-				</section>
-			</main>
-			<Footer />
-		</>
+				)}
+
+				{loading && !latest && (
+					<div className="download-list">
+						{[0, 1, 2].map((i) => (
+							<div key={i} className="download-card">
+								<div className="skeleton skeleton-icon" />
+								<div className="download-info">
+									<div className="skeleton skeleton-line skeleton-line--title" />
+									<div className="skeleton skeleton-line skeleton-line--meta" />
+								</div>
+							</div>
+						))}
+					</div>
+				)}
+
+				{latest && (
+					<article className="trust-card">
+						<header className="trust-card-head">
+							<h2 className="trust-card-title">
+								<Icon name="tag" size={16} />
+								{latest.tag}
+							</h2>
+							<span className="trust-card-meta">
+								{new Date(latest.publishedAt).toLocaleDateString()} ·{" "}
+								{latest.assets.length} binaries
+							</span>
+						</header>
+						{latest.body ? (
+							<ReleaseNotes body={latest.body} className="dl-notes dl-notes--full" lineClassName="dl-notes-line" />
+						) : (
+							<p className="trust-p">No release notes published for this version.</p>
+						)}
+					</article>
+				)}
+
+				{historyError && (
+					<div className="confirm-note">
+						<Icon name="book" size={16} />
+						<span>Release history could not be loaded ({historyError}). The latest release above is still current.</span>
+					</div>
+				)}
+
+				{history && history.length > 0 && (
+					<div className="trust-list">
+						<h2 className="trust-h">Previous releases</h2>
+						{(() => {
+							// Exclude the CURRENT release — via the fetched latest
+							// if present, else the freshest known tag (history[0]),
+							// so a partial failure (latest fetch down) cannot
+							// mislabel the current release as "previous".
+							const excludeTag = latest?.tag ?? history[0].tag;
+							return history.filter((r) => r.tag !== excludeTag).map((r) => (
+								<div key={r.tag} className="trust-list-row">
+									<span className="trust-list-title">{r.tag}</span>
+									<span className="trust-list-meta">
+										{new Date(r.publishedAt).toLocaleDateString()} · {r.assetCount} binaries
+									</span>
+								</div>
+							));
+						})()}
+					</div>
+				)}
+			</div>
+		</section>
 	);
 }

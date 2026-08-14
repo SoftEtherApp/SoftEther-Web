@@ -3,10 +3,9 @@
    ════════════════════════════════════ */
 
 import { type JSX } from "react";
-import { useScrollToHash } from "../hooks/useScrollToHash";
-import Icon from "../components/Icon";
-import Footer from "../components/Footer";
-import Header, { LIBRARY_REPO_URL } from "../components/Header";
+import { useScrollToHash } from "../../hooks/useScrollToHash";
+import Icon from "../../components/Icon";
+import { LIBRARY_REPO_URL } from "../../components/Header";
 
 /* ── Data ── */
 
@@ -83,7 +82,7 @@ function LibHero() {
 					written in Zig. Exposes a C ABI for seamless integration with any
 					language or framework.
 				</p>
-				<div className="hero-actions">
+				<div className="hero-actions d-flex gap-md flex-wrap justify-center mb-lg">
 					<a
 						href={LIBRARY_REPO_URL}
 						target="_blank"
@@ -105,10 +104,10 @@ function LibHero() {
 
 function LibFeaturesSection() {
 	return (
-		<section id="features" className="section">
-			<div className="section-inner">
-				<h2 className="section-title">The Missing Mobile VPN Architecture</h2>
-				<p className="section-desc section-desc--spaced">
+		<section id="features" className="py-2xl px-lg sm:py-2xl sm:px-md">
+			<div className="m-auto mw-1040">
+				<h2 className="mb-sm text-center fw-700 fs-lg text-primary">The Missing Mobile VPN Architecture</h2>
+				<p className="m-auto mb-xl text-center text-secondary mw-540 fs-base">
 					The existing SoftEther ecosystem has zero architecture for mobile or
 					embeddable clients — and no viable community contributions toward one.
 					SoftEtherZig is the first clean-runtime library purpose-built to fill
@@ -132,10 +131,10 @@ function LibFeaturesSection() {
 
 function UsageSection() {
 	return (
-		<section id="usage" className="section">
-			<div className="section-inner">
-				<h2 className="section-title">Quick Start</h2>
-				<p className="section-desc">
+		<section id="usage" className="py-2xl px-lg sm:py-2xl sm:px-md">
+			<div className="m-auto mw-1040">
+				<h2 className="mb-sm text-center fw-700 fs-lg text-primary">Quick Start</h2>
+				<p className="m-auto mb-2xl text-center text-secondary mw-540 fs-base">
 					Build the library and integrate it into your project in minutes.
 				</p>
 				<div className="code-block">
@@ -160,7 +159,7 @@ zig build -Dtarget=aarch64-linux-android -Doptimize=ReleaseSafe
 						are available on GitHub.
 					</span>
 				</div>
-				<div className="hero-actions hero-actions--top">
+				<div className="d-flex gap-md flex-wrap justify-center mt-xl">
 					<a
 						href={LIBRARY_REPO_URL}
 						target="_blank"
@@ -187,10 +186,10 @@ zig build -Dtarget=aarch64-linux-android -Doptimize=ReleaseSafe
 
 function TargetsSection() {
 	return (
-		<section className="section section-alt">
-			<div className="section-inner">
-				<h2 className="section-title">Integration Targets</h2>
-				<p className="section-desc">
+		<section className="py-2xl px-lg bg-surface-800 sm:py-2xl sm:px-md">
+			<div className="m-auto mw-1040">
+				<h2 className="mb-sm text-center fw-700 fs-lg text-primary">Integration Targets</h2>
+				<p className="m-auto mb-2xl text-center text-secondary mw-540 fs-base">
 					SoftEtherZig works wherever you need a native SoftEther VPN library.
 				</p>
 				<div className="targets-list">
@@ -208,10 +207,10 @@ function TargetsSection() {
 
 function ProvenanceSection() {
 	return (
-		<section className="section section-alt">
-			<div className="section-inner">
-				<h2 className="section-title">Where SoftEtherZig comes from</h2>
-				<p className="section-desc section-desc--spaced">
+		<section className="py-2xl px-lg bg-surface-800 sm:py-2xl sm:px-md">
+			<div className="m-auto mw-1040">
+				<h2 className="mb-sm text-center fw-700 fs-lg text-primary">Where SoftEtherZig comes from</h2>
+				<p className="m-auto mb-xl text-center text-secondary mw-540 fs-base">
 					SoftEtherZig was sponsored into existence by WorxVPN (Globe Data Ltd.),
 					production-hardened through their deployment, and then released as an
 					independent, Apache-2.0 library. Fixes and improvements discovered in
@@ -233,13 +232,13 @@ function ProvenanceSection() {
 
 function LibCtaSection() {
 	return (
-		<section className="section">
-			<div className="section-inner section-inner--center">
-				<h2 className="section-title">Ready to build with it?</h2>
-				<p className="section-desc">
+		<section className="py-2xl px-lg text-center sm:py-2xl sm:px-md">
+			<div className="m-auto mw-1040">
+				<h2 className="mb-sm text-center fw-700 fs-lg text-primary">Ready to build with it?</h2>
+				<p className="m-auto mb-2xl text-center text-secondary mw-540 fs-base">
 					Star the repo, open an issue, or submit a PR. The VPN library is yours.
 				</p>
-				<div className="hero-actions">
+				<div className="d-flex gap-md flex-wrap justify-center">
 					<a
 						href={LIBRARY_REPO_URL}
 						target="_blank"
@@ -266,22 +265,17 @@ function LibCtaSection() {
 
 /* ── Page ── */
 
-export default function LibraryLanding(): JSX.Element {
+export default function LibraryPage(): JSX.Element {
 	useScrollToHash(200);
 
 	return (
 		<>
-			<Header />
-			<a href="#main-content" className="skip-link">Skip to content</a>
-			<main id="main-content">
-				<LibHero />
-				<LibFeaturesSection />
-				<ProvenanceSection />
-				<UsageSection />
-				<TargetsSection />
-				<LibCtaSection />
-			</main>
-			<Footer />
+			<LibHero />
+			<LibFeaturesSection />
+			<ProvenanceSection />
+			<UsageSection />
+			<TargetsSection />
+			<LibCtaSection />
 		</>
 	);
 }

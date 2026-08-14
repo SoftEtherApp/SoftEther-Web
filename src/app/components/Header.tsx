@@ -86,7 +86,7 @@ export default function Header() {
 	return (
 		<>
 			<header className="header">
-				<div className="header-inner">
+				<div className="m-auto mw-1100 px-lg d-flex items-center gap-md h-56">
 					<button
 						className="menu-btn"
 						onClick={() => setOpen(!open)}
@@ -95,11 +95,11 @@ export default function Header() {
 					>
 						<Icon name="menu" size={20} />
 					</button>
-					<a href="/" className="logo-link">
+					<a href="/" className="logo-link d-flex items-center gap-sm text-primary">
 						<img src="/logo.png" alt="SoftEther App" width={32} height={32} />
 						<span className="logo-text">SoftEther App</span>
 					</a>
-					<nav className="nav-desktop" aria-label="Main navigation">
+					<nav className="nav-desktop d-flex items-center gap-sm" aria-label="Main navigation">
 						{LINKS.map((l) => (
 							<a
 								key={l.href}
@@ -112,8 +112,8 @@ export default function Header() {
 							</a>
 						))}
 					</nav>
-					<span className="header-spacer" />
-					<div className="header-end">
+					<span className="grow-1" />
+					<div className="d-flex items-center gap-sm">
 						<ThemeToggle />
 					</div>
 				</div>

@@ -9,13 +9,13 @@ import "./Footer.css";
 export default function Footer() {
 	return (
 		<footer className="footer">
-			<div className="footer-inner">
-				<div className="footer-main">
-					<div className="footer-brand">
+			<div className="m-auto mw-1040">
+				<div className="d-flex items-center justify-between gap-lg flex-wrap">
+					<div className="d-flex items-center gap-sm fw-600 fs-sm">
 						<img src="/logo.png" alt="" width={24} height={24} />
 						<span>SoftEther App</span>
 					</div>
-					<div className="footer-links">
+					<div className="d-flex items-center gap-md fs-sm">
 						<a
 							href={LIBRARY_REPO_URL}
 							target="_blank"
@@ -33,12 +33,12 @@ export default function Footer() {
 						<a href="/security">Security</a>
 					</div>
 				</div>
-				<p className="footer-copy">
+				<p className="footer-copy mt-md fs-xs text-muted text-center">
 					Copyright &copy; {new Date().getFullYear()} <a href="https://devstroop.com" target="_blank" rel="noopener noreferrer">
 						<strong>Devstroop</strong>
 					</a>. The SoftEtherZig engine is open source (Apache-2.0); the SoftEther App binary is freeware.
 				</p>
-				<p className="footer-legal">
+				<p className="footer-legal mt-sm text-center">
 					SoftEther App is a third-party implementation based on SoftEther VPN source code.
 					We do not have any affiliation with SoftEther Corporation or its developers.
 				</p>

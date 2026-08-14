@@ -277,7 +277,20 @@ app.post("/api/webhook/release", async (c) => {
 // Routes the SPA router knows. Any other path is a genuine 404: the server
 // answers 404 (so crawlers, link checkers, and no-JS clients get honest
 // semantics) while still shipping the shell for client-side rendering.
-const SPA_ROUTES = new Set(["/", "/library", "/changelog", "/privacy", "/security"]);
+const SPA_ROUTES = new Set([
+	"/",
+	"/library",
+	"/changelog",
+	"/privacy",
+	"/security",
+	"/login",
+	"/register",
+	"/forgot-password",
+	"/reset-password",
+	"/admin",
+	"/admin/settings",
+	"/unauthorized",
+]);
 
 function spaStatus(pathname: string): number {
 	const p = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;

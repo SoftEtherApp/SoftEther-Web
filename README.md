@@ -17,28 +17,47 @@ VPN client built with Flutter, and its open-source Zig engine **SoftEtherZig**.
 ```
 src/
 ├── app/               # React SPA
-│   ├── App.tsx              # Route switch (/, /library)
-│   ├── App.css              # Component styles
+│   ├── App.tsx              # Route table + layout selection
+│   ├── layouts/             # Layout groups
+│   │   ├── PublicLayout.tsx # Header + main + Footer (public pages)
+│   │   ├── AuthLayout.tsx   # Centered card (login/register/…)
+│   │   ├── AdminLayout.tsx  # Admin shell (authorized area)
+│   │   └── EmptyLayout.tsx  # No chrome (404 / unauthorized)
+│   ├── components/          # Header, Footer, Icon, HeroIllustration, …
+│   ├── hooks/               # useScrollToHash
+│   ├── lib/                 # ReleaseNotes renderer + tokenizer
 │   ├── index.css            # Design tokens + base styles
-│   ───── main.tsx             # Entry point
-│   ├── components/
-│   │   ├── Header.tsx       # Nav bar + theme toggle
-│   │   └── Footer.tsx       # Footer + legal disclaimer
-│   ├── Icon.tsx         # SVG icon system (Lucide + brand logos)
-│   │   └── HeroIllustration.tsx  # Hero visual (app logo + rings)
+│   ├── main.tsx             # Entry point
 │   └── pages/
-│       ├── AppLanding.tsx   # Root page — SoftEther App landing
-│       └── LibraryLanding.tsx  # /library page — SoftEtherZig engine
+│       ├── HomePage.tsx     # Root page — SoftEther App landing
+│       ├── LibraryPage.tsx  # /library page — SoftEtherZig engine
+│       ├── ChangelogPage.tsx / PrivacyPage.tsx / SecurityPage.tsx
+│       ├── NotFoundPage.tsx / UnauthorizedPage.tsx
+│       ├── auth/            # Login / Register / ForgotPassword / ResetPassword
+│       └── admin/           # Dashboard, Settings (scaffolded)
+├── shared/
+│   └── types.ts             # Types shared by frontend + worker
 └── worker/
     └── index.ts             # Hono worker + SPA fallback
 ```
 
 ## Pages
 
-| Route | Page | Description |
-|---|---|---|
-| `/` | AppLanding | SoftEther App: hero, features, platforms, download |
-| `/library` | LibraryLanding | SoftEtherZig: features, quick start, integration targets |
+| Route | Page | Layout | Description |
+|---|---|---|---|
+| `/` | HomePage | Public | SoftEther App: hero, features, platforms, download |
+| `/library` | LibraryPage | Public | SoftEtherZig: features, quick start, integration targets |
+| `/changelog` | ChangelogPage | Public | Release history from the worker API |
+| `/privacy` | PrivacyPage | Public | Privacy policy |
+| `/security` | SecurityPage | Public | Security & trust page |
+| `/login` | LoginPage | Auth | Sign in (scaffold) |
+| `/register` | RegisterPage | Auth | Create account (scaffold) |
+| `/forgot-password` | ForgotPasswordPage | Auth | Password reset (scaffold) |
+| `/reset-password` | ResetPasswordPage | Auth | Set new password (scaffold) |
+| `/admin` | DashboardPage | Admin | Admin dashboard (scaffold) |
+| `/admin/settings` | SettingsPage | Admin | Admin settings (scaffold) |
+| `/unauthorized` | UnauthorizedPage | Empty | 403 fallback |
+| `*` | NotFoundPage | Empty | 404 fallback |
 
 ## Development
 

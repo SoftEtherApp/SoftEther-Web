@@ -6,8 +6,6 @@ import { Fragment, useEffect, useState, type JSX } from "react";
 import { useScrollToHash } from "../hooks/useScrollToHash";
 import type { Release, ReleaseAsset } from "../../shared/types";
 import Icon from "../components/Icon";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
 import HeroIllustration from "../components/HeroIllustration";
 import ReleaseNotes from "../lib/ReleaseNotes";
 
@@ -110,7 +108,7 @@ function Hero() {
 						A self-managed SoftEther VPN client that runs on all your devices.
 						Private, open transport, and yours to control.
 					</p>
-					<div className="hero-actions">
+					<div className="hero-actions d-flex gap-md flex-wrap justify-start mb-lg md:justify-center">
 						<a href="#download" className="btn btn-primary">
 							Download App
 						</a>
@@ -119,7 +117,7 @@ function Hero() {
 							Open-Source Library
 						</a>
 					</div>
-					<div className="hero-trust">
+					<div className="hero-trust d-flex items-start gap-sm text-muted fs-xs text-balance mw-560 md:justify-center">
 										<Icon name="code" size={14} />
 										<span>
 											Built with{" "}
@@ -140,10 +138,10 @@ function Hero() {
 
 function FeaturesSection() {
 	return (
-		<section id="features" className="section">
-			<div className="section-inner">
-				<h2 className="section-title">Modern SoftEther for Every Device</h2>
-				<p className="section-desc">
+		<section id="features" className="py-2xl px-lg sm:py-2xl sm:px-md">
+			<div className="m-auto mw-1040">
+				<h2 className="mb-sm text-center fw-700 fs-lg text-primary">Modern SoftEther for Every Device</h2>
+				<p className="m-auto mb-2xl text-center text-secondary mw-540 fs-base">
 					The official SoftEther VPN has clients for Windows, Mac, and Linux
 				but mobile and a unified cross-platform experience were always
 				missing. SoftEther App fills that gap, built from scratch for
@@ -167,10 +165,10 @@ function FeaturesSection() {
 
 function PlatformsSection() {
 	return (
-		<section id="platforms" className="section section-alt">
-			<div className="section-inner">
-				<h2 className="section-title">Available Everywhere</h2>
-				<p className="section-desc">
+		<section id="platforms" className="py-2xl px-lg bg-surface-800 sm:py-2xl sm:px-md">
+			<div className="m-auto mw-1040">
+				<h2 className="mb-sm text-center fw-700 fs-lg text-primary">Available Everywhere</h2>
+				<p className="m-auto mb-2xl text-center text-secondary mw-540 fs-base">
 					Run on your desktop, take it on the go — same app, same experience.
 				</p>
 				<div className="platforms-row">
@@ -228,10 +226,10 @@ function DownloadSection() {
 	}, []);
 
 	return (
-		<section id="download" className="section">
-			<div className="section-inner">
-				<h2 className="section-title">Get Started</h2>
-				<p className="section-desc">
+		<section id="download" className="py-2xl px-lg sm:py-2xl sm:px-md">
+			<div className="m-auto mw-1040">
+				<h2 className="mb-sm text-center fw-700 fs-lg text-primary">Get Started</h2>
+				<p className="m-auto mb-2xl text-center text-secondary mw-540 fs-base">
 					Download the latest release for your platform.
 				</p>
 				{release && (
@@ -353,10 +351,10 @@ const STEPS = [
 
 function GetConnectedSection() {
 	return (
-		<section className="section section-alt">
-			<div className="section-inner">
-				<h2 className="section-title">Get Connected in 3 Steps</h2>
-				<p className="section-desc">
+		<section className="py-2xl px-lg bg-surface-800 sm:py-2xl sm:px-md">
+			<div className="m-auto mw-1040">
+				<h2 className="mb-sm text-center fw-700 fs-lg text-primary">Get Connected in 3 Steps</h2>
+				<p className="m-auto mb-2xl text-center text-secondary mw-540 fs-base">
 					From zero to secure tunnel in a few clicks. No accounts, no subscriptions — just your own server.
 				</p>
 				<div className="steps-list">
@@ -375,21 +373,16 @@ function GetConnectedSection() {
 	);
 }
 
-export default function AppLanding(): JSX.Element {
+export default function HomePage(): JSX.Element {
 	useScrollToHash(100);
 
 	return (
 		<>
-			<Header />
-			<a href="#main-content" className="skip-link">Skip to content</a>
-			<main id="main-content">
-				<Hero />
-				<FeaturesSection />
-				<PlatformsSection />
-				<GetConnectedSection />
-				<DownloadSection />
-			</main>
-			<Footer />
+			<Hero />
+			<FeaturesSection />
+			<PlatformsSection />
+			<GetConnectedSection />
+			<DownloadSection />
 		</>
 	);
 }

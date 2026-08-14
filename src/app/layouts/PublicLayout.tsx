@@ -11,6 +11,7 @@ import Sidebar from "../components/Sidebar";
 import ThemeToggle from "../components/ThemeToggle";
 import Icon from "../components/Icon";
 import { navigate } from "../App";
+import { useAuth } from "../auth/useAuth";
 import { LIBRARY_REPO_URL, SITE_NAME, SITE_URL } from "../lib/constants";
 
 interface LayoutProps {
@@ -27,6 +28,7 @@ const LINKS = [
 ];
 
 export default function PublicLayout({ children }: LayoutProps): JSX.Element {
+	const { user, signOut } = useAuth();
 	const [open, setOpen] = useState(false);
 	const [path, setPath] = useState(window.location.pathname);
 
@@ -90,20 +92,33 @@ export default function PublicLayout({ children }: LayoutProps): JSX.Element {
 					</nav>
 					<span className="flex-grow-1" />
 					<div className="d-flex items-center gap-sm sm:d-none">
-						<a
-							href="/login"
-							className="btn btn-secondary"
-							onClick={(e) => { e.preventDefault(); navigate("/login"); }}
-						>
-							Sign in
-						</a>
-						<a
-							href="/register"
-							className="btn btn-primary"
-							onClick={(e) => { e.preventDefault(); navigate("/register"); }}
-						>
-							Create account
-						</a>
+						{user ? (
+							<a
+								href="/admin"
+								className="btn btn-secondary"
+								onClick={(e) => { e.preventDefault(); navigate("/admin"); }}
+							>
+								<Icon name="dashboard" size={16} />
+								Admin
+							</a>
+						) : (
+							<>
+								<a
+									href="/login"
+									className="btn btn-secondary"
+									onClick={(e) => { e.preventDefault(); navigate("/login"); }}
+								>
+									Sign in
+								</a>
+								<a
+									href="/register"
+									className="btn btn-primary"
+									onClick={(e) => { e.preventDefault(); navigate("/register"); }}
+								>
+									Create account
+								</a>
+							</>
+						)}
 					</div>
 					<ThemeToggle />
 				</div>
@@ -130,20 +145,41 @@ export default function PublicLayout({ children }: LayoutProps): JSX.Element {
 							{l.label}
 						</a>
 					))}
-					<a
-						href="/login"
-						className="nav-link sidebar-link"
-						onClick={(e) => { e.preventDefault(); setOpen(false); navigate("/login"); }}
-					>
-						Sign in
-					</a>
-					<a
-						href="/register"
-						className="nav-link sidebar-link"
-						onClick={(e) => { e.preventDefault(); setOpen(false); navigate("/register"); }}
-					>
-						Create account
-					</a>
+					{user ? (
+						<>
+							<a
+								href="/admin"
+								className="nav-link sidebar-link"
+								onClick={(e) => { e.preventDefault(); setOpen(false); navigate("/admin"); }}
+							>
+								Admin
+							</a>
+							<a
+								href="/login"
+								className="nav-link sidebar-link"
+								onClick={(e) => { e.preventDefault(); setOpen(false); signOut(); navigate("/"); }}
+							>
+								Sign out
+							</a>
+						</>
+					) : (
+						<>
+							<a
+								href="/login"
+								className="nav-link sidebar-link"
+								onClick={(e) => { e.preventDefault(); setOpen(false); navigate("/login"); }}
+							>
+								Sign in
+							</a>
+							<a
+								href="/register"
+								className="nav-link sidebar-link"
+								onClick={(e) => { e.preventDefault(); setOpen(false); navigate("/register"); }}
+							>
+								Create account
+							</a>
+						</>
+					)}
 				</nav>
 				<div className="sidebar-footer">
 					<ThemeToggle />

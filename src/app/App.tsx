@@ -24,7 +24,16 @@ import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
-import DashboardPage from "./pages/admin/DashboardPage";
+import RequireAuth from "./auth/RequireAuth";
+import DashboardPage from "./pages/admin/dashboard/DashboardPage";
+import AnalyticsPage from "./pages/admin/analytics/AnalyticsPage";
+import DistributionPage from "./pages/admin/distribution/DistributionPage";
+import UsersPage from "./pages/admin/access/users/UsersPage";
+import RolesPage from "./pages/admin/access/roles/RolesPage";
+import PermissionsPage from "./pages/admin/access/permissions/PermissionsPage";
+import SubscriptionsPage from "./pages/admin/subscriptions/SubscriptionsPage";
+import PlansPage from "./pages/admin/plans/PlansPage";
+import FeaturesPage from "./pages/admin/features/FeaturesPage";
 import SettingsPage from "./pages/admin/settings/SettingsPage";
 import UnauthorizedPage from "./pages/UnauthorizedPage";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -74,8 +83,16 @@ const ROUTES: RouteDef[] = [
 	{ path: "/register", page: () => <RegisterPage />, layout: "auth", title: "Create account — SoftEther App" },
 	{ path: "/forgot-password", page: () => <ForgotPasswordPage />, layout: "auth", title: "Reset password — SoftEther App" },
 	{ path: "/reset-password", page: () => <ResetPasswordPage />, layout: "auth", title: "Set new password — SoftEther App" },
-	{ path: "/admin", page: () => <DashboardPage />, layout: "admin", title: "Dashboard — SoftEther Admin" },
-	{ path: "/admin/settings", page: () => <SettingsPage />, layout: "admin", title: "Settings — SoftEther Admin" },
+	{ path: "/admin", page: () => <RequireAuth><DashboardPage /></RequireAuth>, layout: "admin", title: "Dashboard — SoftEther Admin" },
+	{ path: "/admin/analytics", page: () => <RequireAuth><AnalyticsPage /></RequireAuth>, layout: "admin", title: "Analytics — SoftEther Admin" },
+	{ path: "/admin/distribution", page: () => <RequireAuth><DistributionPage /></RequireAuth>, layout: "admin", title: "Distribution — SoftEther Admin" },
+	{ path: "/admin/access/users", page: () => <RequireAuth><UsersPage /></RequireAuth>, layout: "admin", title: "Users — SoftEther Admin" },
+	{ path: "/admin/access/roles", page: () => <RequireAuth><RolesPage /></RequireAuth>, layout: "admin", title: "Roles — SoftEther Admin" },
+	{ path: "/admin/access/permissions", page: () => <RequireAuth><PermissionsPage /></RequireAuth>, layout: "admin", title: "Permissions — SoftEther Admin" },
+	{ path: "/admin/subscriptions", page: () => <RequireAuth><SubscriptionsPage /></RequireAuth>, layout: "admin", title: "Subscriptions — SoftEther Admin" },
+	{ path: "/admin/plans", page: () => <RequireAuth><PlansPage /></RequireAuth>, layout: "admin", title: "Plans — SoftEther Admin" },
+	{ path: "/admin/features", page: () => <RequireAuth><FeaturesPage /></RequireAuth>, layout: "admin", title: "Features — SoftEther Admin" },
+	{ path: "/admin/settings", page: () => <RequireAuth><SettingsPage /></RequireAuth>, layout: "admin", title: "Settings — SoftEther Admin" },
 	{ path: "/unauthorized", page: () => <UnauthorizedPage />, layout: "empty", title: "Unauthorized — SoftEther App" },
 ];
 

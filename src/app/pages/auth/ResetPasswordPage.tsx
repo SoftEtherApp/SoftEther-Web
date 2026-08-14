@@ -1,5 +1,6 @@
 /* ════════════════════════════════════
-   ResetPassword — set a new password from a reset link
+   ResetPassword — set a new password from a reset link.
+   Demo mode: shows a success state (nothing is persisted).
    ════════════════════════════════════ */
 
 import { useState, type FormEvent, type JSX } from "react";
@@ -10,10 +11,38 @@ export default function ResetPasswordPage(): JSX.Element {
 	const [password, setPassword] = useState("");
 	const [confirm, setConfirm] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
+	const [submitted, setSubmitted] = useState(false);
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		setSubmitted(true);
 	};
+
+	if (submitted) {
+		return (
+			<div>
+				<div className="d-flex items-center gap-sm mb-sm">
+					<div className="stat-card-icon">
+						<Icon name="check" size={18} />
+					</div>
+					<h1 className="m-0 fs-lg fw-700 text-primary">Password updated</h1>
+				</div>
+				<p className="m-0 mb-xl text-muted fs-sm">
+					Your password has been changed. You can sign in with it now.
+				</p>
+				<a
+					href="/login"
+					className="btn btn-primary w-100 justify-center"
+					onClick={(e) => { e.preventDefault(); navigate("/login"); }}
+				>
+					Sign in
+				</a>
+				<p className="m-0 mt-lg text-center text-muted fs-xs">
+					Demo mode — nothing is persisted yet.
+				</p>
+			</div>
+		);
+	}
 
 	return (
 		<div>

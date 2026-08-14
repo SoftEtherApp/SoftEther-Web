@@ -1,18 +1,25 @@
 /* ════════════════════════════════════
-   Login — auth entry point
+   Login — auth entry point.
+   Demo mode: any email/password signs in locally (no backend yet).
    ════════════════════════════════════ */
 
 import { useState, type FormEvent, type JSX } from "react";
 import Icon from "../../components/Icon";
 import { navigate } from "../../App";
+import { useAuth } from "../../auth/useAuth";
+import { consumeAuthNext } from "../../auth/auth-next";
 
 export default function LoginPage(): JSX.Element {
+	const { signIn } = useAuth();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		const name = email.split("@")[0] || "Admin";
+		signIn({ id: btoa(email.toLowerCase()), name, email });
+		navigate(consumeAuthNext() ?? "/admin");
 	};
 
 	return (
@@ -79,6 +86,9 @@ export default function LoginPage(): JSX.Element {
 			>
 				Create an account
 			</a>
+			<p className="m-0 mt-lg text-center text-muted fs-xs">
+				Demo mode — any email and password signs you in locally.
+			</p>
 		</div>
 	);
 }

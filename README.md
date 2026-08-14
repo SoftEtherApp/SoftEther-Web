@@ -25,6 +25,7 @@ src/
 │   │   └── EmptyLayout.tsx  # No chrome (404 / unauthorized)
 │   ├── components/          # Header/Footer/Sidebar shells, Icon, ThemeToggle, …
 │   ├── hooks/               # useScrollToHash
+│   ├── auth/                # Mock session: AuthProvider, useAuth, RequireAuth
 │   ├── lib/                 # constants, ReleaseNotes renderer + tokenizer
 │   ├── index.css            # Design tokens + base styles
 │   ├── main.tsx             # Entry point
@@ -36,12 +37,28 @@ src/
 │       ├── docs/            # Documentation (scaffolded)
 │       ├── NotFoundPage.tsx / UnauthorizedPage.tsx
 │       ├── auth/            # Login / Register / ForgotPassword / ResetPassword
-│       └── admin/           # Dashboard, Settings (scaffolded)
+│       └── admin/           # Scoped area (auth-gated)
+│           ├── dashboard/   # /admin dashboard
+│           ├── analytics/   # /admin/analytics
+│           ├── distribution/# /admin/distribution (release channels)
+│           ├── access/      # /admin/access/* (users, roles, permissions)
+│           ├── subscriptions/ # /admin/subscriptions
+│           ├── plans/       # /admin/plans
+│           ├── features/    # /admin/features (feature flags)
+│           └── settings/    # /admin/settings
 ├── shared/
 │   └── types.ts             # Types shared by frontend + worker
 └── worker/
     └── index.ts             # Hono worker + SPA fallback
 ```
+
+## Auth
+
+Session handling is a **mock** for now (no backend): `AuthProvider` stores a
+session in `localStorage`, `/login` and `/register` create one locally, and
+`RequireAuth` guards `/admin/*` — unauthenticated visitors are redirected to
+`/login` and returned to their intended page after signing in. Swap
+`src/app/auth/session.ts` for a real token/API flow later.
 
 ## Pages
 
@@ -55,12 +72,20 @@ src/
 | `/download` | DownloadsPage | Public | Installers per platform (scaffold) |
 | `/terms` | TermsPage | Public | Terms of service (scaffold) |
 | `/docs` | DocsPage | Public | Documentation hub (scaffold) |
-| `/login` | LoginPage | Auth | Sign in (scaffold) |
-| `/register` | RegisterPage | Auth | Create account (scaffold) |
-| `/forgot-password` | ForgotPasswordPage | Auth | Password reset (scaffold) |
-| `/reset-password` | ResetPasswordPage | Auth | Set new password (scaffold) |
-| `/admin` | DashboardPage | Admin | Admin dashboard (scaffold) |
-| `/admin/settings` | SettingsPage | Admin | Admin settings (scaffold) |
+| `/login` | LoginPage | Auth | Sign in (mock session) |
+| `/register` | RegisterPage | Auth | Create account (mock session) |
+| `/forgot-password` | ForgotPasswordPage | Auth | Password reset (stub) |
+| `/reset-password` | ResetPasswordPage | Auth | Set new password (stub) |
+| `/admin` | DashboardPage | Admin | Admin dashboard (scaffold, auth-gated) |
+| `/admin/analytics` | AnalyticsPage | Admin | Usage telemetry (scaffold, auth-gated) |
+| `/admin/distribution` | DistributionPage | Admin | Release channels (scaffold, auth-gated) |
+| `/admin/access/users` | UsersPage | Admin | User management (scaffold, auth-gated) |
+| `/admin/access/roles` | RolesPage | Admin | Roles (scaffold, auth-gated) |
+| `/admin/access/permissions` | PermissionsPage | Admin | Permissions (scaffold, auth-gated) |
+| `/admin/subscriptions` | SubscriptionsPage | Admin | Billing overview (scaffold, auth-gated) |
+| `/admin/plans` | PlansPage | Admin | Billing plans (scaffold, auth-gated) |
+| `/admin/features` | FeaturesPage | Admin | Feature flags (scaffold, auth-gated) |
+| `/admin/settings` | SettingsPage | Admin | Admin settings (scaffold, auth-gated) |
 | `/unauthorized` | UnauthorizedPage | Empty | 403 fallback |
 | `*` | NotFoundPage | Empty | 404 fallback |
 

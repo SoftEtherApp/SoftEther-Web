@@ -1,12 +1,15 @@
 /* ════════════════════════════════════
-   Register — new account
+   Register — new account.
+   Demo mode: creates a local session (no backend yet).
    ════════════════════════════════════ */
 
 import { useState, type FormEvent, type JSX } from "react";
 import Icon from "../../components/Icon";
 import { navigate } from "../../App";
+import { useAuth } from "../../auth/useAuth";
 
 export default function RegisterPage(): JSX.Element {
+	const { signIn } = useAuth();
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -15,6 +18,8 @@ export default function RegisterPage(): JSX.Element {
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		signIn({ id: btoa(email.toLowerCase()), name: name || "Admin", email });
+		navigate("/admin");
 	};
 
 	return (
@@ -94,7 +99,10 @@ export default function RegisterPage(): JSX.Element {
 					Create account
 				</button>
 			</form>
-			<p className="m-0 mt-lg text-center text-muted fs-sm">
+			<p className="m-0 mt-lg text-center text-muted fs-xs">
+				Demo mode — creates a local session with no backend.
+			</p>
+			<p className="m-0 mt-sm text-center text-muted fs-sm">
 				Already have an account?{" "}
 				<a
 					href="/login"

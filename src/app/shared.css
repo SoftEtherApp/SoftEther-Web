@@ -178,6 +178,20 @@
 	margin-bottom: 0;
 }
 
+.hero-release-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 3px 10px;
+	border-radius: var(--rad-pill);
+	font-size: 0.72rem;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	background: var(--blurple-soft);
+	color: var(--blurple);
+	margin-bottom: var(--sp-lg);
+}
+
 /* ── Buttons ── */
 
 .btn {

@@ -400,28 +400,37 @@
 
 /* ── Download Section ── */
 
-/* Download cards in a responsive grid, grouped by OS. Group titles span all
-   columns; the grid auto-fills to keep identical card geometry on every
-   breakpoint. */
+/* Outer column: each OS group is its own grid so cards always fill their
+   row cleanly (no stray empty tracks). The grid uses a fixed column count
+   so every card is identical in width; it collapses to one column on small
+   screens (see media query below). */
 .download-list {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.dl-group {
+	width: 100%;
+	max-width: 900px;
+}
+.dl-group + .dl-group {
+	margin-top: var(--sp-lg);
+}
+
+.dl-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+	grid-template-columns: repeat(2, 1fr);
 	gap: var(--sp-md);
-	max-width: 920px;
-	margin: 0 auto;
 }
 
 .download-group-title {
-	grid-column: 1 / -1;
 	font-size: 0.72rem;
 	font-weight: 600;
 	letter-spacing: 0.08em;
 	text-transform: uppercase;
 	color: var(--text-muted);
-	margin: var(--sp-md) 0 var(--sp-xs);
-}
-.download-list > .download-group-title:first-child {
-	margin-top: 0;
+	margin: 0 0 var(--sp-sm);
 }
 
 /* ── Skeleton loading placeholders ── */
@@ -1203,7 +1212,7 @@ html.light ::selection {
 	.features-grid {
 		grid-template-columns: 1fr;
 	}
-	.download-list {
+	.dl-grid {
 		grid-template-columns: 1fr;
 	}
 	.hero {

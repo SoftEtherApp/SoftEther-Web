@@ -225,6 +225,13 @@
 	box-shadow: none;
 }
 
+/* Compact buttons — for headers/navbars where full-height buttons feel heavy */
+.btn-sm {
+	height: 36px;
+	padding: 0 14px;
+	font-size: 0.82rem;
+}
+
 /* ── Forms ── */
 
 .label {

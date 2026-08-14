@@ -99,14 +99,14 @@ export default function PublicLayout({ children }: LayoutProps): JSX.Element {
 							<>
 								<a
 									href="/login"
-									className="btn btn-secondary"
+									className="btn btn-secondary btn-sm"
 									onClick={(e) => { e.preventDefault(); navigate("/login"); }}
 								>
 									Sign in
 								</a>
 								<a
 									href="/register"
-									className="btn btn-primary"
+									className="btn btn-primary btn-sm"
 									onClick={(e) => { e.preventDefault(); navigate("/register"); }}
 								>
 									Create account

@@ -101,8 +101,8 @@ function Hero({ release }: { release: Release | null }) {
 			<div className="hero-inner">
 				<div className="hero-text">
 					{release && (
-						<span className="hero-badge">
-							<Icon name="tag" size={13} />
+						<span className="hero-release-badge">
+							<Icon name="tag" size={12} />
 							Latest release {release.tag}
 						</span>
 					)}

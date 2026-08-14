@@ -10,6 +10,7 @@ import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import ThemeToggle from "../components/ThemeToggle";
 import Icon from "../components/Icon";
+import UserMenu from "../components/UserMenu";
 import { navigate } from "../App";
 import { useAuth } from "../auth/useAuth";
 import { LIBRARY_REPO_URL, SITE_NAME, SITE_URL } from "../lib/constants";
@@ -93,14 +94,7 @@ export default function PublicLayout({ children }: LayoutProps): JSX.Element {
 					<span className="flex-grow-1" />
 					<div className="d-flex items-center gap-sm sm:d-none">
 						{user ? (
-							<a
-								href={user.role === "admin" ? "/admin" : "/profile"}
-								className="btn btn-secondary"
-								onClick={(e) => { e.preventDefault(); navigate(user.role === "admin" ? "/admin" : "/profile"); }}
-							>
-								<Icon name={user.role === "admin" ? "dashboard" : "user"} size={16} />
-								{user.role === "admin" ? "Admin" : "Profile"}
-							</a>
+							<UserMenu />
 						) : (
 							<>
 								<a

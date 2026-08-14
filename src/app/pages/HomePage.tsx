@@ -12,14 +12,6 @@ import ReleaseNotes from "../lib/ReleaseNotes";
 
 /* ── Types ── */
 
-interface PlatformInfo {
-	name: string;
-	icon: string;
-	meta: string;
-	platform: string; // matches worker's detectPlatform() output
-	group: string;    // download group (Android, macOS, Windows, Linux)
-}
-
 /* ── Data ── */
 
 interface Feature {
@@ -61,20 +53,6 @@ const FEATURES: Feature[] = [
 	},
 ];
 
-const PLATFORMS: PlatformInfo[] = [
-	{ name: "Android", icon: "logo-android", meta: "APK (64-bit)", platform: "android", group: "Android" },
-	{ name: "Android (32-bit)", icon: "logo-android", meta: "APK (32-bit)", platform: "android-armv7", group: "Android" },
-	{ name: "macOS (Apple Silicon)", icon: "logo-apple", meta: ".dmg", platform: "macos-aarch64", group: "macOS" },
-	{ name: "macOS (Intel)", icon: "logo-apple", meta: ".dmg", platform: "macos-x64", group: "macOS" },
-	{ name: "Windows", icon: "logo-windows", meta: ".msi", platform: "windows", group: "Windows" },
-	{ name: "Windows (Portable)", icon: "logo-windows", meta: ".zip", platform: "windows-portable", group: "Windows" },
-	{ name: "Linux", icon: "logo-linux", meta: ".deb", platform: "linux", group: "Linux" },
-];
-
-/* Group order follows first-appearance in PLATFORMS — derived so a new
-   platform group can never be silently omitted from the download grid. */
-const GROUPS = [...new Set(PLATFORMS.map((p) => p.group))];
-
 /* ── Helpers ── */
 
 function formatSize(bytes: number): string {
@@ -83,15 +61,57 @@ function formatSize(bytes: number): string {
 	return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-/* Pick the best asset for a platform.
-   With separate platform slots (android, android-armv7, windows, windows-portable),
-   each slot maps to exactly one asset type so direct match is sufficient. */
-function pickAsset(assets: ReleaseAsset[], platform: string): ReleaseAsset | undefined {
-	const matches = assets.filter((a) => a.platform === platform);
-	if (matches.length === 0) return undefined;
-	// Prefer "App"-branded files (e.g. "SoftEther-App-..." over generic)
-	const appBranded = matches.filter((a) => /app/i.test(a.name));
-	return (appBranded.length > 0 ? appBranded : matches)[0];
+/* Display metadata for known platforms — purely cosmetic, never a whitelist.
+   Any asset platform not listed here still renders via the fallbacks below. */
+const PLATFORM_META: Record<string, { name: string; icon: string; group: string; meta: string }> = {
+	android: { name: "Android", icon: "logo-android", group: "Android", meta: "APK (64-bit)" },
+	"android-armv7": { name: "Android (32-bit)", icon: "logo-android", group: "Android", meta: "APK (32-bit)" },
+	"macos-aarch64": { name: "macOS (Apple Silicon)", icon: "logo-apple", group: "macOS", meta: ".dmg" },
+	"macos-x64": { name: "macOS (Intel)", icon: "logo-apple", group: "macOS", meta: ".dmg" },
+	windows: { name: "Windows", icon: "logo-windows", group: "Windows", meta: ".msi" },
+	"windows-portable": { name: "Windows (Portable)", icon: "logo-windows", group: "Windows", meta: ".zip" },
+	linux: { name: "Linux", icon: "logo-linux", group: "Linux", meta: ".deb" },
+};
+
+const KNOWN_GROUPS = ["Android", "macOS", "Windows", "Linux"];
+
+/* Marketing chips for the "Available Everywhere" section — static by design. */
+const PLATFORM_CHIPS = [
+	{ name: "Android", icon: "logo-android" },
+	{ name: "macOS", icon: "logo-apple" },
+	{ name: "Windows", icon: "logo-windows" },
+	{ name: "Linux", icon: "logo-linux" },
+];
+
+function groupFor(platform: string): string {
+	return PLATFORM_META[platform]?.group ?? "Other";
+}
+
+function displayNameFor(platform: string): string {
+	if (PLATFORM_META[platform]) return PLATFORM_META[platform].name;
+	return platform.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function iconFor(platform: string): string {
+	return PLATFORM_META[platform]?.icon ?? "package";
+}
+
+function metaFor(asset: ReleaseAsset): string {
+	return PLATFORM_META[asset.platform]?.meta ?? asset.name;
+}
+
+/* Group release assets by platform group, known groups first, then any
+   additional groups in order of first appearance — never skip an asset. */
+function groupAssets(assets: ReleaseAsset[]): Array<{ group: string; items: ReleaseAsset[] }> {
+	const map = new Map<string, ReleaseAsset[]>();
+	for (const a of assets) {
+		const g = groupFor(a.platform);
+		if (!map.has(g)) map.set(g, []);
+		map.get(g)!.push(a);
+	}
+	const present = [...map.keys()];
+	const ordered = [...KNOWN_GROUPS.filter((g) => present.includes(g)), ...present.filter((g) => !KNOWN_GROUPS.includes(g))];
+	return ordered.map((g) => ({ group: g, items: map.get(g)! }));
 }
 
 function Hero({ release }: { release: Release | null }) {
@@ -179,7 +199,7 @@ function PlatformsSection() {
 					Run on your desktop, take it on the go — same app, same experience.
 				</p>
 				<div className="platforms-row">
-					{PLATFORMS.map((p) => (
+					{PLATFORM_CHIPS.map((p) => (
 						<div key={p.name} className="platform-chip">
 							<Icon name={p.icon} size={22} />
 							<span>{p.name}</span>
@@ -245,63 +265,53 @@ function DownloadSection({
 					</div>
 				)}
 				<div className="download-list">
-					{GROUPS.map((group) => (
+					{loading && (
+						<>
+							<div className="skeleton skeleton-line skeleton-line--title" />
+							{[0, 1, 2].map((i) => (
+								<div key={i} className="download-card">
+									<div className="skeleton skeleton-icon" />
+									<div className="download-info">
+										<div className="skeleton skeleton-line skeleton-line--title" />
+										<div className="skeleton skeleton-line skeleton-line--meta" />
+									</div>
+									<div className="skeleton skeleton-badge" />
+								</div>
+							))}
+						</>
+					)}
+					{release && !loading && groupAssets(release.assets).map(({ group, items }) => (
 						<Fragment key={group}>
 							<h3 className="download-group-title">{group}</h3>
-							{PLATFORMS.filter((p) => p.group === group).map((p) => {
-								const asset = release ? pickAsset(release.assets, p.platform) : undefined;
-								const isComing = !asset && !loading;
-
-								if (!asset && loading) {
-									return (
-										<div key={p.name} className="download-card">
-											<div className="skeleton skeleton-icon" />
-											<div className="download-info">
-												<div className="skeleton skeleton-line skeleton-line--title" />
-												<div className="skeleton skeleton-line skeleton-line--meta" />
-											</div>
-											<div className="skeleton skeleton-badge" />
-										</div>
-									);
-								}
-
-								if (isComing) {
-									return (
-										<div key={p.name} className="download-card download-card--dim">
-											<div className="download-icon">
-												<Icon name={p.icon} size={28} />
-											</div>
-											<div className="download-info">
-												<h4>{p.name}</h4>
-												<span className="download-meta">{p.meta}</span>
-											</div>
-											<span className="download-tag">Coming soon</span>
-										</div>
-									);
-								}
-
+							{items.map((asset) => {
+								const name = displayNameFor(asset.platform);
 								return (
 									<a
-										key={p.name}
-										href={asset!.downloadUrl}
+										key={asset.r2Key}
+										href={asset.downloadUrl}
 										className="download-card download-card--live"
 										target="_blank"
 										rel="noopener noreferrer"
 									>
 										<div className="download-icon">
-											<Icon name={p.icon} size={28} />
+											<Icon name={iconFor(asset.platform)} size={28} />
 										</div>
 										<div className="download-info">
-											<h4>{p.name}</h4>
-											<span className="download-meta">{p.meta}</span>
+											<h4>{name}</h4>
+											<span className="download-meta">{metaFor(asset)}</span>
 										</div>
-										<span className="download-size">{formatSize(asset!.size)}</span>
+										<span className="download-size">{formatSize(asset.size)}</span>
 										<span className="download-badge">Download</span>
 									</a>
 								);
 							})}
 						</Fragment>
 					))}
+					{release && !loading && release.assets.length === 0 && (
+						<p className="m-0 py-xl text-center text-muted fs-sm">
+							No installers are available yet for the latest release.
+						</p>
+					)}
 				</div>
 			</div>
 		</section>

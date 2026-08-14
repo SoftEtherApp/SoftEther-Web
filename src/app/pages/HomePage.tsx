@@ -193,7 +193,7 @@ function Hero({ release }: { release: Release | null }) {
 											<a href="/library" style={{ color: "inherit", textDecoration: "underline", textUnderlineOffset: "3px" }}>
 												SoftEtherZig
 											</a>
-											. The engine is open source (Apache-2.0); the app binary is freeware.
+											. The core engine is open source (Apache-2.0)
 										</span>
 									</div>
 				</div>

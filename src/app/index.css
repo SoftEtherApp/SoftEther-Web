@@ -107,7 +107,7 @@ html.light .nav-github {
 }
 
 html.light .feature-card,
-html.light .download-card,
+html.light .dl-card,
 html.light .library-promo-card,
 html.light .target-card {
 	background: var(--surface-800);

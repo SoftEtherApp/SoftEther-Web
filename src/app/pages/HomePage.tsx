@@ -63,14 +63,14 @@ function formatSize(bytes: number): string {
 
 /* Display metadata for known platforms — purely cosmetic, never a whitelist.
    Any asset platform not listed here still renders via the fallbacks below. */
-const PLATFORM_META: Record<string, { name: string; icon: string; group: string; meta: string; arch: string }> = {
-	android: { name: "Android", icon: "logo-android", group: "Android", meta: "APK (64-bit)", arch: "arm64" },
-	"android-armv7": { name: "Android (32-bit)", icon: "logo-android", group: "Android", meta: "APK (32-bit)", arch: "armv7" },
-	"macos-aarch64": { name: "macOS (Apple Silicon)", icon: "logo-apple", group: "macOS", meta: ".dmg", arch: "arm64" },
-	"macos-x64": { name: "macOS (Intel)", icon: "logo-apple", group: "macOS", meta: ".dmg", arch: "x64" },
-	windows: { name: "Windows", icon: "logo-windows", group: "Windows", meta: ".msi", arch: "x64" },
-	"windows-portable": { name: "Windows (Portable)", icon: "logo-windows", group: "Windows", meta: ".zip", arch: "x64" },
-	linux: { name: "Linux", icon: "logo-linux", group: "Linux", meta: ".deb", arch: "x64" },
+const PLATFORM_META: Record<string, { name: string; icon: string; group: string; pkg: string; variant: string; arch: string }> = {
+	android: { name: "Android", icon: "logo-android", group: "Android", pkg: ".apk", variant: "Installer", arch: "arm64" },
+	"android-armv7": { name: "Android (32-bit)", icon: "logo-android", group: "Android", pkg: ".apk", variant: "32-bit", arch: "armv7" },
+	"macos-aarch64": { name: "macOS (Apple Silicon)", icon: "logo-apple", group: "macOS", pkg: ".dmg", variant: "Installer", arch: "arm64" },
+	"macos-x64": { name: "macOS (Intel)", icon: "logo-apple", group: "macOS", pkg: ".dmg", variant: "Installer", arch: "x64" },
+	windows: { name: "Windows", icon: "logo-windows", group: "Windows", pkg: ".msi", variant: "Installer", arch: "x64" },
+	"windows-portable": { name: "Windows (Portable)", icon: "logo-windows", group: "Windows", pkg: ".zip", variant: "Portable", arch: "x64" },
+	linux: { name: "Linux", icon: "logo-linux", group: "Linux", pkg: ".deb", variant: "Package", arch: "x64" },
 };
 
 const KNOWN_GROUPS = ["Android", "macOS", "Windows", "Linux"];
@@ -96,8 +96,14 @@ function iconFor(platform: string): string {
 	return PLATFORM_META[platform]?.icon ?? "package";
 }
 
-function metaFor(asset: ReleaseAsset): string {
-	return PLATFORM_META[asset.platform]?.meta ?? asset.name;
+function variantFor(platform: string): string {
+	return PLATFORM_META[platform]?.variant ?? "Installer";
+}
+
+function pkgFor(asset: ReleaseAsset): string {
+	if (PLATFORM_META[asset.platform]) return PLATFORM_META[asset.platform].pkg;
+	const m = asset.name.match(/\.([a-z0-9]+)$/i);
+	return m ? `.${m[1].toLowerCase()}` : "Package";
 }
 
 /* Derive an architecture label from the platform id; unknown ones that carry
@@ -305,12 +311,10 @@ function DownloadSection({
 						<>
 							<div className="skeleton skeleton-line skeleton-line--title" />
 							{[0, 1, 2].map((i) => (
-								<div key={i} className="download-card">
+								<div key={i} className="dl-card">
 									<div className="skeleton skeleton-icon" />
-									<div className="download-info">
-										<div className="skeleton skeleton-line skeleton-line--title" />
-										<div className="skeleton skeleton-line skeleton-line--meta" />
-									</div>
+									<div className="skeleton skeleton-line skeleton-line--title" />
+									<div className="skeleton skeleton-line skeleton-line--meta" />
 									<div className="skeleton skeleton-badge" />
 								</div>
 							))}
@@ -320,27 +324,34 @@ function DownloadSection({
 						<Fragment key={group}>
 							<h3 className="download-group-title">{group}</h3>
 							{items.map((asset) => {
-								const name = displayNameFor(asset.platform);
+								const arch = archFor(asset.platform);
+								const variant = variantFor(asset.platform);
 								return (
 									<a
 										key={asset.r2Key}
 										href={asset.downloadUrl}
-										className="download-card download-card--live"
+										className={`dl-card dl-card--live${variant === "Portable" ? " dl-card--portable" : ""}`}
 										target="_blank"
 										rel="noopener noreferrer"
 									>
-										<div className="download-icon">
-											<Icon name={iconFor(asset.platform)} size={28} />
+										<div className="dl-card-head">
+											<span className="dl-card-icon">
+												<Icon name={iconFor(asset.platform)} size={22} />
+											</span>
+											<div className="dl-card-title">
+												<h4>{displayNameFor(asset.platform)}</h4>
+												<span className="dl-card-sub">{variant}</span>
+											</div>
+											{arch && <span className="dl-card-arch">{arch}</span>}
 										</div>
-										<div className="download-info">
-											<h4>{name}</h4>
-											<span className="download-meta">{metaFor(asset)}</span>
+										<div className="dl-card-meta">
+											<span className="dl-card-pkg">{pkgFor(asset)}</span>
+											<span className="dl-card-size">{formatSize(asset.size)}</span>
 										</div>
-										{archFor(asset.platform) && (
-											<span className="download-arch">{archFor(asset.platform)}</span>
-										)}
-										<span className="download-size">{formatSize(asset.size)}</span>
-										<span className="download-badge">Download</span>
+										<span className="dl-card-cta">
+											<Icon name="download" size={15} />
+											Download
+										</span>
 									</a>
 								);
 							})}

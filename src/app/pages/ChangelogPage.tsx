@@ -111,12 +111,11 @@ export default function ChangelogPage(): JSX.Element {
 				{loading && !latest && (
 					<div className="download-list">
 						{[0, 1, 2].map((i) => (
-							<div key={i} className="download-card">
+							<div key={i} className="dl-card">
 								<div className="skeleton skeleton-icon" />
-								<div className="download-info">
-									<div className="skeleton skeleton-line skeleton-line--title" />
-									<div className="skeleton skeleton-line skeleton-line--meta" />
-								</div>
+								<div className="skeleton skeleton-line skeleton-line--title" />
+								<div className="skeleton skeleton-line skeleton-line--meta" />
+								<div className="skeleton skeleton-badge" />
 							</div>
 						))}
 					</div>

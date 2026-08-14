@@ -1,4 +1,4 @@
-# softether.app — Landing Website
+# softether.app — Website
 
 This is the source code for [softether.app](https://softether.app), the official
 landing website for **SoftEther App** — a self-managed, multi-platform SoftEther

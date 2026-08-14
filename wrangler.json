@@ -30,8 +30,8 @@
 	"d1_databases": [
 		{
 			"binding": "DB",
-			"database_name": "softether-app",
-			"database_id": "00000000-0000-0000-0000-000000000000",
+			"database_name": "softether-app-db",
+			"database_id": "1fadff4e-9a14-41fb-8855-947ae35305c4",
 			"migrations_dir": "drizzle"
 		}
 	]

@@ -87,9 +87,9 @@ export default function ChangelogPage(): JSX.Element {
 			<div className="m-auto mw-1040">
 				<h1 className="mb-sm text-center fw-700 fs-lg text-primary">Changelog</h1>
 				<p className="m-auto mb-2xl text-center text-secondary mw-540 fs-base">
-					Release notes for the SoftEther App. Downloads are on the{" "}
-					<a href="/#download" style={{ color: "inherit", textDecoration: "underline", textUnderlineOffset: "3px" }}>
-						home page
+					Release notes for the SoftEther App. Installers for every platform live on the{" "}
+					<a href="/download" style={{ color: "inherit", textDecoration: "underline", textUnderlineOffset: "3px" }}>
+						Downloads page
 					</a>.
 				</p>
 

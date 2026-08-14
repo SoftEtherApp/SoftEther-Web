@@ -24,7 +24,7 @@ interface LayoutProps {
 const LINKS = [
 	{ href: "/#features", label: "Features" },
 	{ href: "/#platforms", label: "Platforms" },
-	{ href: "/#download", label: "Download" },
+	{ href: "/download", label: "Download" },
 	{ href: "/library", label: "Library", badge: "OSS" },
 ];
 

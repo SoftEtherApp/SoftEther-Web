@@ -111,14 +111,39 @@ function archFor(platform: string): string | null {
 	return null;
 }
 
+/* Canonical per-group order — primary variant first (e.g. 64-bit before
+   32-bit, installer before portable). Unknown platforms sort last. */
+const PLATFORM_ORDER = [
+	"android",
+	"android-armv7",
+	"macos-aarch64",
+	"macos-x64",
+	"windows",
+	"windows-portable",
+	"linux",
+];
+
+function platformSortKey(platform: string): number {
+	const idx = PLATFORM_ORDER.indexOf(platform);
+	return idx === -1 ? PLATFORM_ORDER.length : idx;
+}
+
 /* Group release assets by platform group, known groups first, then any
-   additional groups in order of first appearance — never skip an asset. */
+   additional groups in order of first appearance — never skip an asset.
+   Within a group, assets follow PLATFORM_ORDER then name. */
 function groupAssets(assets: ReleaseAsset[]): Array<{ group: string; items: ReleaseAsset[] }> {
 	const map = new Map<string, ReleaseAsset[]>();
 	for (const a of assets) {
 		const g = groupFor(a.platform);
 		if (!map.has(g)) map.set(g, []);
 		map.get(g)!.push(a);
+	}
+	for (const items of map.values()) {
+		items.sort(
+			(a, b) =>
+				platformSortKey(a.platform) - platformSortKey(b.platform) ||
+				a.name.localeCompare(b.name),
+		);
 	}
 	const present = [...map.keys()];
 	const ordered = [...KNOWN_GROUPS.filter((g) => present.includes(g)), ...present.filter((g) => !KNOWN_GROUPS.includes(g))];

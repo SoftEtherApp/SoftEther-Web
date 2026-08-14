@@ -17,28 +17,82 @@ VPN client built with Flutter, and its open-source Zig engine **SoftEtherZig**.
 ```
 src/
 ├── app/               # React SPA
-│   ├── App.tsx              # Route switch (/, /library)
-│   ├── App.css              # Component styles
+│   ├── App.tsx              # Route table + layout selection
+│   ├── layouts/             # Layout groups
+│   │   ├── PublicLayout.tsx # Header + main + Footer (public pages)
+│   │   ├── AuthLayout.tsx   # Centered card (login/register/…)
+│   │   ├── AdminLayout.tsx  # Admin shell (authorized area)
+│   │   └── EmptyLayout.tsx  # No chrome (404 / unauthorized)
+│   ├── components/          # Header/Footer/Sidebar shells, Icon, ThemeToggle, …
+│   ├── hooks/               # useScrollToHash
+│   ├── auth/                # Mock session: AuthProvider, useAuth, RequireAuth
+│   ├── lib/                 # constants, ReleaseNotes renderer + tokenizer
 │   ├── index.css            # Design tokens + base styles
-│   ───── main.tsx             # Entry point
-│   ├── components/
-│   │   ├── Header.tsx       # Nav bar + theme toggle
-│   │   └── Footer.tsx       # Footer + legal disclaimer
-│   ├── Icon.tsx         # SVG icon system (Lucide + brand logos)
-│   │   └── HeroIllustration.tsx  # Hero visual (app logo + rings)
+│   ├── main.tsx             # Entry point
 │   └── pages/
-│       ├── AppLanding.tsx   # Root page — SoftEther App landing
-│       └── LibraryLanding.tsx  # /library page — SoftEtherZig engine
+│       ├── HomePage.tsx     # Root page — SoftEther App landing
+│       ├── library/         # /library page — SoftEtherZig engine
+│       ├── ChangelogPage.tsx / PrivacyPage.tsx / SecurityPage.tsx
+│       ├── DownloadsPage.tsx / TermsPage.tsx
+│       ├── docs/            # Documentation (scaffolded)
+│       ├── NotFoundPage.tsx / UnauthorizedPage.tsx
+│       ├── auth/            # Login / Register / ForgotPassword / ResetPassword
+│       └── admin/           # Scoped area (auth-gated)
+│           ├── dashboard/   # /admin dashboard
+│           ├── analytics/   # /admin/analytics
+│           ├── distribution/# /admin/distribution (release channels)
+│           ├── access/      # /admin/access/* (users, roles, permissions)
+│           ├── subscriptions/ # /admin/subscriptions
+│           ├── plans/       # /admin/plans
+│           ├── features/    # /admin/features (feature flags)
+│           └── settings/    # /admin/settings
+├── shared/
+│   └── types.ts             # Types shared by frontend + worker
 └── worker/
     └── index.ts             # Hono worker + SPA fallback
 ```
 
+## Auth
+
+Session handling is a **mock** for now (no backend): `AuthProvider` stores a
+session in `localStorage`, `/login` and `/register` create one locally, and
+`RequireAuth` guards scoped areas — unauthenticated visitors are redirected to
+`/login` and returned to their intended page after signing in. Access is
+**role-based**: `RequireAuth roles={["admin"]}` protects `/admin/*`, so regular
+users are sent to `/unauthorized` while admins pass through; regular users land
+on `/profile` and the public site. `admin@softether.app` signs in as an admin in
+demo mode (see `roleForEmail` in `src/app/auth/session.ts`). Swap
+`src/app/auth/session.ts` for a real token/API flow later.
+
 ## Pages
 
-| Route | Page | Description |
-|---|---|---|
-| `/` | AppLanding | SoftEther App: hero, features, platforms, download |
-| `/library` | LibraryLanding | SoftEtherZig: features, quick start, integration targets |
+| Route | Page | Layout | Description |
+|---|---|---|---|
+| `/` | HomePage | Public | SoftEther App: hero, features, platforms, download |
+| `/library` | LibraryPage | Public | SoftEtherZig: features, quick start, integration targets |
+| `/changelog` | ChangelogPage | Public | Release history from the worker API |
+| `/privacy` | PrivacyPage | Public | Privacy policy |
+| `/security` | SecurityPage | Public | Security & trust page |
+| `/download` | DownloadsPage | Public | Installers per platform (scaffold) |
+| `/terms` | TermsPage | Public | Terms of service (scaffold) |
+| `/docs` | DocsPage | Public | Documentation hub (scaffold) |
+| `/login` | LoginPage | Auth | Sign in (mock session) |
+| `/register` | RegisterPage | Auth | Create account (mock session) |
+| `/forgot-password` | ForgotPasswordPage | Auth | Password reset (stub) |
+| `/reset-password` | ResetPasswordPage | Auth | Set new password (stub) |
+| `/profile` | ProfilePage | Public | Signed-in account page (auth-gated) |
+| `/admin` | DashboardPage | Admin | Admin dashboard (scaffold, auth-gated) |
+| `/admin/analytics` | AnalyticsPage | Admin | Usage telemetry (scaffold, auth-gated) |
+| `/admin/distribution` | DistributionPage | Admin | Release channels (scaffold, auth-gated) |
+| `/admin/access/users` | UsersPage | Admin | User management (scaffold, auth-gated) |
+| `/admin/access/roles` | RolesPage | Admin | Roles (scaffold, auth-gated) |
+| `/admin/access/permissions` | PermissionsPage | Admin | Permissions (scaffold, auth-gated) |
+| `/admin/subscriptions` | SubscriptionsPage | Admin | Billing overview (scaffold, auth-gated) |
+| `/admin/plans` | PlansPage | Admin | Billing plans (scaffold, auth-gated) |
+| `/admin/features` | FeaturesPage | Admin | Feature flags (scaffold, auth-gated) |
+| `/admin/settings` | SettingsPage | Admin | Admin settings (scaffold, auth-gated) |
+| `/unauthorized` | UnauthorizedPage | Empty | 403 fallback |
+| `*` | NotFoundPage | Empty | 404 fallback |
 
 ## Development
 
@@ -57,6 +111,33 @@ npm run deploy     # wrangler deploy
 The `wrangler.json` configures static assets from `dist/client/` with SPA
 fallback (`not_found_handling: single-page-application`) — so `/library` and
 any client-side route serves `index.html`.
+
+## Database (D1 + Drizzle)
+
+The worker uses **Cloudflare D1** with **Drizzle ORM**. Schema lives in
+`src/worker/db/schema.ts`; generated SQL migrations live in `drizzle/` and are
+applied via wrangler.
+
+```bash
+# One-time setup — create the remote database, then paste its ID into
+# wrangler.json (d1_databases.database_id)
+npx wrangler d1 create softether-app-db
+
+# Local development — the local database is created automatically by wrangler
+npx wrangler d1 migrations apply softether-app-db --local
+
+# Seed baseline data (roles, permissions, plans, users, …)
+npx wrangler d1 execute softether-app-db --local --file=scripts/seed.sql
+
+# After changing src/worker/db/schema.ts
+npx drizzle-kit generate                       # write a new migration
+npx wrangler d1 migrations apply softether-app-db --local   # apply locally
+npx wrangler d1 migrations apply softether-app-db --remote  # apply to production
+```
+
+Run `npx wrangler types` after changing bindings in `wrangler.json`. The
+D1-backed admin API is served under `/api/admin/*` (stats, users, roles,
+permissions, plans, subscriptions, features, activity).
 
 ## Design System
 

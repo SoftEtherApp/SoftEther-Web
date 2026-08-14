@@ -1,48 +1,19 @@
 /* ════════════════════════════════════
-   Shared Footer
+   Footer — structural shell for the page footer
+   Content is supplied by the layout via children.
    ════════════════════════════════════ */
 
-import Icon from "./Icon";
-import { LIBRARY_REPO_URL } from "./Header";
+import { type JSX, type ReactNode } from "react";
 import "./Footer.css";
 
-export default function Footer() {
+interface FooterProps {
+	children: ReactNode;
+}
+
+export default function Footer({ children }: FooterProps): JSX.Element {
 	return (
 		<footer className="footer">
-			<div className="footer-inner">
-				<div className="footer-main">
-					<div className="footer-brand">
-						<img src="/logo.png" alt="" width={24} height={24} />
-						<span>SoftEther App</span>
-					</div>
-					<div className="footer-links">
-						<a
-							href={LIBRARY_REPO_URL}
-							target="_blank"
-							rel="noopener noreferrer"
-							aria-label="SoftEtherZig on GitHub"
-						>
-							<Icon name="github" size={18} />
-						</a>
-						<a href="https://softether.app" target="_blank" rel="noopener noreferrer">
-							SoftEther.app
-						</a>
-						<a href="/library">Library</a>
-						<a href="/changelog">Changelog</a>
-						<a href="/privacy">Privacy</a>
-						<a href="/security">Security</a>
-					</div>
-				</div>
-				<p className="footer-copy">
-					Copyright &copy; {new Date().getFullYear()} <a href="https://devstroop.com" target="_blank" rel="noopener noreferrer">
-						<strong>Devstroop</strong>
-					</a>. The SoftEtherZig engine is open source (Apache-2.0); the SoftEther App binary is freeware.
-				</p>
-				<p className="footer-legal">
-					SoftEther App is a third-party implementation based on SoftEther VPN source code.
-					We do not have any affiliation with SoftEther Corporation or its developers.
-				</p>
-			</div>
+			{children}
 		</footer>
 	);
 }

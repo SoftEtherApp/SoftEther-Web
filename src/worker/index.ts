@@ -1,16 +1,19 @@
+import { count, desc, eq } from "drizzle-orm";
 import { Hono } from "hono";
+
+import { getDb } from "./db/client";
+import * as schema from "./db/schema";
+import type { ReleaseAsset, Release } from "../shared/types";
 
 /* ── Types ── */
 
 interface AppEnv extends Env {
-	ASSETS?: { fetch: (req: Request) => Promise<Response> };
 	RELEASES: R2Bucket;
 	RELEASE_META: KVNamespace;
+	DB: D1Database;
 	WEBHOOK_SECRET: string;
 	ENVIRONMENT?: string;
 }
-
-import type { ReleaseAsset, Release } from "../shared/types";
 
 /* ── Helpers ── */
 
@@ -256,6 +259,42 @@ app.post("/api/webhook/release", async (c) => {
 		// Store in KV
 		await c.env.RELEASE_META.put(`releases:${tag}`, JSON.stringify(meta));
 
+		// Mirror release metadata into D1
+		try {
+			const db = getDb(c.env.DB);
+			const [releaseRow] = await db
+				.insert(schema.releases)
+				.values({
+					tag,
+					version,
+					publishedAt: ghRelease.published_at,
+					body: ghRelease.body || "",
+				})
+				.onConflictDoUpdate({
+					target: schema.releases.tag,
+					set: {
+						version,
+						publishedAt: ghRelease.published_at,
+						body: ghRelease.body || "",
+					},
+				})
+				.returning({ id: schema.releases.id });
+
+			if (releaseRow) {
+				for (const asset of assets) {
+					await db.insert(schema.releaseAssets).values({
+						releaseId: releaseRow.id,
+						name: asset.name,
+						platform: asset.platform,
+						size: asset.size,
+						r2Key: asset.r2Key,
+					});
+				}
+			}
+		} catch (err) {
+			console.error("D1 mirror write failed (non-fatal):", err);
+		}
+
 		// Update releases list
 		const listRaw = await c.env.RELEASE_META.get("releases:list");
 		const list: string[] = listRaw ? JSON.parse(listRaw) : [];
@@ -272,12 +311,172 @@ app.post("/api/webhook/release", async (c) => {
 	}
 });
 
+/* ── Admin API (D1) ── */
+
+app.get("/api/admin/stats", async (c) => {
+	try {
+		const db = getDb(c.env.DB);
+		const [users, subs, releases, flags] = await Promise.all([
+			db.select({ value: count() }).from(schema.users),
+			db.select({ value: count() }).from(schema.subscriptions),
+			db.select({ value: count() }).from(schema.releases),
+			db.select({ value: count() }).from(schema.featureFlags),
+		]);
+		return c.json({
+			users: users[0].value,
+			subscriptions: subs[0].value,
+			releases: releases[0].value,
+			featureFlags: flags[0].value,
+		});
+	} catch (err) {
+		console.error("Error fetching admin stats:", err);
+		return c.json({ error: "Internal server error" }, 500);
+	}
+});
+
+app.get("/api/admin/users", async (c) => {
+	try {
+		const db = getDb(c.env.DB);
+		const rows = await db
+			.select({
+				id: schema.users.id,
+				email: schema.users.email,
+				name: schema.users.name,
+				role: schema.users.role,
+				status: schema.users.status,
+				createdAt: schema.users.createdAt,
+			})
+			.from(schema.users)
+			.orderBy(desc(schema.users.createdAt));
+		return c.json(rows);
+	} catch (err) {
+		console.error("Error fetching admin users:", err);
+		return c.json({ error: "Internal server error" }, 500);
+	}
+});
+
+app.get("/api/admin/roles", async (c) => {
+	try {
+		const db = getDb(c.env.DB);
+		const rows = await db.select().from(schema.roles).orderBy(schema.roles.id);
+		return c.json(rows);
+	} catch (err) {
+		console.error("Error fetching admin roles:", err);
+		return c.json({ error: "Internal server error" }, 500);
+	}
+});
+
+app.get("/api/admin/permissions", async (c) => {
+	try {
+		const db = getDb(c.env.DB);
+		const rows = await db.select().from(schema.permissions).orderBy(schema.permissions.id);
+		return c.json(rows);
+	} catch (err) {
+		console.error("Error fetching admin permissions:", err);
+		return c.json({ error: "Internal server error" }, 500);
+	}
+});
+
+app.get("/api/admin/plans", async (c) => {
+	try {
+		const db = getDb(c.env.DB);
+		const rows = await db
+			.select()
+			.from(schema.plans)
+			.orderBy(schema.plans.sortOrder);
+		return c.json(rows);
+	} catch (err) {
+		console.error("Error fetching admin plans:", err);
+		return c.json({ error: "Internal server error" }, 500);
+	}
+});
+
+app.get("/api/admin/subscriptions", async (c) => {
+	try {
+		const db = getDb(c.env.DB);
+		const rows = await db
+			.select({
+				id: schema.subscriptions.id,
+				userId: schema.subscriptions.userId,
+				planId: schema.subscriptions.planId,
+				status: schema.subscriptions.status,
+				renewsAt: schema.subscriptions.renewsAt,
+				createdAt: schema.subscriptions.createdAt,
+				userEmail: schema.users.email,
+				userName: schema.users.name,
+				planName: schema.plans.name,
+			})
+			.from(schema.subscriptions)
+			.innerJoin(schema.users, eq(schema.users.id, schema.subscriptions.userId))
+			.innerJoin(schema.plans, eq(schema.plans.id, schema.subscriptions.planId))
+			.orderBy(desc(schema.subscriptions.createdAt));
+		return c.json(rows);
+	} catch (err) {
+		console.error("Error fetching admin subscriptions:", err);
+		return c.json({ error: "Internal server error" }, 500);
+	}
+});
+
+app.get("/api/admin/features", async (c) => {
+	try {
+		const db = getDb(c.env.DB);
+		const rows = await db
+			.select()
+			.from(schema.featureFlags)
+			.orderBy(schema.featureFlags.id);
+		return c.json(rows);
+	} catch (err) {
+		console.error("Error fetching admin features:", err);
+		return c.json({ error: "Internal server error" }, 500);
+	}
+});
+
+app.get("/api/admin/activity", async (c) => {
+	try {
+		const db = getDb(c.env.DB);
+		const rows = await db
+			.select()
+			.from(schema.activityLog)
+			.orderBy(desc(schema.activityLog.createdAt))
+			.limit(50);
+		return c.json(rows);
+	} catch (err) {
+		console.error("Error fetching admin activity:", err);
+		return c.json({ error: "Internal server error" }, 500);
+	}
+});
+
 /* ── SPA fallback ── */
 
 // Routes the SPA router knows. Any other path is a genuine 404: the server
 // answers 404 (so crawlers, link checkers, and no-JS clients get honest
 // semantics) while still shipping the shell for client-side rendering.
-const SPA_ROUTES = new Set(["/", "/library", "/changelog", "/privacy", "/security"]);
+const SPA_ROUTES = new Set([
+	"/",
+	"/library",
+	"/changelog",
+	"/privacy",
+	"/security",
+	"/download",
+	"/terms",
+	"/docs",
+	"/login",
+	"/register",
+	"/forgot-password",
+	"/reset-password",
+	"/profile",
+	"/admin",
+	"/admin/analytics",
+	"/admin/distribution",
+	"/admin/access/users",
+	"/admin/access/roles",
+	"/admin/access/permissions",
+	"/admin/subscriptions",
+	"/admin/plans",
+	"/admin/features",
+	"/admin/settings",
+	"/unauthorized",
+]);
 
 function spaStatus(pathname: string): number {
 	const p = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;

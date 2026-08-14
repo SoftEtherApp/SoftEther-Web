@@ -1,0 +1,105 @@
+/* ════════════════════════════════════
+   UserMenu — avatar button + dropdown
+   ════════════════════════════════════ */
+
+.user-menu {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+}
+
+.user-menu-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 2px;
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 2px;
+	border-radius: var(--rad-full);
+	transition: background var(--transition-fast);
+}
+.user-menu-btn:hover {
+	background: var(--surface-600);
+}
+
+.user-menu-avatar {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 34px;
+	height: 34px;
+	border-radius: var(--rad-full);
+	background: var(--blurple-soft);
+	color: var(--blurple);
+	font-size: 0.78rem;
+	font-weight: 700;
+}
+
+.user-menu-chevron {
+	color: var(--text-secondary);
+	transition: transform var(--transition-fast);
+}
+.user-menu-btn[aria-expanded="true"] .user-menu-chevron {
+	transform: rotate(180deg);
+}
+
+.user-menu-pop {
+	position: absolute;
+	top: calc(100% + 8px);
+	right: 0;
+	min-width: 220px;
+	background: var(--surface-600);
+	border: 1px solid var(--surface-500);
+	border-radius: var(--rad-md);
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+	padding: var(--sp-xs);
+	z-index: 110;
+}
+
+.user-menu-header {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	padding: var(--sp-sm) var(--sp-sm) var(--sp-sm) var(--sp-sm);
+	border-bottom: 1px solid var(--surface-500);
+	margin-bottom: var(--sp-xs);
+}
+.user-menu-name {
+	font-size: 0.9rem;
+	font-weight: 600;
+	color: var(--text-primary);
+}
+.user-menu-email {
+	font-size: 0.78rem;
+	color: var(--text-muted);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.user-menu-item {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	padding: var(--sp-sm) var(--sp-sm);
+	border: none;
+	background: none;
+	border-radius: var(--rad-sm);
+	color: var(--text-secondary);
+	font-size: 0.88rem;
+	cursor: pointer;
+	text-align: left;
+	transition: background var(--transition-fast), color var(--transition-fast);
+}
+.user-menu-item:hover {
+	background: var(--surface-500);
+	color: var(--text-primary);
+}
+
+.user-menu-divider {
+	height: 1px;
+	background: var(--surface-500);
+	margin: var(--sp-xs) 0;
+}

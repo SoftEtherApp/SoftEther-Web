@@ -8,8 +8,6 @@
 import { type JSX } from "react";
 import { useScrollToHash } from "../hooks/useScrollToHash";
 import Icon from "../components/Icon";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
 
 // Fixed revision date — bump it manually whenever this policy actually changes.
 const LAST_UPDATED = "2026-08-06";
@@ -18,16 +16,12 @@ export default function PrivacyPage(): JSX.Element {
 	useScrollToHash(200);
 
 	return (
-		<>
-			<Header />
-			<a href="#main-content" className="skip-link">Skip to content</a>
-			<main id="main-content">
-				<section className="section">
-					<div className="section-inner">
-						<h1 className="section-title">Privacy Policy</h1>
-						<p className="section-desc section-desc--spaced">
-							Last updated: {LAST_UPDATED}
-						</p>
+		<section className="py-2xl px-lg sm:py-2xl sm:px-md">
+			<div className="m-auto mw-1040">
+				<h1 className="mb-sm text-center fw-700 fs-lg text-primary">Privacy Policy</h1>
+				<p className="m-auto mb-xl text-center text-secondary mw-540 fs-base">
+					Last updated: {LAST_UPDATED}
+				</p>
 
 						<div className="confirm-note">
 							<Icon name="book" size={16} />
@@ -133,10 +127,7 @@ export default function PrivacyPage(): JSX.Element {
 								channel on the Devstroop GitHub org.]
 							</p>
 						</article>
-					</div>
-				</section>
-			</main>
-			<Footer />
-		</>
+				</div>
+			</section>
 	);
 }

@@ -2,7 +2,7 @@
    SVG Icon component — Lucide + brand icons
    ════════════════════════════════════ */
 
-import type { JSX } from "react";
+import type { CSSProperties, JSX } from "react";
 
 interface IconNode {
   type: "path" | "circle" | "rect";
@@ -104,6 +104,136 @@ const ICONS: Record<string, IconDef> = {
     { type: "circle", props: { cx: 18, cy: 19, r: 3 } },
     { type: "path", props: { d: "m8.59 13.51 6.83 3.98m-.01-10.98-6.82 3.98" } },
   ] },
+  dashboard: { children: [
+    { type: "rect", props: { width: 7, height: 9, x: 3, y: 3, rx: 1 } },
+    { type: "rect", props: { width: 7, height: 5, x: 14, y: 3, rx: 1 } },
+    { type: "rect", props: { width: 7, height: 9, x: 14, y: 12, rx: 1 } },
+    { type: "rect", props: { width: 7, height: 5, x: 3, y: 16, rx: 1 } },
+  ] },
+  download: { children: [
+    { type: "path", props: { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" } },
+    { type: "path", props: { d: "m7 10 5 5 5-5" } },
+    { type: "path", props: { d: "M12 15V3" } },
+  ] },
+  "file-text": { children: [
+    { type: "path", props: { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z" } },
+    { type: "path", props: { d: "M14 2v6h6" } },
+    { type: "path", props: { d: "M16 13H8m8 4H8m-2-8h4" } },
+  ] },
+  eye: { children: [
+    { type: "path", props: { d: "M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0" } },
+    { type: "circle", props: { cx: 12, cy: 12, r: 3 } },
+  ] },
+  "eye-off": { children: [
+    { type: "path", props: { d: "M10.73 5.08A10.4 10.4 0 0 1 12 5c7 0 10 7 10 7a13.2 13.2 0 0 1-1.67 2.68" } },
+    { type: "path", props: { d: "M6.61 6.61A13.5 13.5 0 0 0 2 12s3 7 10 7a9.7 9.7 0 0 0 5.39-1.61" } },
+    { type: "path", props: { d: "M2 2l20 20" } },
+  ] },
+  settings: { children: [
+    { type: "path", props: { d: "M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" } },
+    { type: "circle", props: { cx: 12, cy: 12, r: 3 } },
+  ] },
+  users: { children: [
+    { type: "path", props: { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" } },
+    { type: "circle", props: { cx: 9, cy: 7, r: 4 } },
+    { type: "path", props: { d: "M22 21v-2a4 4 0 0 0-3-3.87" } },
+    { type: "path", props: { d: "M16 3.13a4 4 0 0 1 0 7.75" } },
+  ] },
+  user: { children: [
+    { type: "path", props: { d: "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" } },
+    { type: "circle", props: { cx: 12, cy: 7, r: 4 } },
+  ] },
+  "user-plus": { children: [
+    { type: "path", props: { d: "M2 21a8 8 0 0 1 13.292-6" } },
+    { type: "circle", props: { cx: 10, cy: 8, r: 5 } },
+    { type: "path", props: { d: "M19 16v6m3-3h-6" } },
+  ] },
+  shield: { children: [
+    { type: "path", props: { d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" } },
+  ] },
+  key: { children: [
+    { type: "path", props: { d: "M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" } },
+    { type: "circle", props: { cx: 16.5, cy: 7.5, r: 0.5, fill: "currentColor" } },
+  ] },
+  "log-out": { children: [
+    { type: "path", props: { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" } },
+    { type: "path", props: { d: "m16 17 5-5-5-5" } },
+    { type: "path", props: { d: "M21 12H9" } },
+  ] },
+  plus: { children: [
+    { type: "path", props: { d: "M5 12h14" } },
+    { type: "path", props: { d: "M12 5v14" } },
+  ] },
+  search: { children: [
+    { type: "circle", props: { cx: 11, cy: 11, r: 8 } },
+    { type: "path", props: { d: "m21 21-4.3-4.3" } },
+  ] },
+  activity: { children: [
+    { type: "path", props: { d: "M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" } },
+  ] },
+  check: { children: [
+    { type: "path", props: { d: "M20 6 9 17l-5-5" } },
+  ] },
+  package: { children: [
+    { type: "path", props: { d: "M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" } },
+    { type: "path", props: { d: "M12 22V12" } },
+    { type: "path", props: { d: "m3.3 7 8.7 5 8.7-5" } },
+    { type: "path", props: { d: "m7.5 4.27 9 5.15" } },
+  ] },
+  clock: { children: [
+    { type: "circle", props: { cx: 12, cy: 12, r: 10 } },
+    { type: "path", props: { d: "M12 6v6l4 2" } },
+  ] },
+  "alert-triangle": { children: [
+    { type: "path", props: { d: "M12 9v4" } },
+    { type: "path", props: { d: "M12 17h.01" } },
+    { type: "path", props: { d: "M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" } },
+  ] },
+  radio: { children: [
+    { type: "path", props: { d: "M4.9 19.1C1 15.2 1 8.8 4.9 4.9" } },
+    { type: "path", props: { d: "M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5" } },
+    { type: "circle", props: { cx: 12, cy: 12, r: 2 } },
+    { type: "path", props: { d: "M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5" } },
+    { type: "path", props: { d: "M19.1 4.9C23 8.8 23 15.2 19.1 19.1" } },
+  ] },
+  "refresh-cw": { children: [
+    { type: "path", props: { d: "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" } },
+    { type: "path", props: { d: "M21 3v5h-5" } },
+    { type: "path", props: { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" } },
+    { type: "path", props: { d: "M3 19v-5h5" } },
+  ] },
+  globe: { children: [
+    { type: "circle", props: { cx: 12, cy: 12, r: 10 } },
+    { type: "path", props: { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" } },
+    { type: "path", props: { d: "M2 12h20" } },
+  ] },
+  sliders: { children: [
+    { type: "path", props: { d: "M21 4h-7" } },
+    { type: "path", props: { d: "M10 4H3" } },
+    { type: "path", props: { d: "M21 12h-9" } },
+    { type: "path", props: { d: "M8 12H3" } },
+    { type: "path", props: { d: "M21 20h-5" } },
+    { type: "path", props: { d: "M12 20H3" } },
+    { type: "path", props: { d: "M14 2v4" } },
+    { type: "path", props: { d: "M8 10v4" } },
+    { type: "path", props: { d: "M16 18v4" } },
+  ] },
+  x: { children: [
+    { type: "path", props: { d: "M18 6 6 18" } },
+    { type: "path", props: { d: "m6 6 12 12" } },
+  ] },
+  "credit-card": { children: [
+    { type: "rect", props: { width: 20, height: 14, x: 2, y: 5, rx: 2 } },
+    { type: "path", props: { d: "M2 10h20" } },
+  ] },
+  flag: { children: [
+    { type: "path", props: { d: "M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" } },
+    { type: "path", props: { d: "M4 22v-7" } },
+  ] },
+  "trending-up": { children: [
+    { type: "path", props: { d: "M22 7l-8.5 8.5-5-5L2 17" } },
+    { type: "path", props: { d: "M16 7h6v6" } },
+  ] },
   /* ── Brand logos (fill-based) ── */
   "logo-android": { children: [
     { type: "path", props: { fill: "currentColor", d: "M18.44 5.559q-1.015 1.748-2.028 3.498q-.055-.023-.111-.043a12.1 12.1 0 0 0-8.68.033C7.537 8.897 5.868 6.026 5.6 5.56a1 1 0 0 0-.141-.19a1.104 1.104 0 0 0-1.768 1.298c1.947 3.37-.096-.216 1.948 3.36c.017.03-.495.263-1.393 1.017C2.9 12.176.452 14.772 0 18.99h24a11.7 11.7 0 0 0-.746-3.068a12.1 12.1 0 0 0-2.74-4.184a12 12 0 0 0-2.131-1.687c.66-1.122 1.312-2.256 1.965-3.385a1.11 1.11 0 0 0-.008-1.12a1.1 1.1 0 0 0-.852-.532c-.522-.054-.939.313-1.049.545m-.04 8.46c.395.593.324 1.331-.156 1.65c-.48.32-1.188.1-1.582-.493s-.324-1.33.156-1.65c.473-.316 1.182-.11 1.582.494m-11.193-.492c.48.32.55 1.058.156 1.65c-.394.593-1.103.815-1.584.495c-.48-.32-.55-1.058-.156-1.65c.4-.603 1.109-.811 1.584-.495" } },
@@ -154,9 +284,13 @@ function renderNode(node: IconNode, key: number): JSX.Element {
 export default function Icon({
   name,
   size = 24,
+  className,
+  style,
 }: {
   name: IconName;
   size?: number;
+  className?: string;
+  style?: CSSProperties;
 }) {
   const def = ICONS[name];
   if (!def) return null;
@@ -167,6 +301,8 @@ export default function Icon({
       height={size}
       viewBox={def.viewBox || "0 0 24 24"}
       aria-hidden="true"
+      className={className}
+      style={style}
     >
       {def.children.map((node, i) => renderNode(node, i))}
     </svg>

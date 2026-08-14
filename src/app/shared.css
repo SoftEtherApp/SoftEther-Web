@@ -183,11 +183,15 @@
 .btn {
 	display: inline-flex;
 	align-items: center;
+	justify-content: center;
 	gap: var(--sp-sm);
-	padding: 8px 16px;
+	height: 40px;
+	padding: 0 16px;
 	border-radius: var(--rad-pill);
+	font-family: inherit;
 	font-size: 0.85rem;
 	font-weight: 600;
+	line-height: 1;
 	cursor: pointer;
 	transition: all var(--transition-fast);
 	border: none;
@@ -211,6 +215,54 @@
 }
 .btn-secondary:hover {
 	background: var(--surface-500);
+	color: var(--text-primary);
+}
+
+/* ── Forms ── */
+
+.label {
+	display: block;
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: var(--text-secondary);
+	margin-bottom: var(--sp-xs);
+}
+
+.input {
+	width: 100%;
+	background: var(--surface-700);
+	border: 1px solid var(--surface-500);
+	border-radius: var(--rad-sm);
+	color: var(--text-primary);
+	font-size: 0.9rem;
+	padding: 10px 14px;
+	transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.input::placeholder {
+	color: var(--text-muted);
+}
+.input:focus {
+	outline: none;
+	border-color: var(--blurple);
+	box-shadow: 0 0 0 3px var(--blurple-soft);
+}
+
+.password-toggle {
+	position: absolute;
+	right: 6px;
+	top: 50%;
+	transform: translateY(-50%);
+	background: none;
+	border: none;
+	color: var(--text-muted);
+	cursor: pointer;
+	padding: 6px;
+	border-radius: var(--rad-sm);
+	display: flex;
+	align-items: center;
+	line-height: 0;
+}
+.password-toggle:hover {
 	color: var(--text-primary);
 }
 

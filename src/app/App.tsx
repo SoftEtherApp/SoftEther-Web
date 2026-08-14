@@ -16,6 +16,9 @@ import LibraryPage from "./pages/library/LibraryPage";
 import ChangelogPage from "./pages/ChangelogPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import SecurityPage from "./pages/SecurityPage";
+import DownloadsPage from "./pages/DownloadsPage";
+import TermsPage from "./pages/TermsPage";
+import DocsPage from "./pages/docs/DocsPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
@@ -64,6 +67,9 @@ const ROUTES: RouteDef[] = [
 	{ path: "/changelog", page: () => <ChangelogPage />, layout: "public", title: "Changelog — SoftEther App" },
 	{ path: "/privacy", page: () => <PrivacyPage />, layout: "public", title: "Privacy Policy — SoftEther App" },
 	{ path: "/security", page: () => <SecurityPage />, layout: "public", title: "Security — SoftEther App" },
+	{ path: "/download", page: () => <DownloadsPage />, layout: "public", title: "Downloads — SoftEther App" },
+	{ path: "/terms", page: () => <TermsPage />, layout: "public", title: "Terms of Service — SoftEther App" },
+	{ path: "/docs", page: () => <DocsPage />, layout: "public", title: "Documentation — SoftEther App" },
 	{ path: "/login", page: () => <LoginPage />, layout: "auth", title: "Sign in — SoftEther App" },
 	{ path: "/register", page: () => <RegisterPage />, layout: "auth", title: "Create account — SoftEther App" },
 	{ path: "/forgot-password", page: () => <ForgotPasswordPage />, layout: "auth", title: "Reset password — SoftEther App" },

@@ -57,10 +57,11 @@ failures=0
 declare -A EXPECTED_STATUS=(
   ["/library"]=200 ["/nope"]=404 ["/library/"]=200
   ["/changelog"]=200 ["/privacy"]=200 ["/security"]=200 ["/features"]=404
+  ["/download"]=200 ["/terms"]=200 ["/docs"]=200
   ["/login"]=200 ["/register"]=200 ["/admin"]=200 ["/admin/settings"]=200 ["/unauthorized"]=200
 )
 
-for path in /library /nope /library/ /changelog /privacy /security /features /login /register /admin /admin/settings /unauthorized; do
+for path in /library /nope /library/ /changelog /privacy /security /features /download /terms /docs /login /register /admin /admin/settings /unauthorized; do
   out="$(curl -s -H 'Sec-Fetch-Mode: navigate' -w '__FINAL__%{url_effective}__STATUS__%{http_code}' "${BASE}${path}")"
   body="${out%%__FINAL__*}"
   rest="${out#*__FINAL__}"

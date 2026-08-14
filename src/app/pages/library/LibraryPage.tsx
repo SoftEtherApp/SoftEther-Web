@@ -5,7 +5,7 @@
 import { type JSX } from "react";
 import { useScrollToHash } from "../../hooks/useScrollToHash";
 import Icon from "../../components/Icon";
-import { LIBRARY_REPO_URL } from "../../components/Header";
+import { LIBRARY_REPO_URL } from "../../lib/constants";
 
 /* ── Data ── */
 

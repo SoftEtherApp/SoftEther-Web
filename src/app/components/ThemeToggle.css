@@ -1,0 +1,23 @@
+/* ════════════════════════════════════
+   ThemeToggle — dark/light mode switch
+   ════════════════════════════════════ */
+
+.theme-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--surface-600);
+	border: none;
+	color: var(--text-secondary);
+	cursor: pointer;
+	width: 40px;
+	height: 40px;
+	border-radius: var(--rad-full);
+	transition: color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+	margin-left: var(--sp-sm);
+}
+.theme-btn:hover {
+	color: var(--text-primary);
+	background: var(--surface-500);
+	transform: translateY(-1px);
+}

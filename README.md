@@ -23,15 +23,17 @@ src/
 │   │   ├── AuthLayout.tsx   # Centered card (login/register/…)
 │   │   ├── AdminLayout.tsx  # Admin shell (authorized area)
 │   │   └── EmptyLayout.tsx  # No chrome (404 / unauthorized)
-│   ├── components/          # Header, Footer, Icon, HeroIllustration, …
+│   ├── components/          # Header/Footer/Sidebar shells, Icon, ThemeToggle, …
 │   ├── hooks/               # useScrollToHash
-│   ├── lib/                 # ReleaseNotes renderer + tokenizer
+│   ├── lib/                 # constants, ReleaseNotes renderer + tokenizer
 │   ├── index.css            # Design tokens + base styles
 │   ├── main.tsx             # Entry point
 │   └── pages/
 │       ├── HomePage.tsx     # Root page — SoftEther App landing
-│       ├── LibraryPage.tsx  # /library page — SoftEtherZig engine
+│       ├── library/         # /library page — SoftEtherZig engine
 │       ├── ChangelogPage.tsx / PrivacyPage.tsx / SecurityPage.tsx
+│       ├── DownloadsPage.tsx / TermsPage.tsx
+│       ├── docs/            # Documentation (scaffolded)
 │       ├── NotFoundPage.tsx / UnauthorizedPage.tsx
 │       ├── auth/            # Login / Register / ForgotPassword / ResetPassword
 │       └── admin/           # Dashboard, Settings (scaffolded)
@@ -50,6 +52,9 @@ src/
 | `/changelog` | ChangelogPage | Public | Release history from the worker API |
 | `/privacy` | PrivacyPage | Public | Privacy policy |
 | `/security` | SecurityPage | Public | Security & trust page |
+| `/download` | DownloadsPage | Public | Installers per platform (scaffold) |
+| `/terms` | TermsPage | Public | Terms of service (scaffold) |
+| `/docs` | DocsPage | Public | Documentation hub (scaffold) |
 | `/login` | LoginPage | Auth | Sign in (scaffold) |
 | `/register` | RegisterPage | Auth | Create account (scaffold) |
 | `/forgot-password` | ForgotPasswordPage | Auth | Password reset (scaffold) |

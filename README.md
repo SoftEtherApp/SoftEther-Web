@@ -121,18 +121,18 @@ applied via wrangler.
 ```bash
 # One-time setup — create the remote database, then paste its ID into
 # wrangler.json (d1_databases.database_id)
-npx wrangler d1 create softether-app
+npx wrangler d1 create softether-app-db
 
 # Local development — the local database is created automatically by wrangler
-npx wrangler d1 migrations apply softether-app --local
+npx wrangler d1 migrations apply softether-app-db --local
 
 # Seed baseline data (roles, permissions, plans, users, …)
-npx wrangler d1 execute softether-app --local --file=scripts/seed.sql
+npx wrangler d1 execute softether-app-db --local --file=scripts/seed.sql
 
 # After changing src/worker/db/schema.ts
-npx drizzle-kit generate                      # write a new migration
-npx wrangler d1 migrations apply softether-app --local    # apply locally
-npx wrangler d1 migrations apply softether-app --remote   # apply to production
+npx drizzle-kit generate                       # write a new migration
+npx wrangler d1 migrations apply softether-app-db --local   # apply locally
+npx wrangler d1 migrations apply softether-app-db --remote  # apply to production
 ```
 
 Run `npx wrangler types` after changing bindings in `wrangler.json`. The

@@ -25,7 +25,7 @@ const LINKS = [
 	{ href: "/#features", label: "Features" },
 	{ href: "/#platforms", label: "Platforms" },
 	{ href: "/#download", label: "Download" },
-	{ href: "/library", label: "Library" },
+	{ href: "/library", label: "Library", badge: "OSS" },
 ];
 
 export default function PublicLayout({ children }: LayoutProps): JSX.Element {
@@ -88,6 +88,7 @@ export default function PublicLayout({ children }: LayoutProps): JSX.Element {
 								aria-current={isActive(l.href) ? "page" : undefined}
 							>
 								{l.label}
+								{l.badge && <span className="nav-badge">{l.badge}</span>}
 							</a>
 						))}
 					</nav>
@@ -137,6 +138,7 @@ export default function PublicLayout({ children }: LayoutProps): JSX.Element {
 							aria-current={isActive(l.href) ? "page" : undefined}
 						>
 							{l.label}
+							{l.badge && <span className="nav-badge">{l.badge}</span>}
 						</a>
 					))}
 					{user ? (

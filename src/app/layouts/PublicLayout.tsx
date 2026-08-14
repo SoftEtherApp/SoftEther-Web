@@ -211,7 +211,7 @@ export default function PublicLayout({ children }: LayoutProps): JSX.Element {
 					<p className="footer-copy mt-md fs-xs text-muted text-center">
 						Copyright &copy; {new Date().getFullYear()} <a href="https://devstroop.com" target="_blank" rel="noopener noreferrer">
 							<strong>Devstroop</strong>
-						</a>. The SoftEtherZig engine is open source (Apache-2.0); the {SITE_NAME} binary is freeware.
+						</a>. The SoftEtherZig engine is open source (Apache-2.0)
 					</p>
 					<p className="footer-legal mt-sm text-center">
 						{SITE_NAME} is a third-party implementation based on SoftEther VPN source code.

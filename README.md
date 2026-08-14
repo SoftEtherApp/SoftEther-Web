@@ -56,8 +56,12 @@ src/
 
 Session handling is a **mock** for now (no backend): `AuthProvider` stores a
 session in `localStorage`, `/login` and `/register` create one locally, and
-`RequireAuth` guards `/admin/*` — unauthenticated visitors are redirected to
-`/login` and returned to their intended page after signing in. Swap
+`RequireAuth` guards scoped areas — unauthenticated visitors are redirected to
+`/login` and returned to their intended page after signing in. Access is
+**role-based**: `RequireAuth roles={["admin"]}` protects `/admin/*`, so regular
+users are sent to `/unauthorized` while admins pass through; regular users land
+on `/profile` and the public site. `admin@softether.app` signs in as an admin in
+demo mode (see `roleForEmail` in `src/app/auth/session.ts`). Swap
 `src/app/auth/session.ts` for a real token/API flow later.
 
 ## Pages
@@ -76,6 +80,7 @@ session in `localStorage`, `/login` and `/register` create one locally, and
 | `/register` | RegisterPage | Auth | Create account (mock session) |
 | `/forgot-password` | ForgotPasswordPage | Auth | Password reset (stub) |
 | `/reset-password` | ResetPasswordPage | Auth | Set new password (stub) |
+| `/profile` | ProfilePage | Public | Signed-in account page (auth-gated) |
 | `/admin` | DashboardPage | Admin | Admin dashboard (scaffold, auth-gated) |
 | `/admin/analytics` | AnalyticsPage | Admin | Usage telemetry (scaffold, auth-gated) |
 | `/admin/distribution` | DistributionPage | Admin | Release channels (scaffold, auth-gated) |

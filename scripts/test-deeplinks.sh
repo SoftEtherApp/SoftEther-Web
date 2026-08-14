@@ -58,13 +58,13 @@ declare -A EXPECTED_STATUS=(
   ["/library"]=200 ["/nope"]=404 ["/library/"]=200
   ["/changelog"]=200 ["/privacy"]=200 ["/security"]=200 ["/features"]=404
   ["/download"]=200 ["/terms"]=200 ["/docs"]=200
-  ["/login"]=200 ["/register"]=200 ["/admin"]=200 ["/admin/settings"]=200 ["/unauthorized"]=200
+  ["/login"]=200 ["/register"]=200 ["/profile"]=200 ["/admin"]=200 ["/admin/settings"]=200 ["/unauthorized"]=200
   ["/admin/analytics"]=200 ["/admin/distribution"]=200
   ["/admin/access/users"]=200 ["/admin/access/roles"]=200 ["/admin/access/permissions"]=200
   ["/admin/subscriptions"]=200 ["/admin/plans"]=200 ["/admin/features"]=200
 )
 
-for path in /library /nope /library/ /changelog /privacy /security /features /download /terms /docs /login /register /admin /admin/settings /unauthorized /admin/analytics /admin/distribution /admin/access/users /admin/access/roles /admin/access/permissions /admin/subscriptions /admin/plans /admin/features; do
+for path in /library /nope /library/ /changelog /privacy /security /features /download /terms /docs /login /register /profile /admin /admin/settings /unauthorized /admin/analytics /admin/distribution /admin/access/users /admin/access/roles /admin/access/permissions /admin/subscriptions /admin/plans /admin/features; do
   out="$(curl -s -H 'Sec-Fetch-Mode: navigate' -w '__FINAL__%{url_effective}__STATUS__%{http_code}' "${BASE}${path}")"
   body="${out%%__FINAL__*}"
   rest="${out#*__FINAL__}"

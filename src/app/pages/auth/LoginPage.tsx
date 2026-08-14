@@ -8,6 +8,7 @@ import Icon from "../../components/Icon";
 import { navigate } from "../../App";
 import { useAuth } from "../../auth/useAuth";
 import { consumeAuthNext } from "../../auth/auth-next";
+import { roleForEmail } from "../../auth/session";
 
 export default function LoginPage(): JSX.Element {
 	const { signIn } = useAuth();
@@ -17,9 +18,10 @@ export default function LoginPage(): JSX.Element {
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		const role = roleForEmail(email);
 		const name = email.split("@")[0] || "Admin";
-		signIn({ id: btoa(email.toLowerCase()), name, email });
-		navigate(consumeAuthNext() ?? "/admin");
+		signIn({ id: btoa(email.toLowerCase()), name, email, role });
+		navigate(consumeAuthNext() ?? (role === "admin" ? "/admin" : "/profile"));
 	};
 
 	return (
@@ -87,7 +89,8 @@ export default function LoginPage(): JSX.Element {
 				Create an account
 			</a>
 			<p className="m-0 mt-lg text-center text-muted fs-xs">
-				Demo mode — any email and password signs you in locally.
+				Demo mode — any email and password signs you in locally. Use{" "}
+				<span className="text-secondary">admin@softether.app</span> for admin access.
 			</p>
 		</div>
 	);

@@ -464,6 +464,7 @@ const SPA_ROUTES = new Set([
 	"/register",
 	"/forgot-password",
 	"/reset-password",
+	"/profile",
 	"/admin",
 	"/admin/analytics",
 	"/admin/distribution",

@@ -139,6 +139,10 @@ const ICONS: Record<string, IconDef> = {
     { type: "path", props: { d: "M22 21v-2a4 4 0 0 0-3-3.87" } },
     { type: "path", props: { d: "M16 3.13a4 4 0 0 1 0 7.75" } },
   ] },
+  user: { children: [
+    { type: "path", props: { d: "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" } },
+    { type: "circle", props: { cx: 12, cy: 7, r: 4 } },
+  ] },
   "user-plus": { children: [
     { type: "path", props: { d: "M2 21a8 8 0 0 1 13.292-6" } },
     { type: "circle", props: { cx: 10, cy: 8, r: 5 } },

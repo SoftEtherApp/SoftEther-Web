@@ -18,8 +18,8 @@ export default function RegisterPage(): JSX.Element {
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		signIn({ id: btoa(email.toLowerCase()), name: name || "Admin", email });
-		navigate("/admin");
+		signIn({ id: btoa(email.toLowerCase()), name: name || "Member", email, role: "user" });
+		navigate("/profile");
 	};
 
 	return (
@@ -100,7 +100,7 @@ export default function RegisterPage(): JSX.Element {
 				</button>
 			</form>
 			<p className="m-0 mt-lg text-center text-muted fs-xs">
-				Demo mode — creates a local session with no backend.
+				Demo mode — creates a local member account with no backend.
 			</p>
 			<p className="m-0 mt-sm text-center text-muted fs-sm">
 				Already have an account?{" "}

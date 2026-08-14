@@ -94,12 +94,12 @@ export default function PublicLayout({ children }: LayoutProps): JSX.Element {
 					<div className="d-flex items-center gap-sm sm:d-none">
 						{user ? (
 							<a
-								href="/admin"
+								href={user.role === "admin" ? "/admin" : "/profile"}
 								className="btn btn-secondary"
-								onClick={(e) => { e.preventDefault(); navigate("/admin"); }}
+								onClick={(e) => { e.preventDefault(); navigate(user.role === "admin" ? "/admin" : "/profile"); }}
 							>
-								<Icon name="dashboard" size={16} />
-								Admin
+								<Icon name={user.role === "admin" ? "dashboard" : "user"} size={16} />
+								{user.role === "admin" ? "Admin" : "Profile"}
 							</a>
 						) : (
 							<>
@@ -148,11 +148,11 @@ export default function PublicLayout({ children }: LayoutProps): JSX.Element {
 					{user ? (
 						<>
 							<a
-								href="/admin"
+								href={user.role === "admin" ? "/admin" : "/profile"}
 								className="nav-link sidebar-link"
-								onClick={(e) => { e.preventDefault(); setOpen(false); navigate("/admin"); }}
+								onClick={(e) => { e.preventDefault(); setOpen(false); navigate(user.role === "admin" ? "/admin" : "/profile"); }}
 							>
-								Admin
+								{user.role === "admin" ? "Admin" : "Profile"}
 							</a>
 							<a
 								href="/login"

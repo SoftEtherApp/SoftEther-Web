@@ -4,9 +4,83 @@
 
 import { useState, type JSX } from "react";
 import { useLatestRelease } from "../hooks/useLatestRelease";
-import { groupAssets, displayNameFor, iconFor, variantFor, pkgFor, archFor, formatSize } from "../lib/downloads";
+import { groupAssets, displayNameFor, iconFor, variantFor, archFor, formatSize, KNOWN_GROUPS } from "../lib/downloads";
 import Icon from "../components/Icon";
 import ReleaseNotes from "../lib/ReleaseNotes";
+
+/* Rows are rendered as a GitHub-style release asset list: icon + identity
+   + size, with the download action on the right. */
+function AssetRow({ asset }: { asset: { name: string; platform: string; size: number; downloadUrl: string; r2Key: string } }) {
+	const arch = archFor(asset.platform);
+	const variant = variantFor(asset.platform);
+
+	return (
+		<li className="asset-row">
+			<span className="asset-icon">
+				<Icon name={iconFor(asset.platform)} size={20} />
+			</span>
+			<div className="asset-info">
+				<span className="asset-title">
+					<span className="asset-title-name">{displayNameFor(asset.platform)}</span>
+					{variant !== "Installer" && <span className="asset-chip">{variant}</span>}
+					{arch && <span className="asset-chip asset-chip--arch">{arch}</span>}
+				</span>
+				<span className="asset-file">{asset.name}</span>
+			</div>
+			<span className="asset-size">{formatSize(asset.size)}</span>
+			<a
+				className="btn btn-primary btn-sm asset-dl"
+				href={asset.downloadUrl}
+				target="_blank"
+				rel="noopener noreferrer"
+			>
+				<Icon name="download" size={14} />
+				Download
+			</a>
+		</li>
+	);
+}
+
+/* Loading skeleton mirrors the final layout — one group block per known
+   platform so the page keeps its height instead of collapsing. */
+function Skeleton() {
+	return (
+		<>
+			<div className="dl-group">
+				<div className="skeleton skeleton-line skeleton-line--title skeleton-line--sm" />
+				<ul className="asset-list" aria-hidden="true">
+					{[0, 1, 2].map((i) => (
+						<li key={i} className="asset-row">
+							<div className="skeleton skeleton-icon" />
+							<div className="asset-info">
+								<div className="skeleton skeleton-line skeleton-line--title" />
+								<div className="skeleton skeleton-line skeleton-line--meta" />
+							</div>
+							<div className="skeleton skeleton-badge" />
+						</li>
+					))}
+				</ul>
+			</div>
+			{KNOWN_GROUPS.slice(1).map((group) => (
+				<div className="dl-group" key={group}>
+					<div className="skeleton skeleton-line skeleton-line--sm" />
+					<ul className="asset-list" aria-hidden="true">
+						{[0, 1].map((i) => (
+							<li key={i} className="asset-row">
+								<div className="skeleton skeleton-icon" />
+								<div className="asset-info">
+									<div className="skeleton skeleton-line skeleton-line--title" />
+									<div className="skeleton skeleton-line skeleton-line--meta" />
+								</div>
+								<div className="skeleton skeleton-badge" />
+							</li>
+						))}
+					</ul>
+				</div>
+			))}
+		</>
+	);
+}
 
 export default function DownloadsPage(): JSX.Element {
 	const [showNotes, setShowNotes] = useState(false);
@@ -56,65 +130,36 @@ export default function DownloadsPage(): JSX.Element {
 				)}
 
 				<div className="download-list">
-					{loading && (
-						<>
-							<div className="skeleton skeleton-line skeleton-line--title" />
-							<div className="dl-grid">
-								{[0, 1, 2].map((i) => (
-									<div key={i} className="dl-card">
-										<div className="skeleton skeleton-icon" />
-										<div className="skeleton skeleton-line skeleton-line--title" />
-										<div className="skeleton skeleton-line skeleton-line--meta" />
-										<div className="skeleton skeleton-badge" />
-									</div>
-								))}
-							</div>
-						</>
+					{loading && <Skeleton />}
+
+					{release && !loading && release.assets.length === 0 && (
+						<div className="download-empty">
+							<span className="download-empty-icon">
+								<Icon name="package" size={32} />
+							</span>
+							<h3 className="download-empty-title">No downloads available yet</h3>
+							<p className="download-empty-desc">
+								Installers for <strong>{release.tag}</strong> haven't been published yet.
+								Check back soon — or refresh in case you just missed them.
+							</p>
+							<button className="btn btn-secondary" onClick={reload}>
+								Check again
+							</button>
+						</div>
 					)}
 
-					{release && !loading && groupAssets(release.assets).map(({ group, items }) => (
-						<div className="dl-group" key={group}>
-							<h3 className="download-group-title">{group}</h3>
-							<div className="dl-grid">
-								{items.map((asset) => {
-									const arch = archFor(asset.platform);
-									const variant = variantFor(asset.platform);
-									return (
-										<a
-											key={asset.r2Key}
-											href={asset.downloadUrl}
-											className={`dl-card dl-card--live${variant === "Portable" ? " dl-card--portable" : ""}`}
-											target="_blank"
-											rel="noopener noreferrer"
-										>
-											<div className="dl-card-head">
-												<span className="dl-card-icon">
-													<Icon name={iconFor(asset.platform)} size={22} />
-												</span>
-												<div className="dl-card-title">
-													<h4>{displayNameFor(asset.platform)}</h4>
-													<span className="dl-card-sub">
-														{variant} &middot; {formatSize(asset.size)}
-													</span>
-												</div>
-												<span className="dl-card-pkg">{pkgFor(asset)}</span>
-												{arch && <span className="dl-card-arch">{arch}</span>}
-											</div>
-											<span className="dl-card-cta">
-												<Icon name="download" size={15} />
-												Download
-											</span>
-										</a>
-									);
-								})}
+					{release &&
+						!loading &&
+						groupAssets(release.assets).map(({ group, items }) => (
+							<div className="dl-group" key={group}>
+								<h3 className="download-group-title">{group}</h3>
+								<ul className="asset-list">
+									{items.map((asset) => (
+										<AssetRow key={asset.r2Key} asset={asset} />
+									))}
+								</ul>
 							</div>
-						</div>
-					))}
-					{release && !loading && release.assets.length === 0 && (
-						<p className="m-0 py-xl text-center text-muted fs-sm">
-							No installers are available yet for the latest release.
-						</p>
-					)}
+						))}
 				</div>
 
 				<div className="d-flex justify-center mt-2xl">

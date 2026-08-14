@@ -110,15 +110,20 @@ export default function ChangelogPage(): JSX.Element {
 
 				{loading && !latest && (
 					<div className="download-list">
-						<div className="dl-grid">
-							{[0, 1, 2].map((i) => (
-								<div key={i} className="dl-card">
-									<div className="skeleton skeleton-icon" />
-									<div className="skeleton skeleton-line skeleton-line--title" />
-									<div className="skeleton skeleton-line skeleton-line--meta" />
-									<div className="skeleton skeleton-badge" />
-								</div>
-							))}
+						<div className="dl-group">
+							<div className="skeleton skeleton-line skeleton-line--title skeleton-line--sm" />
+							<ul className="asset-list" aria-hidden="true">
+								{[0, 1, 2].map((i) => (
+									<li key={i} className="asset-row">
+										<div className="skeleton skeleton-icon" />
+										<div className="asset-info">
+											<div className="skeleton skeleton-line skeleton-line--title" />
+											<div className="skeleton skeleton-line skeleton-line--meta" />
+										</div>
+										<div className="skeleton skeleton-badge" />
+									</li>
+								))}
+							</ul>
 						</div>
 					</div>
 				)}

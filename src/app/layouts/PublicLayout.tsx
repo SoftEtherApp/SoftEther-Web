@@ -88,10 +88,24 @@ export default function PublicLayout({ children }: LayoutProps): JSX.Element {
 							</a>
 						))}
 					</nav>
-					<span className="grow-1" />
-					<div className="d-flex items-center gap-sm">
-						<ThemeToggle />
+					<span className="flex-grow-1" />
+					<div className="d-flex items-center gap-sm sm:d-none">
+						<a
+							href="/login"
+							className="btn btn-secondary"
+							onClick={(e) => { e.preventDefault(); navigate("/login"); }}
+						>
+							Sign in
+						</a>
+						<a
+							href="/register"
+							className="btn btn-primary"
+							onClick={(e) => { e.preventDefault(); navigate("/register"); }}
+						>
+							Create account
+						</a>
 					</div>
+					<ThemeToggle />
 				</div>
 			</Header>
 			<Sidebar open={open} onClose={() => setOpen(false)}>
@@ -116,6 +130,20 @@ export default function PublicLayout({ children }: LayoutProps): JSX.Element {
 							{l.label}
 						</a>
 					))}
+					<a
+						href="/login"
+						className="nav-link sidebar-link"
+						onClick={(e) => { e.preventDefault(); setOpen(false); navigate("/login"); }}
+					>
+						Sign in
+					</a>
+					<a
+						href="/register"
+						className="nav-link sidebar-link"
+						onClick={(e) => { e.preventDefault(); setOpen(false); navigate("/register"); }}
+					>
+						Create account
+					</a>
 				</nav>
 				<div className="sidebar-footer">
 					<ThemeToggle />

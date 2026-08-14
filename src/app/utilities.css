@@ -309,6 +309,7 @@
 	.sm\:flex-col { flex-direction: column; }
 	.sm\:items-center { align-items: center; }
 	.sm\:text-center { text-align: center; }
+	.sm\:d-none { display: none; }
 }
 
 @media (max-width: 900px) {

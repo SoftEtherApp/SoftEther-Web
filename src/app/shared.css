@@ -400,14 +400,14 @@
 
 /* ── Download Section ── */
 
-/* Platform cards in a responsive two-column grid, grouped by OS.
-   Group titles span both columns; the grid collapses to one column
-   on small screens (see media query below). */
+/* Download cards in a responsive grid, grouped by OS. Group titles span all
+   columns; the grid auto-fills to keep identical card geometry on every
+   breakpoint. */
 .download-list {
 	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: var(--sp-sm) var(--sp-md);
-	max-width: 800px;
+	grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+	gap: var(--sp-md);
+	max-width: 920px;
 	margin: 0 auto;
 }
 
@@ -541,11 +541,11 @@ ul.dl-notes-line li:last-child {
 	margin-bottom: 0;
 }
 
-.download-card {
+.dl-card {
 	display: flex;
-	align-items: center;
-	gap: var(--sp-md);
-	padding: var(--sp-md) var(--sp-lg);
+	flex-direction: column;
+	gap: var(--sp-sm);
+	padding: var(--sp-md);
 	background: var(--surface-800);
 	border: 0.5px solid var(--surface-600);
 	border-radius: var(--rad-md);
@@ -555,122 +555,126 @@ ul.dl-notes-line li:last-child {
 	position: relative;
 	overflow: hidden;
 }
-.download-card--dim {
-	opacity: 0.5;
-	cursor: default;
-}
-.download-card--live {
+.dl-card--live {
 	cursor: pointer;
 }
-.download-card--live::before {
-	content: "";
-	position: absolute;
-	inset: 0;
-	border-radius: inherit;
-	padding: 1px;
-	background: linear-gradient(135deg, transparent 40%, var(--blurple-soft), transparent 60%);
-	mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-	mask-composite: exclude;
-	-webkit-mask-composite: xor;
-	opacity: 0;
-	transition: opacity var(--transition-base);
-	pointer-events: none;
-}
-.download-card--live:hover::before {
-	opacity: 1;
-}
-.download-card--live:hover {
-	border-color: transparent;
+.dl-card--live:hover {
+	border-color: var(--surface-500);
 	background: var(--surface-700);
 	box-shadow: 0 8px 32px rgba(88, 101, 242, 0.15);
 	transform: translateY(-2px);
 	color: var(--text-primary);
 }
-.download-card--live:active {
+.dl-card--live:active {
 	transform: translateY(0);
 	box-shadow: 0 2px 12px rgba(88, 101, 242, 0.1);
 }
-.download-card--live:focus-visible {
+.dl-card--live:focus-visible {
 	outline: 2px solid var(--blurple);
 	outline-offset: 2px;
 }
 
-.download-icon {
+.dl-card-head {
+	display: flex;
+	align-items: flex-start;
+	gap: var(--sp-sm);
+}
+
+.dl-card-icon {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 44px;
-	height: 44px;
+	width: 42px;
+	height: 42px;
 	border-radius: var(--rad-sm);
-	background: var(--surface-700);
-	color: var(--text-muted);
-	flex-shrink: 0;
-	transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
-}
-.download-card--live .download-icon {
 	background: var(--blurple-soft);
 	color: var(--blurple);
+	flex-shrink: 0;
+	transition: background var(--transition-fast), transform var(--transition-fast);
 }
-.download-card--live:hover .download-icon {
+.dl-card--live:hover .dl-card-icon {
 	background: rgba(88, 101, 242, 0.2);
 	transform: scale(1.05);
 }
 
-.download-info {
+.dl-card-title {
 	flex: 1;
 	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	padding-top: 3px;
 }
-.download-info h3,
-.download-info h4 {
-	font-size: 1rem;
+.dl-card-title h4 {
+	font-size: 0.92rem;
 	font-weight: 600;
-	margin-bottom: 1px;
+	margin: 0;
 }
-.download-meta {
-	font-size: 0.78rem;
+.dl-card-sub {
+	font-size: 0.75rem;
 	color: var(--text-muted);
 }
-.download-size {
+
+.dl-card-arch {
+	font-size: 0.68rem;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+	letter-spacing: 0.02em;
+	padding: 2px 9px;
+	border-radius: var(--rad-pill);
+	background: var(--blurple-soft);
+	color: var(--blurple);
+	white-space: nowrap;
+}
+
+.dl-card-meta {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--sp-sm);
+}
+.dl-card-pkg {
+	font-size: 0.66rem;
+	font-weight: 600;
+	letter-spacing: 0.03em;
+	text-transform: uppercase;
+	padding: 2px 9px;
+	border-radius: var(--rad-pill);
+	border: 0.5px solid var(--surface-500);
+	background: var(--surface-700);
+	color: var(--text-secondary);
+	white-space: nowrap;
+}
+.dl-card--portable .dl-card-pkg {
+	border-color: rgba(35, 165, 90, 0.4);
+	background: rgba(35, 165, 90, 0.12);
+	color: var(--green);
+}
+.dl-card-size {
 	font-size: 0.75rem;
 	color: var(--text-muted);
 	font-variant-numeric: tabular-nums;
 	white-space: nowrap;
 }
-.download-arch {
-	font-size: 0.68rem;
-	font-weight: 600;
-	font-variant-numeric: tabular-nums;
-	padding: 2px 8px;
-	border-radius: var(--rad-pill);
-	background: var(--surface-600);
-	color: var(--text-secondary);
-	white-space: nowrap;
-}
-.download-tag {
-	font-size: 0.65rem;
-	font-weight: 600;
-	letter-spacing: 0.03em;
-	text-transform: uppercase;
-	padding: 3px 10px;
-	border-radius: var(--rad-pill);
-	background: var(--surface-600);
-	color: var(--text-secondary);
-	white-space: nowrap;
-}
-.download-badge {
-	font-size: 0.72rem;
-	font-weight: 600;
-	padding: 5px 14px;
+
+.dl-card-cta {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	margin-top: auto;
+	width: 100%;
+	height: 38px;
 	border-radius: var(--rad-pill);
 	background: var(--blurple);
 	color: #fff;
-	white-space: nowrap;
-	transition: background var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+	font-size: 0.82rem;
+	font-weight: 600;
+	transition: background var(--transition-fast), box-shadow var(--transition-fast);
 }
-.download-card--live:hover .download-badge {
+.dl-card--live:hover .dl-card-cta {
 	background: var(--blurple-hover);
-	box-shadow: 0 4px 16px rgba(88, 101, 242, 0.35);
-	transform: scale(1.04);
+	box-shadow: 0 4px 20px rgba(88, 101, 242, 0.35);
 }
 
 /* ── Download error banner ── */
@@ -891,7 +895,7 @@ html.light .nav-github {
 }
 
 html.light .feature-card,
-html.light .download-card,
+html.light .dl-card,
 html.light .library-promo-card,
 html.light .target-card,
 html.light .trust-card,

@@ -107,6 +107,33 @@ The `wrangler.json` configures static assets from `dist/client/` with SPA
 fallback (`not_found_handling: single-page-application`) — so `/library` and
 any client-side route serves `index.html`.
 
+## Database (D1 + Drizzle)
+
+The worker uses **Cloudflare D1** with **Drizzle ORM**. Schema lives in
+`src/worker/db/schema.ts`; generated SQL migrations live in `drizzle/` and are
+applied via wrangler.
+
+```bash
+# One-time setup — create the remote database, then paste its ID into
+# wrangler.json (d1_databases.database_id)
+npx wrangler d1 create softether-app
+
+# Local development — the local database is created automatically by wrangler
+npx wrangler d1 migrations apply softether-app --local
+
+# Seed baseline data (roles, permissions, plans, users, …)
+npx wrangler d1 execute softether-app --local --file=scripts/seed.sql
+
+# After changing src/worker/db/schema.ts
+npx drizzle-kit generate                      # write a new migration
+npx wrangler d1 migrations apply softether-app --local    # apply locally
+npx wrangler d1 migrations apply softether-app --remote   # apply to production
+```
+
+Run `npx wrangler types` after changing bindings in `wrangler.json`. The
+D1-backed admin API is served under `/api/admin/*` (stats, users, roles,
+permissions, plans, subscriptions, features, activity).
+
 ## Design System
 
 - **Palette:** Indigo (#3F51B5 seed) + Teal accent

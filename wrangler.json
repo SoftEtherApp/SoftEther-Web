@@ -26,5 +26,13 @@
 			"id": "e67f2ace09cd42a1b24124516322623b",
 			"preview_id": "e67f2ace09cd42a1b24124516322623b"
 		}
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "softether-app",
+			"database_id": "00000000-0000-0000-0000-000000000000",
+			"migrations_dir": "drizzle"
+		}
 	]
 }

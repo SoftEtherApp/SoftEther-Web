@@ -634,14 +634,9 @@ ul.dl-notes-line li:last-child {
 	background: var(--blurple-soft);
 	color: var(--blurple);
 	white-space: nowrap;
+	flex-shrink: 0;
 }
 
-.dl-card-meta {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: var(--sp-sm);
-}
 .dl-card-pkg {
 	font-size: 0.66rem;
 	font-weight: 600;
@@ -653,17 +648,12 @@ ul.dl-notes-line li:last-child {
 	background: var(--surface-700);
 	color: var(--text-secondary);
 	white-space: nowrap;
+	flex-shrink: 0;
 }
 .dl-card--portable .dl-card-pkg {
 	border-color: rgba(35, 165, 90, 0.4);
 	background: rgba(35, 165, 90, 0.12);
 	color: var(--green);
-}
-.dl-card-size {
-	font-size: 0.75rem;
-	color: var(--text-muted);
-	font-variant-numeric: tabular-nums;
-	white-space: nowrap;
 }
 
 .dl-card-cta {

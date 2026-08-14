@@ -337,25 +337,24 @@ function DownloadSection({
 											target="_blank"
 											rel="noopener noreferrer"
 										>
-											<div className="dl-card-head">
-												<span className="dl-card-icon">
-													<Icon name={iconFor(asset.platform)} size={22} />
-												</span>
-												<div className="dl-card-title">
-													<h4>{displayNameFor(asset.platform)}</h4>
-													<span className="dl-card-sub">{variant}</span>
-												</div>
-												{arch && <span className="dl-card-arch">{arch}</span>}
-											</div>
-											<div className="dl-card-meta">
-												<span className="dl-card-pkg">{pkgFor(asset)}</span>
-												<span className="dl-card-size">{formatSize(asset.size)}</span>
-											</div>
-											<span className="dl-card-cta">
-												<Icon name="download" size={15} />
-												Download
+										<div className="dl-card-head">
+											<span className="dl-card-icon">
+												<Icon name={iconFor(asset.platform)} size={22} />
 											</span>
-										</a>
+											<div className="dl-card-title">
+												<h4>{displayNameFor(asset.platform)}</h4>
+												<span className="dl-card-sub">
+													{variant} &middot; {formatSize(asset.size)}
+												</span>
+											</div>
+											<span className="dl-card-pkg">{pkgFor(asset)}</span>
+											{arch && <span className="dl-card-arch">{arch}</span>}
+										</div>
+										<span className="dl-card-cta">
+											<Icon name="download" size={15} />
+											Download
+										</span>
+									</a>
 									);
 								})}
 							</div>

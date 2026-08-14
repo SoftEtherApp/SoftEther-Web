@@ -7,7 +7,7 @@
 #
 # Regression for: https://softether.app/library opened directly rendered a
 # blank page because the worker fallback served the raw source index.html
-# (`/src/react-app/main.tsx`) or (after the binding fix) returned the assets
+# (`/src/app/main.tsx`) or (after the binding fix) returned the assets
 # canonical 307 so the browser landed on "/".
 set -euo pipefail
 
@@ -69,7 +69,7 @@ for path in /library /nope /library/ /changelog /privacy /security /features; do
   ok=1
   [[ "${status}" == "${EXPECTED_STATUS[${path}]}" ]] || { echo "FAIL: ${path} status ${status} != expected ${EXPECTED_STATUS[${path}]}"; ok=0; }
   echo "${body}" | grep -q '/assets/index-' || { echo "FAIL: ${path} body has no hashed bundle"; ok=0; }
-  echo "${body}" | grep -q '/src/react-app/main.tsx' && { echo "FAIL: ${path} body references dev template"; ok=0; }
+  echo "${body}" | grep -q '/src/app/main.tsx' && { echo "FAIL: ${path} body references dev template"; ok=0; }
   [[ "${final}" == "${BASE}${path}" ]] || { echo "FAIL: ${path} final URL ${final} != ${BASE}${path} (redirect bounce)"; ok=0; }
 
   if [[ "${ok}" == "1" ]]; then

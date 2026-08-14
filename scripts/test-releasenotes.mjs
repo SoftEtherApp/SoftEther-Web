@@ -1,7 +1,7 @@
 // Unit check for the release-notes tokenizer (pure TS, runnable with
 // `node scripts/test-releasenotes.mjs` — no framework needed).
 import assert from "node:assert/strict";
-import { tokenizeInline } from "../src/react-app/lib/releaseNotesInline.ts";
+import { tokenizeInline } from "../src/app/lib/releaseNotesInline.ts";
 
 // **bold** with surrounding text
 assert.deepEqual(tokenizeInline("Add **dark mode** support"), [

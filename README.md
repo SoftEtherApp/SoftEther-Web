@@ -16,7 +16,7 @@ VPN client built with Flutter, and its open-source Zig engine **SoftEtherZig**.
 
 ```
 src/
-├── react-app/               # React SPA
+├── app/               # React SPA
 │   ├── App.tsx              # Route switch (/, /library)
 │   ├── App.css              # Component styles
 │   ├── index.css            # Design tokens + base styles

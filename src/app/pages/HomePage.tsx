@@ -101,12 +101,10 @@ function Hero({ release }: { release: Release | null }) {
 			<div className="hero-inner">
 				<div className="hero-text">
 					{release && (
-						<div className="hero-badges">
-							<span className="hero-badge">
-								<Icon name="tag" size={13} />
-								Latest release {release.tag}
-							</span>
-						</div>
+						<span className="hero-badge">
+							<Icon name="tag" size={13} />
+							Latest release {release.tag}
+						</span>
 					)}
 					<h1 className="hero-title">
 						<span className="hero-accent">Modern <br />Cross-Platform</span>

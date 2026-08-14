@@ -636,6 +636,16 @@ ul.dl-notes-line li:last-child {
 	font-variant-numeric: tabular-nums;
 	white-space: nowrap;
 }
+.download-arch {
+	font-size: 0.68rem;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+	padding: 2px 8px;
+	border-radius: var(--rad-pill);
+	background: var(--surface-600);
+	color: var(--text-secondary);
+	white-space: nowrap;
+}
 .download-tag {
 	font-size: 0.65rem;
 	font-weight: 600;

@@ -63,14 +63,14 @@ function formatSize(bytes: number): string {
 
 /* Display metadata for known platforms — purely cosmetic, never a whitelist.
    Any asset platform not listed here still renders via the fallbacks below. */
-const PLATFORM_META: Record<string, { name: string; icon: string; group: string; meta: string }> = {
-	android: { name: "Android", icon: "logo-android", group: "Android", meta: "APK (64-bit)" },
-	"android-armv7": { name: "Android (32-bit)", icon: "logo-android", group: "Android", meta: "APK (32-bit)" },
-	"macos-aarch64": { name: "macOS (Apple Silicon)", icon: "logo-apple", group: "macOS", meta: ".dmg" },
-	"macos-x64": { name: "macOS (Intel)", icon: "logo-apple", group: "macOS", meta: ".dmg" },
-	windows: { name: "Windows", icon: "logo-windows", group: "Windows", meta: ".msi" },
-	"windows-portable": { name: "Windows (Portable)", icon: "logo-windows", group: "Windows", meta: ".zip" },
-	linux: { name: "Linux", icon: "logo-linux", group: "Linux", meta: ".deb" },
+const PLATFORM_META: Record<string, { name: string; icon: string; group: string; meta: string; arch: string }> = {
+	android: { name: "Android", icon: "logo-android", group: "Android", meta: "APK (64-bit)", arch: "arm64" },
+	"android-armv7": { name: "Android (32-bit)", icon: "logo-android", group: "Android", meta: "APK (32-bit)", arch: "armv7" },
+	"macos-aarch64": { name: "macOS (Apple Silicon)", icon: "logo-apple", group: "macOS", meta: ".dmg", arch: "arm64" },
+	"macos-x64": { name: "macOS (Intel)", icon: "logo-apple", group: "macOS", meta: ".dmg", arch: "x64" },
+	windows: { name: "Windows", icon: "logo-windows", group: "Windows", meta: ".msi", arch: "x64" },
+	"windows-portable": { name: "Windows (Portable)", icon: "logo-windows", group: "Windows", meta: ".zip", arch: "x64" },
+	linux: { name: "Linux", icon: "logo-linux", group: "Linux", meta: ".deb", arch: "x64" },
 };
 
 const KNOWN_GROUPS = ["Android", "macOS", "Windows", "Linux"];
@@ -98,6 +98,17 @@ function iconFor(platform: string): string {
 
 function metaFor(asset: ReleaseAsset): string {
 	return PLATFORM_META[asset.platform]?.meta ?? asset.name;
+}
+
+/* Derive an architecture label from the platform id; unknown ones that carry
+   no architecture signal return null so the chip is omitted. */
+function archFor(platform: string): string | null {
+	if (PLATFORM_META[platform]) return PLATFORM_META[platform].arch;
+	if (/aarch64|arm64|armv8/i.test(platform)) return "arm64";
+	if (/armv7|armhf|armeabi-v7a/i.test(platform)) return "armv7";
+	if (/amd64|x86_64|win64/i.test(platform)) return "x64";
+	if (/x86|i386|i686|win32/i.test(platform)) return "x86";
+	return null;
 }
 
 /* Group release assets by platform group, known groups first, then any
@@ -300,6 +311,9 @@ function DownloadSection({
 											<h4>{name}</h4>
 											<span className="download-meta">{metaFor(asset)}</span>
 										</div>
+										{archFor(asset.platform) && (
+											<span className="download-arch">{archFor(asset.platform)}</span>
+										)}
 										<span className="download-size">{formatSize(asset.size)}</span>
 										<span className="download-badge">Download</span>
 									</a>

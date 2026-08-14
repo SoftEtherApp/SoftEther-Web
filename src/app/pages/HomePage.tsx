@@ -2,8 +2,9 @@
    SoftEther App — Main Landing Page
    ════════════════════════════════════ */
 
-import { Fragment, useEffect, useState, type JSX } from "react";
+import { Fragment, useState, type JSX } from "react";
 import { useScrollToHash } from "../hooks/useScrollToHash";
+import { useLatestRelease } from "../hooks/useLatestRelease";
 import type { Release, ReleaseAsset } from "../../shared/types";
 import Icon from "../components/Icon";
 import HeroIllustration from "../components/HeroIllustration";
@@ -93,12 +94,20 @@ function pickAsset(assets: ReleaseAsset[], platform: string): ReleaseAsset | und
 	return (appBranded.length > 0 ? appBranded : matches)[0];
 }
 
-function Hero() {
+function Hero({ release }: { release: Release | null }) {
 	return (
 		<section className="hero">
 			<div className="hero-bg" />
 			<div className="hero-inner">
 				<div className="hero-text">
+					{release && (
+						<div className="hero-badges">
+							<span className="hero-badge">
+								<Icon name="tag" size={13} />
+								Latest release {release.tag}
+							</span>
+						</div>
+					)}
 					<h1 className="hero-title">
 						<span className="hero-accent">Modern <br />Cross-Platform</span>
 						<br />
@@ -184,46 +193,18 @@ function PlatformsSection() {
 	);
 }
 
-function DownloadSection() {
-	const [release, setRelease] = useState<Release | null>(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
+function DownloadSection({
+	release,
+	loading,
+	error,
+	reload,
+}: {
+	release: Release | null;
+	loading: boolean;
+	error: string | null;
+	reload: () => void;
+}) {
 	const [showNotes, setShowNotes] = useState(false);
-
-	async function fetchRelease() {
-		setLoading(true);
-		setError(null);
-		// localStorage cache with 5-min TTL
-		const cacheKey = "cache:releases:latest";
-		try {
-			const cached = localStorage.getItem(cacheKey);
-			if (cached) {
-				const { data, ts } = JSON.parse(cached);
-				if (Date.now() - ts < 300_000) {
-					setRelease(data);
-					setLoading(false);
-					return;
-				}
-			}
-		} catch { /* ignore corrupt cache */ }
-
-		try {
-			const r = await fetch("/api/releases/latest");
-			if (!r.ok) throw new Error(`Server returned ${r.status}`);
-			const data = await r.json();
-			if (data) {
-				localStorage.setItem(cacheKey, JSON.stringify({ data, ts: Date.now() }));
-			}
-			setRelease(data);
-		} catch (err) {
-			setError(err instanceof Error ? err.message : "Failed to load releases");
-		}
-		setLoading(false);
-	}
-
-	useEffect(() => {
-		fetchRelease();
-	}, []);
 
 	return (
 		<section id="download" className="py-2xl px-lg sm:py-2xl sm:px-md">
@@ -260,7 +241,7 @@ function DownloadSection() {
 								<p className="download-error-desc">{error}</p>
 							</div>
 						</div>
-						<button className="btn btn-secondary" onClick={() => { setLoading(true); setError(null); fetchRelease(); }}>
+						<button className="btn btn-secondary" onClick={reload}>
 							Retry
 						</button>
 					</div>
@@ -375,14 +356,15 @@ function GetConnectedSection() {
 
 export default function HomePage(): JSX.Element {
 	useScrollToHash(100);
+	const { release, loading, error, reload } = useLatestRelease();
 
 	return (
 		<>
-			<Hero />
+			<Hero release={release} />
 			<FeaturesSection />
 			<PlatformsSection />
 			<GetConnectedSection />
-			<DownloadSection />
+			<DownloadSection release={release} loading={loading} error={error} reload={reload} />
 		</>
 	);
 }

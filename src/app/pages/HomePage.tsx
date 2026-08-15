@@ -72,7 +72,7 @@ function Hero() {
 						SoftEther VPN Client
 					</h1>
 					<p className="hero-desc">
-						A self-managed SoftEther VPN client that runs on all your devices.
+						A Layer-2 VPN infrastructure that runs on all your devices.
 						Private, open transport, and yours to control.
 					</p>
 					<div className="hero-actions d-flex gap-md flex-wrap justify-start mb-lg md:justify-center">

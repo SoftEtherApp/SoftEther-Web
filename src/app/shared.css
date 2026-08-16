@@ -35,9 +35,11 @@
 	padding: 80px var(--sp-md) var(--sp-lg);
 }
 
-/* The header is fixed, so any page whose first section is not the hero
-   needs extra top padding to clear it (py-2xl alone is not enough). */
-main > section:first-child:not(.hero) {
+/* The public header is fixed, so any page whose first section is not the
+   hero needs extra top padding to clear it (py-2xl alone is not enough).
+   Excludes .admin-main — the admin layout has its own sticky sidebar and
+   already pads content with var(--sp-xl). */
+main:not(.admin-main) > section:first-child:not(.hero) {
 	padding-top: calc(var(--sp-4xl) + var(--sp-lg));
 }
 

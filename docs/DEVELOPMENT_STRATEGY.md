@@ -24,15 +24,19 @@ worktrees, pull requests, CI, and releases all follow the rules below.
 ```
 master                 production — protected; only via release PR from develop
 └── develop            THE integration gate — protected; all work accumulates here
-    ├── fixes/         accumulator for corrective work (bugs, regressions, hotfixes)
+    ├── fixes           accumulator for corrective work (bugs, regressions, hotfixes)
     │   └── fix/<issue#>-<slug>
-    ├── features/      accumulator for product work (features, improvements)
+    ├── features        accumulator for product work (features, improvements)
     │   └── feat/<issue#>-<slug>
-    ├── chores/        accumulator for maintenance (deps, CI, refactors, tooling)
+    ├── chores          accumulator for maintenance (deps, CI, refactors, tooling)
     │   └── chore/<issue#>-<slug>
-    └── docs/          accumulator for documentation (guides, strategy, policies)
+    └── docs            accumulator for documentation (guides, strategy, policies)
         └── docs/<issue#>-<slug>
 ```
+
+> Git branch names cannot end in `/` — accumulators are slash-free (`fixes`,
+> `features`, ...) while implementation branches carry the slash prefix
+> (`fix/…`, `feat/…`, `chore/…`, `docs/…`).
 
 ### Branch rules
 

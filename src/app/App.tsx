@@ -32,8 +32,6 @@ import DistributionPage from "./pages/admin/distribution/DistributionPage";
 import UsersPage from "./pages/admin/access/users/UsersPage";
 import RolesPage from "./pages/admin/access/roles/RolesPage";
 import PermissionsPage from "./pages/admin/access/permissions/PermissionsPage";
-import SubscriptionsPage from "./pages/admin/subscriptions/SubscriptionsPage";
-import PlansPage from "./pages/admin/plans/PlansPage";
 import FeaturesPage from "./pages/admin/features/FeaturesPage";
 import SettingsPage from "./pages/admin/settings/SettingsPage";
 import UnauthorizedPage from "./pages/UnauthorizedPage";
@@ -91,8 +89,6 @@ const ROUTES: RouteDef[] = [
 	{ path: "/admin/access/users", page: () => <RequireAuth roles={["admin"]}><UsersPage /></RequireAuth>, layout: "admin", title: "Users — SoftEther Admin" },
 	{ path: "/admin/access/roles", page: () => <RequireAuth roles={["admin"]}><RolesPage /></RequireAuth>, layout: "admin", title: "Roles — SoftEther Admin" },
 	{ path: "/admin/access/permissions", page: () => <RequireAuth roles={["admin"]}><PermissionsPage /></RequireAuth>, layout: "admin", title: "Permissions — SoftEther Admin" },
-	{ path: "/admin/subscriptions", page: () => <RequireAuth roles={["admin"]}><SubscriptionsPage /></RequireAuth>, layout: "admin", title: "Subscriptions — SoftEther Admin" },
-	{ path: "/admin/plans", page: () => <RequireAuth roles={["admin"]}><PlansPage /></RequireAuth>, layout: "admin", title: "Plans — SoftEther Admin" },
 	{ path: "/admin/features", page: () => <RequireAuth roles={["admin"]}><FeaturesPage /></RequireAuth>, layout: "admin", title: "Features — SoftEther Admin" },
 	{ path: "/admin/settings", page: () => <RequireAuth roles={["admin"]}><SettingsPage /></RequireAuth>, layout: "admin", title: "Settings — SoftEther Admin" },
 	{ path: "/unauthorized", page: () => <UnauthorizedPage />, layout: "empty", title: "Unauthorized — SoftEther App" },

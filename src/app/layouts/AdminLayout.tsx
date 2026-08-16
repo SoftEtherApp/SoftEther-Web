@@ -43,13 +43,6 @@ const NAV: NavGroup[] = [
 		],
 	},
 	{
-		label: "Billing",
-		links: [
-			{ href: "/admin/subscriptions", label: "Subscriptions", icon: "credit-card" },
-			{ href: "/admin/plans", label: "Plans", icon: "tag" },
-		],
-	},
-	{
 		label: "Product",
 		links: [{ href: "/admin/features", label: "Features", icon: "flag" }],
 	},

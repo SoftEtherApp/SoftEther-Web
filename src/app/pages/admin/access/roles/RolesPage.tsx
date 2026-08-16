@@ -13,7 +13,7 @@ interface Role {
 }
 
 const ROLES: Role[] = [
-	{ name: "Owner", desc: "Full control over the site, including billing and deployment.", members: 1, permissions: ["Everything"] },
+	{ name: "Owner", desc: "Full control over the site, including deployment.", members: 1, permissions: ["Everything"] },
 	{ name: "Admin", desc: "Manage users, roles, content and distribution channels.", members: 2, permissions: ["users:write", "roles:write", "releases:publish", "settings:write"] },
 	{ name: "Moderator", desc: "Review reports and moderate user-generated content.", members: 1, permissions: ["users:read", "reports:manage"] },
 	{ name: "Member", desc: "Standard account on the public site.", members: 1280, permissions: ["profile:edit", "downloads:read"] },

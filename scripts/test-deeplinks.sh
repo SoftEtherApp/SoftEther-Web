@@ -61,10 +61,10 @@ declare -A EXPECTED_STATUS=(
   ["/login"]=200 ["/register"]=200 ["/profile"]=200 ["/admin"]=200 ["/admin/settings"]=200 ["/unauthorized"]=200
   ["/admin/analytics"]=200 ["/admin/distribution"]=200
   ["/admin/access/users"]=200 ["/admin/access/roles"]=200 ["/admin/access/permissions"]=200
-  ["/admin/subscriptions"]=200 ["/admin/plans"]=200 ["/admin/features"]=200
+  ["/admin/features"]=200 ["/admin/subscriptions"]=404 ["/admin/plans"]=404
 )
 
-for path in /library /nope /library/ /changelog /privacy /security /features /download /terms /docs /login /register /profile /admin /admin/settings /unauthorized /admin/analytics /admin/distribution /admin/access/users /admin/access/roles /admin/access/permissions /admin/subscriptions /admin/plans /admin/features; do
+for path in /library /nope /library/ /changelog /privacy /security /features /download /terms /docs /login /register /profile /admin /admin/settings /unauthorized /admin/analytics /admin/distribution /admin/access/users /admin/access/roles /admin/access/permissions /admin/features /admin/subscriptions /admin/plans; do
   out="$(curl -s -H 'Sec-Fetch-Mode: navigate' -w '__FINAL__%{url_effective}__STATUS__%{http_code}' "${BASE}${path}")"
   body="${out%%__FINAL__*}"
   rest="${out#*__FINAL__}"

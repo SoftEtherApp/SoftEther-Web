@@ -76,37 +76,6 @@ export const rolePermissions = sqliteTable(
 	(t) => [primaryKey({ columns: [t.roleId, t.permissionId] })],
 );
 
-export const plans = sqliteTable(
-	"plans",
-	{
-		id: integer("id").primaryKey({ autoIncrement: true }),
-		name: text("name").notNull(),
-		key: text("key").notNull().unique(),
-		priceMonthly: integer("price_monthly").notNull().default(0),
-		priceYearly: integer("price_yearly").notNull().default(0),
-		active: integer("active", { mode: "boolean" }).notNull().default(true),
-		sortOrder: integer("sort_order").notNull().default(0),
-	},
-	(t) => [index("plans_active_idx").on(t.active)],
-);
-
-export const subscriptions = sqliteTable(
-	"subscriptions",
-	{
-		id: integer("id").primaryKey({ autoIncrement: true }),
-		userId: integer("user_id")
-			.notNull()
-			.references(() => users.id, { onDelete: "cascade" }),
-		planId: integer("plan_id")
-			.notNull()
-			.references(() => plans.id),
-		status: text("status").notNull().default("active"),
-		renewsAt: integer("renews_at"),
-		createdAt: integer("created_at").notNull().default(sql`(unixepoch())`),
-	},
-	(t) => [index("subscriptions_user_idx").on(t.userId), index("subscriptions_plan_idx").on(t.planId)],
-);
-
 export const featureFlags = sqliteTable("feature_flags", {
 	id: integer("id").primaryKey({ autoIncrement: true }),
 	key: text("key").notNull().unique(),

@@ -1,4 +1,4 @@
-import { count, desc, eq } from "drizzle-orm";
+import { count, desc } from "drizzle-orm";
 import { Hono } from "hono";
 
 import { getDb } from "./db/client";
@@ -316,15 +316,13 @@ app.post("/api/webhook/release", async (c) => {
 app.get("/api/admin/stats", async (c) => {
 	try {
 		const db = getDb(c.env.DB);
-		const [users, subs, releases, flags] = await Promise.all([
+		const [users, releases, flags] = await Promise.all([
 			db.select({ value: count() }).from(schema.users),
-			db.select({ value: count() }).from(schema.subscriptions),
 			db.select({ value: count() }).from(schema.releases),
 			db.select({ value: count() }).from(schema.featureFlags),
 		]);
 		return c.json({
 			users: users[0].value,
-			subscriptions: subs[0].value,
 			releases: releases[0].value,
 			featureFlags: flags[0].value,
 		});
@@ -373,46 +371,6 @@ app.get("/api/admin/permissions", async (c) => {
 		return c.json(rows);
 	} catch (err) {
 		console.error("Error fetching admin permissions:", err);
-		return c.json({ error: "Internal server error" }, 500);
-	}
-});
-
-app.get("/api/admin/plans", async (c) => {
-	try {
-		const db = getDb(c.env.DB);
-		const rows = await db
-			.select()
-			.from(schema.plans)
-			.orderBy(schema.plans.sortOrder);
-		return c.json(rows);
-	} catch (err) {
-		console.error("Error fetching admin plans:", err);
-		return c.json({ error: "Internal server error" }, 500);
-	}
-});
-
-app.get("/api/admin/subscriptions", async (c) => {
-	try {
-		const db = getDb(c.env.DB);
-		const rows = await db
-			.select({
-				id: schema.subscriptions.id,
-				userId: schema.subscriptions.userId,
-				planId: schema.subscriptions.planId,
-				status: schema.subscriptions.status,
-				renewsAt: schema.subscriptions.renewsAt,
-				createdAt: schema.subscriptions.createdAt,
-				userEmail: schema.users.email,
-				userName: schema.users.name,
-				planName: schema.plans.name,
-			})
-			.from(schema.subscriptions)
-			.innerJoin(schema.users, eq(schema.users.id, schema.subscriptions.userId))
-			.innerJoin(schema.plans, eq(schema.plans.id, schema.subscriptions.planId))
-			.orderBy(desc(schema.subscriptions.createdAt));
-		return c.json(rows);
-	} catch (err) {
-		console.error("Error fetching admin subscriptions:", err);
 		return c.json({ error: "Internal server error" }, 500);
 	}
 });
@@ -471,8 +429,6 @@ const SPA_ROUTES = new Set([
 	"/admin/access/users",
 	"/admin/access/roles",
 	"/admin/access/permissions",
-	"/admin/subscriptions",
-	"/admin/plans",
 	"/admin/features",
 	"/admin/settings",
 	"/unauthorized",

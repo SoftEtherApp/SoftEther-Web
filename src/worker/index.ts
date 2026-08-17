@@ -178,7 +178,7 @@ app.post("/api/webhook/release", async (c) => {
 	const secret = c.env.WEBHOOK_SECRET;
 	const isDev = c.env.ENVIRONMENT === "development" || c.req.url.includes("localhost");
 	const authorized = secret
-		? auth !== null && auth.startsWith("Bearer ") && constantTimeEqual(auth.slice(7), secret)
+		? auth !== undefined && auth.startsWith("Bearer ") && constantTimeEqual(auth.slice(7), secret)
 		: isDev;
 	if (!authorized) {
 		return c.json({ error: "Unauthorized" }, 401);

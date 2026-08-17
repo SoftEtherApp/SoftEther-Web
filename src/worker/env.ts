@@ -10,6 +10,8 @@ export interface AppEnv extends Env {
 	RELEASE_META: KVNamespace;
 	DB: D1Database;
 	WEBHOOK_SECRET: string;
+	/** Bearer token guarding /api/admin/* (fail closed when unset). */
+	ADMIN_API_TOKEN?: string;
 	ENVIRONMENT?: string;
 	SMTP_HOST?: string;
 	SMTP_PORT?: string;

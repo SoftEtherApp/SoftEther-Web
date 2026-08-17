@@ -4,7 +4,7 @@
    ════════════════════════════════════ */
 
 import { useCallback, useEffect, useState, type JSX } from "react";
-import { Alert } from "@devstroop/react-ui";
+import { Alert, Skeleton } from "@devstroop/react-ui";
 import { useScrollToHash } from "../hooks/useScrollToHash";
 import Icon from "../components/Icon";
 import ReleaseNotes from "../lib/ReleaseNotes";
@@ -110,16 +110,16 @@ export default function ChangelogPage(): JSX.Element {
 				{loading && !latest && (
 					<div className="download-list">
 						<div className="dl-group">
-							<div className="skeleton skeleton-line skeleton-line--title skeleton-line--sm" />
+							<Skeleton variant="text" width="25%" className="mb-sm" />
 							<ul className="asset-list" aria-hidden="true">
 								{[0, 1, 2].map((i) => (
 									<li key={i} className="asset-row">
-										<div className="skeleton skeleton-icon" />
+										<Skeleton variant="rect" width={44} height={44} />
 										<div className="asset-info">
-											<div className="skeleton skeleton-line skeleton-line--title" />
-											<div className="skeleton skeleton-line skeleton-line--meta" />
+											<Skeleton variant="text" width="60%" className="mb-xs" />
+											<Skeleton variant="text" width="40%" />
 										</div>
-										<div className="skeleton skeleton-badge" />
+										<Skeleton variant="rect" width={72} height={28} />
 									</li>
 								))}
 							</ul>

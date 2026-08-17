@@ -3,7 +3,7 @@
    ════════════════════════════════════ */
 
 import { useState, type JSX } from "react";
-import { Alert, Badge, Card, EmptyState, Input, Table, Tooltip } from "@devstroop/react-ui";
+import { Alert, Avatar, Badge, Card, EmptyState, Input, Table, Tooltip } from "@devstroop/react-ui";
 import Icon from "../../../../components/Icon";
 
 interface AdminUser {
@@ -28,15 +28,6 @@ const STATUS_BADGE: Record<AdminUser["status"], "success" | "warning" | "danger"
 	invited: "warning",
 	suspended: "danger",
 };
-
-function initials(name: string): string {
-	return name
-		.split(/\s+/)
-		.filter(Boolean)
-		.slice(0, 2)
-		.map((p) => p[0]!.toUpperCase())
-		.join("");
-}
 
 export default function UsersPage(): JSX.Element {
 	const [query, setQuery] = useState("");
@@ -88,7 +79,7 @@ export default function UsersPage(): JSX.Element {
 								header: "User",
 								render: (u) => (
 									<div className="d-flex items-center gap-sm">
-										<span className="admin-avatar">{initials(u.name)}</span>
+										<Avatar name={u.name} size="sm" />
 										<div>
 											<div className="fw-600 text-primary">{u.name}</div>
 											<div className="fs-xs text-muted">{u.email}</div>

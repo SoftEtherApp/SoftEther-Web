@@ -3,20 +3,15 @@ import Icon from "./Icon";
 import "./ThemeToggle.css";
 
 export default function ThemeToggle() {
-    const [dark, setDark] = useState(true);
+    const [dark, setDark] = useState(() => localStorage.getItem("theme") !== "light");
 
     useEffect(() => {
-        const stored = localStorage.getItem("theme");
-        if (stored === "light") {
-            setDark(false);
-            document.documentElement.classList.add("light");
-        }
-    }, []);
+        document.documentElement.classList.toggle("light", !dark);
+    }, [dark]);
 
     const toggle = () => {
         const next = !dark;
         setDark(next);
-        document.documentElement.classList.toggle("light", !next);
         localStorage.setItem("theme", next ? "dark" : "light");
     };
 

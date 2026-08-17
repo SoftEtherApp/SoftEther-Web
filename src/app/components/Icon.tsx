@@ -2,7 +2,7 @@
    SVG Icon component — Lucide + brand icons
    ════════════════════════════════════ */
 
-import type { CSSProperties, JSX } from "react";
+import type { CSSProperties, JSX, SVGAttributes } from "react";
 
 interface IconNode {
   type: "path" | "circle" | "rect";
@@ -255,8 +255,7 @@ export type IconName = keyof typeof ICONS;
 function renderNode(node: IconNode, key: number): JSX.Element {
   const { type, props } = node;
   const isBrand = props.fill === "currentColor";
-  const attrs: Record<string, string | number | boolean> = {
-    key,
+  const attrs: SVGAttributes<SVGElement> & Record<string, string | number | boolean> = {
     ...(isBrand
       ? { fill: "currentColor" }
       : {
@@ -274,11 +273,9 @@ function renderNode(node: IconNode, key: number): JSX.Element {
     delete attrs.strokeLinecap;
     delete attrs.strokeLinejoin;
   }
-  return type === "circle"
-    ? <circle {...(attrs as any)} />
-    : type === "rect"
-    ? <rect {...(attrs as any)} />
-    : <path {...(attrs as any)} />;
+  if (type === "circle") return <circle key={key} {...attrs} />;
+  if (type === "rect") return <rect key={key} {...attrs} />;
+  return <path key={key} {...attrs} />;
 }
 
 export default function Icon({

@@ -5,6 +5,7 @@
    ════════════════════════════════════ */
 
 import { type JSX } from "react";
+import { Badge, Button, Card } from "@devstroop/react-ui";
 import Icon from "../components/Icon";
 import { navigate } from "../App";
 import { useAuth } from "../auth/useAuth";
@@ -39,8 +40,7 @@ export default function ProfilePage(): JSX.Element | null {
 					</div>
 				</div>
 
-				<div className="admin-card p-lg mb-lg">
-					<h2 className="m-0 mb-md fs-base fw-600">Profile</h2>
+				<Card variant="outlined" className="mb-lg" header={<div className="fw-700 fs-base">Profile</div>}>
 					<dl className="m-0 d-flex flex-col gap-sm fs-sm">
 						<div className="d-flex justify-between gap-md">
 							<dt className="text-muted m-0">Name</dt>
@@ -53,9 +53,9 @@ export default function ProfilePage(): JSX.Element | null {
 						<div className="d-flex justify-between gap-md">
 							<dt className="text-muted m-0">Role</dt>
 							<dd className="m-0">
-								<span className={`badge ${user.role === "admin" ? "badge--info" : "badge--muted"}`}>
+								<Badge tone={user.role === "admin" ? "primary" : "neutral"}>
 									{user.role}
-								</span>
+								</Badge>
 							</dd>
 						</div>
 						<div className="d-flex justify-between gap-md">
@@ -63,10 +63,9 @@ export default function ProfilePage(): JSX.Element | null {
 							<dd className="m-0">{memberSince}</dd>
 						</div>
 					</dl>
-				</div>
+				</Card>
 
-				<div className="admin-card p-lg">
-					<h2 className="m-0 mb-md fs-base fw-600">Access</h2>
+				<Card variant="outlined" header={<div className="fw-700 fs-base">Access</div>}>
 					{user.role === "admin" ? (
 						<p className="m-0 mb-md text-muted fs-sm">
 							You have administrator access. Manage releases, users, and settings from the admin panel.
@@ -80,23 +79,21 @@ export default function ProfilePage(): JSX.Element | null {
 						{user.role === "admin" && (
 							<a
 								href="/admin"
-								className="btn btn-primary"
+								className="text-none"
 								onClick={(e) => { e.preventDefault(); navigate("/admin"); }}
 							>
-								<Icon name="dashboard" size={16} />
-								Admin panel
+								<Button>
+									<Icon name="dashboard" size={16} />
+									Admin panel
+								</Button>
 							</a>
 						)}
-						<button
-							type="button"
-							className="btn btn-secondary"
-							onClick={() => { signOut(); navigate("/"); }}
-						>
+						<Button variant="secondary" onClick={() => { signOut(); navigate("/"); }}>
 							<Icon name="log-out" size={16} />
 							Sign out
-						</button>
+						</Button>
 					</div>
-				</div>
+				</Card>
 			</div>
 		</section>
 	);

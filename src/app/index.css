@@ -4,6 +4,25 @@
    ════════════════════════════════════ */
 
 :root {
+	/* ── @devstroop/react-ui token bridge ── */
+	--se-color-primary: var(--blurple);
+	--se-color-primary-hover: var(--blurple-hover);
+	--se-color-primary-fg: #ffffff;
+	--se-color-text: var(--text-primary);
+	--se-color-text-muted: var(--text-muted);
+	--se-color-border: var(--surface-500);
+	--se-color-border-strong: var(--surface-500);
+	--se-color-surface: var(--surface-800);
+	--se-color-surface-hover: var(--surface-700);
+	--se-color-success: var(--green);
+	--se-color-warning: var(--orange);
+	--se-color-danger: var(--red);
+	--se-radius-sm: 6px;
+	--se-radius-md: var(--rad-sm);
+	--se-radius-lg: var(--rad-md);
+	--se-radius-full: var(--rad-full);
+	--se-control-height: 40px;
+
 	/* ── Surface palette ── */
 	--surface-900: #0f0f13;
 	--surface-800: #1a1a22;

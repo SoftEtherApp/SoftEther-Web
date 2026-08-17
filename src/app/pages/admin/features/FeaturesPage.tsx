@@ -3,6 +3,7 @@
    ════════════════════════════════════ */
 
 import { useState, type JSX } from "react";
+import { Badge, Button, Card, Switch, Table } from "@devstroop/react-ui";
 import Icon from "../../../components/Icon";
 
 interface FeatureFlag {
@@ -44,43 +45,44 @@ export default function FeaturesPage(): JSX.Element {
 							Feature flags shipped with each release. Toggles are local to this session.
 						</p>
 					</div>
-					<button type="button" className="btn btn-primary" onClick={save}>
+					<Button onClick={save}>
 						<Icon name="check" size={16} />
 						Save
-					</button>
+					</Button>
 					{saved && <span className="fs-sm text-muted">Saved (local only).</span>}
 				</div>
 
-				<div className="admin-card overflow-x-auto">
-					<table className="admin-table">
-						<thead>
-							<tr>
-								<th>Feature</th>
-								<th>Channel</th>
-								<th className="text-right">Enabled</th>
-							</tr>
-						</thead>
-						<tbody>
-							{flags.map((f) => (
-								<tr key={f.key}>
-									<td>
+				<Card variant="outlined" className="overflow-x-auto">
+					<Table<FeatureFlag>
+						columns={[
+							{
+								key: "feature",
+								header: "Feature",
+								render: (f) => (
+									<div>
 										<div className="fw-600 text-primary">{f.label}</div>
 										<div className="fs-xs text-muted">{f.desc}</div>
-									</td>
-									<td>
-										<span className={`badge ${f.channel === "all" ? "badge--info" : "badge--warning"}`}>{f.channel}</span>
-									</td>
-									<td className="text-right">
-										<label className="switch">
-											<input type="checkbox" checked={f.enabled} onChange={() => toggle(f.key)} />
-											<span className="switch-slider" />
-										</label>
-									</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
-				</div>
+									</div>
+								),
+							},
+							{
+								key: "channel",
+								header: "Channel",
+								render: (f) => <Badge tone={f.channel === "all" ? "primary" : "warning"}>{f.channel}</Badge>,
+							},
+							{
+								key: "enabled",
+								header: "Enabled",
+								align: "end",
+								render: (f) => (
+									<Switch checked={f.enabled} onChange={() => toggle(f.key)} aria-label={`Toggle ${f.label}`} />
+								),
+							},
+						]}
+						rows={flags}
+						rowKey={(f) => f.key}
+					/>
+				</Card>
 
 				<div className="admin-empty">
 					<Icon name="flag" size={16} />

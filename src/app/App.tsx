@@ -128,7 +128,7 @@ function App(): JSX.Element {
 	}, []);
 
 	useEffect(() => {
-		sync();
+		document.title = matchRoute(window.location.pathname).title;
 		window.addEventListener("popstate", sync);
 		window.addEventListener(NAV_EVENT, sync);
 		return () => {

@@ -3,8 +3,9 @@
    ════════════════════════════════════ */
 
 import { useState, type FormEvent, type JSX } from "react";
-import { Alert, Button, Card, Field, Input, Select, Switch, useToast } from "@devstroop/react-ui";
+import { Button, Card, Field, Input, Select, Switch, useToast } from "@devstroop/react-ui";
 import Icon from "../../../components/Icon";
+import { getAdminToken, setAdminToken, clearAdminToken } from "../../../lib/admin-api";
 
 export default function SettingsPage(): JSX.Element {
 	const { toast } = useToast();
@@ -14,10 +15,18 @@ export default function SettingsPage(): JSX.Element {
 	const [sessionTimeout, setSessionTimeout] = useState("24");
 	const [enforce2fa, setEnforce2fa] = useState(false);
 	const [publicSignup, setPublicSignup] = useState(true);
+	const [adminToken, setAdminTokenState] = useState(() => getAdminToken() ?? "");
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		toast({ title: "Settings saved", description: "Local only — not persisted.", tone: "success" });
+		setAdminToken(adminToken);
+		toast({ title: "Settings saved", description: "Admin API token stored locally.", tone: "success" });
+	};
+
+	const clearToken = () => {
+		clearAdminToken();
+		setAdminTokenState("");
+		toast({ title: "Admin API token removed", description: "Admin pages will fail closed (401).", tone: "info" });
 	};
 
 	return (
@@ -98,7 +107,27 @@ export default function SettingsPage(): JSX.Element {
 							</div>
 						}
 					>
-						<Alert tone="info">API tokens and webhook secrets will live here once the backend is connected.</Alert>
+						<div className="d-flex flex-col gap-md">
+							<Field
+								label="Admin API token"
+								htmlFor="adminToken"
+								hint="Bearer token for /api/admin/*. Enter the ADMIN_API_TOKEN secret configured on the worker; without it admin pages return 401."
+							>
+								<Input
+									id="adminToken"
+									type="password"
+									value={adminToken}
+									onChange={(e) => setAdminTokenState(e.target.value)}
+									autoComplete="off"
+									placeholder="Paste the admin API token…"
+								/>
+							</Field>
+							<div className="d-flex items-center gap-md">
+								<Button type="button" variant="ghost" onClick={clearToken}>
+									Clear token
+								</Button>
+							</div>
+						</div>
 					</Card>
 
 					<div className="d-flex items-center gap-md">

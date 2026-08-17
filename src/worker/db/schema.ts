@@ -44,6 +44,8 @@ export const users = sqliteTable(
 		name: text("name").notNull(),
 		role: text("role").notNull().default("user"),
 		status: text("status").notNull().default("active"),
+		/** PBKDF2-SHA256 hash ("pbkdf2-sha256$iters$salt$key"), set at registration. */
+		passwordHash: text("password_hash"),
 		createdAt: integer("created_at").notNull().default(sql`(unixepoch())`),
 	},
 	(t) => [index("users_role_idx").on(t.role)],

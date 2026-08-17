@@ -22,6 +22,7 @@ import DocsPage from "./pages/docs/DocsPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
+import VerifyEmailPage from "./pages/auth/VerifyEmailPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -80,6 +81,7 @@ const ROUTES: RouteDef[] = [
 	{ path: "/docs", page: () => <DocsPage />, layout: "public", title: "Documentation — SoftEther App" },
 	{ path: "/login", page: () => <LoginPage />, layout: "auth", title: "Sign in — SoftEther App" },
 	{ path: "/register", page: () => <RegisterPage />, layout: "auth", title: "Create account — SoftEther App" },
+	{ path: "/verify-email", page: () => <VerifyEmailPage />, layout: "auth", title: "Verify email — SoftEther App" },
 	{ path: "/forgot-password", page: () => <ForgotPasswordPage />, layout: "auth", title: "Reset password — SoftEther App" },
 	{ path: "/reset-password", page: () => <ResetPasswordPage />, layout: "auth", title: "Set new password — SoftEther App" },
 	{ path: "/profile", page: () => <RequireAuth><ProfilePage /></RequireAuth>, layout: "public", title: "Profile — SoftEther App" },

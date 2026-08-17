@@ -50,7 +50,8 @@
     "test:releasenotes": "node --experimental-strip-types scripts/test-releasenotes.mjs",
     "test:responsive": "node scripts/responsive.mjs",
     "test:smtp": "node --experimental-strip-types scripts/test-smtp.mjs",
-    "test:tokens": "node --experimental-strip-types scripts/test-tokens.mjs"
+    "test:tokens": "node --experimental-strip-types scripts/test-tokens.mjs",
+    "test:auth": "node --experimental-strip-types scripts/test-auth.mjs"
   },
   "type": "module"
 }

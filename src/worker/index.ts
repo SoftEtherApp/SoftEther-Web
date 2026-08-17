@@ -5,6 +5,7 @@ import { getDb } from "./db/client";
 import * as schema from "./db/schema";
 import type { ReleaseAsset, Release } from "../shared/types";
 import { authRoutes } from "./api/auth";
+import { constantTimeEqual } from "./auth/bearer";
 import type { AppEnv } from "./env";
 
 /* ── App ── */
@@ -170,10 +171,16 @@ app.get("/api/releases", async (c) => {
 
 /* ── POST /api/webhook/release — triggered by SoftEtherApp release workflow ── */
 app.post("/api/webhook/release", async (c) => {
-	// Validate webhook secret
+	// Validate webhook secret — FAIL CLOSED: without a configured secret
+	// the guard must reject (except local development), never accept an
+	// unauthenticated release sync into R2/KV/D1.
 	const auth = c.req.header("Authorization");
 	const secret = c.env.WEBHOOK_SECRET;
-	if (secret && auth !== `Bearer ${secret}`) {
+	const isDev = c.env.ENVIRONMENT === "development" || c.req.url.includes("localhost");
+	const authorized = secret
+		? auth !== undefined && auth.startsWith("Bearer ") && constantTimeEqual(auth.slice(7), secret)
+		: isDev;
+	if (!authorized) {
 		return c.json({ error: "Unauthorized" }, 401);
 	}
 

@@ -14,6 +14,7 @@ import {
   PBKDF2_KEY_BYTES,
 } from "../src/worker/auth/password.ts";
 import { normalizeEmail, normalizeName, checkPassword } from "../src/worker/auth/validate.ts";
+import { constantTimeEqual } from "../src/worker/auth/bearer.ts";
 
 let failures = 0;
 
@@ -78,6 +79,15 @@ function check(name, cond, extra = "") {
   check("rejects overlong", !checkPassword("x".repeat(129)));
   check("rejects empty", !checkPassword(""));
   check("rejects non-string", !checkPassword(12345));
+}
+
+// 6. constantTimeEqual
+{
+  check("equal strings match", constantTimeEqual("secret-token", "secret-token"));
+  check("different strings reject", !constantTimeEqual("secret-token", "secret-tokEn"));
+  check("prefix mismatch rejects", !constantTimeEqual("secret-token", "secret-token2"));
+  check("empty vs non-empty rejects", !constantTimeEqual("", "x"));
+  check("both empty match", constantTimeEqual("", ""));
 }
 
 if (failures) {

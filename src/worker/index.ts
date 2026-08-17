@@ -1,10 +1,10 @@
-import { count, desc } from "drizzle-orm";
 import { Hono } from "hono";
 
 import { getDb } from "./db/client";
 import * as schema from "./db/schema";
 import type { ReleaseAsset, Release } from "../shared/types";
 import { authRoutes } from "./api/auth";
+import { adminRoutes } from "./api/admin";
 import { constantTimeEqual } from "./auth/bearer";
 import type { AppEnv } from "./env";
 
@@ -316,9 +316,8 @@ app.post("/api/webhook/release", async (c) => {
 /* ── Admin API (D1) ── */
 
 // Admin routes are gated behind a bearer token (ADMIN_API_TOKEN secret).
-// Fail closed: without the token configured, everyone gets 401 — the
-// demo admin pages don't call these yet; the real session flow (epic
-// #16) will send this token once wired.
+// Fail closed: without the token configured, everyone gets 401. The SPA
+// sends the token from the admin Settings page (epic #16).
 app.use("/api/admin/*", async (c, next) => {
 	const token = c.env.ADMIN_API_TOKEN;
 	const auth = c.req.header("Authorization");
@@ -333,96 +332,7 @@ app.use("/api/admin/*", async (c, next) => {
 	await next();
 });
 
-app.get("/api/admin/stats", async (c) => {
-	try {
-		const db = getDb(c.env.DB);
-		const [users, releases, flags] = await Promise.all([
-			db.select({ value: count() }).from(schema.users),
-			db.select({ value: count() }).from(schema.releases),
-			db.select({ value: count() }).from(schema.featureFlags),
-		]);
-		return c.json({
-			users: users[0].value,
-			releases: releases[0].value,
-			featureFlags: flags[0].value,
-		});
-	} catch (err) {
-		console.error("Error fetching admin stats:", err);
-		return c.json({ error: "Internal server error" }, 500);
-	}
-});
-
-app.get("/api/admin/users", async (c) => {
-	try {
-		const db = getDb(c.env.DB);
-		const rows = await db
-			.select({
-				id: schema.users.id,
-				email: schema.users.email,
-				name: schema.users.name,
-				role: schema.users.role,
-				status: schema.users.status,
-				createdAt: schema.users.createdAt,
-			})
-			.from(schema.users)
-			.orderBy(desc(schema.users.createdAt));
-		return c.json(rows);
-	} catch (err) {
-		console.error("Error fetching admin users:", err);
-		return c.json({ error: "Internal server error" }, 500);
-	}
-});
-
-app.get("/api/admin/roles", async (c) => {
-	try {
-		const db = getDb(c.env.DB);
-		const rows = await db.select().from(schema.roles).orderBy(schema.roles.id);
-		return c.json(rows);
-	} catch (err) {
-		console.error("Error fetching admin roles:", err);
-		return c.json({ error: "Internal server error" }, 500);
-	}
-});
-
-app.get("/api/admin/permissions", async (c) => {
-	try {
-		const db = getDb(c.env.DB);
-		const rows = await db.select().from(schema.permissions).orderBy(schema.permissions.id);
-		return c.json(rows);
-	} catch (err) {
-		console.error("Error fetching admin permissions:", err);
-		return c.json({ error: "Internal server error" }, 500);
-	}
-});
-
-app.get("/api/admin/features", async (c) => {
-	try {
-		const db = getDb(c.env.DB);
-		const rows = await db
-			.select()
-			.from(schema.featureFlags)
-			.orderBy(schema.featureFlags.id);
-		return c.json(rows);
-	} catch (err) {
-		console.error("Error fetching admin features:", err);
-		return c.json({ error: "Internal server error" }, 500);
-	}
-});
-
-app.get("/api/admin/activity", async (c) => {
-	try {
-		const db = getDb(c.env.DB);
-		const rows = await db
-			.select()
-			.from(schema.activityLog)
-			.orderBy(desc(schema.activityLog.createdAt))
-			.limit(50);
-		return c.json(rows);
-	} catch (err) {
-		console.error("Error fetching admin activity:", err);
-		return c.json({ error: "Internal server error" }, 500);
-	}
-});
+app.route("/api/admin", adminRoutes);
 
 /* ── SPA fallback ── */
 

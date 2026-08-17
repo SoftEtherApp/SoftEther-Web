@@ -52,7 +52,8 @@
     "test:responsive": "node scripts/responsive.mjs",
     "test:smtp": "node --experimental-strip-types scripts/test-smtp.mjs",
     "test:tokens": "node --experimental-strip-types scripts/test-tokens.mjs",
-    "test:auth": "node --experimental-strip-types scripts/test-auth.mjs"
+    "test:auth": "node --experimental-strip-types scripts/test-auth.mjs",
+    "test:admin": "node --experimental-strip-types scripts/test-admin.mjs"
   },
   "type": "module"
 }

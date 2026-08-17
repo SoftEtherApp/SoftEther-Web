@@ -3,6 +3,7 @@
    ════════════════════════════════════ */
 
 import { type JSX } from "react";
+import { Card, Stat } from "@devstroop/react-ui";
 import Icon, { type IconName } from "../../../components/Icon";
 import { navigate } from "../../../App";
 
@@ -57,53 +58,55 @@ export default function DashboardPage(): JSX.Element {
 
 				<div className="d-grid gap-md mb-lg" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
 					{STATS.map((s) => (
-						<div key={s.label} className="stat-card d-flex items-center gap-md">
-							<div className="stat-card-icon">
-								<Icon name={s.icon} size={18} />
+						<Card key={s.label} variant="outlined">
+							<div className="d-flex items-center gap-md">
+								<div className="stat-card-icon">
+									<Icon name={s.icon} size={18} />
+								</div>
+								<Stat label={s.label} value={s.value} hint={s.note} />
 							</div>
-							<div>
-								<div className="stat-card-value text-primary">{s.value}</div>
-								<div className="stat-card-label">{s.label}</div>
-								<div className="fs-xs text-muted">{s.note}</div>
-							</div>
-						</div>
+						</Card>
 					))}
 				</div>
 
 				<div className="d-grid gap-md mb-lg" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))" }}>
 					{QUICK_ACTIONS.map((q) => (
-						<a
-							key={q.href}
-							href={q.href}
-							className="admin-card text-none d-flex items-center gap-md"
-							onClick={(e) => { e.preventDefault(); navigate(q.href); }}
-						>
-							<div className="stat-card-icon">
-								<Icon name={q.icon} size={18} />
-							</div>
-							<div className="flex-1">
-								<div className="fw-600 text-primary">{q.label}</div>
-								<div className="fs-xs text-muted">{q.desc}</div>
-							</div>
-							<Icon name="chevron-right" size={18} className="text-muted" />
-						</a>
+						<Card key={q.href} variant="interactive">
+							<a
+								href={q.href}
+								className="text-none d-flex items-center gap-md"
+								onClick={(e) => { e.preventDefault(); navigate(q.href); }}
+							>
+								<div className="stat-card-icon">
+									<Icon name={q.icon} size={18} />
+								</div>
+								<div className="flex-1">
+									<div className="fw-600 text-primary">{q.label}</div>
+									<div className="fs-xs text-muted">{q.desc}</div>
+								</div>
+								<Icon name="chevron-right" size={18} className="text-muted" />
+							</a>
+						</Card>
 					))}
 				</div>
 
-				<div className="admin-card">
-					<div className="d-flex items-center justify-between gap-md flex-wrap mb-md">
-						<div>
-							<h2 className="admin-card-title text-primary">Recent activity</h2>
-							<p className="admin-card-desc m-0">Latest events across the admin area.</p>
+				<Card
+					header={
+						<div className="d-flex items-center justify-between gap-md flex-wrap">
+							<div>
+								<div className="fw-700 fs-md text-primary">Recent activity</div>
+								<p className="admin-card-desc m-0">Latest events across the admin area.</p>
+							</div>
+							<a
+								href="/admin/access/users"
+								className="fs-sm text-blurple text-none"
+								onClick={(e) => { e.preventDefault(); navigate("/admin/access/users"); }}
+							>
+								View all
+							</a>
 						</div>
-						<a
-							href="/admin/access/users"
-							className="fs-sm text-blurple text-none"
-							onClick={(e) => { e.preventDefault(); navigate("/admin/access/users"); }}
-						>
-							View all
-						</a>
-					</div>
+					}
+				>
 					<div className="d-flex flex-col">
 						{ACTIVITY.map((a, i) => (
 							<div key={i} className="d-flex items-center gap-md py-sm bordered-b">
@@ -115,7 +118,7 @@ export default function DashboardPage(): JSX.Element {
 							</div>
 						))}
 					</div>
-				</div>
+				</Card>
 			</div>
 		</section>
 	);

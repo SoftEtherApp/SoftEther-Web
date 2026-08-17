@@ -4,6 +4,7 @@
    ════════════════════════════════════ */
 
 import { useState, type FormEvent, type JSX } from "react";
+import { Button, Field, Input } from "@devstroop/react-ui";
 import Icon from "../../components/Icon";
 import { navigate } from "../../App";
 import { useAuth } from "../../auth/useAuth";
@@ -29,34 +30,36 @@ export default function LoginPage(): JSX.Element {
 			<h1 className="m-0 mb-sm fs-lg fw-700 text-primary">Welcome back</h1>
 			<p className="m-0 mb-xl text-muted fs-sm">Sign in to your account.</p>
 			<form onSubmit={handleSubmit} noValidate className="d-flex flex-col gap-md">
-				<div>
-					<label className="label" htmlFor="email">Email</label>
-					<input
+				<Field label="Email" htmlFor="email">
+					<Input
 						id="email"
 						type="email"
-						className="input"
 						placeholder="you@example.com"
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
 						autoComplete="email"
 					/>
-				</div>
-				<div>
-					<div className="d-flex items-center justify-between mb-xs">
-						<label className="label m-0" htmlFor="password">Password</label>
-						<a
-							href="/forgot-password"
-							className="fs-xs text-secondary"
-							onClick={(e) => { e.preventDefault(); navigate("/forgot-password"); }}
-						>
-							Forgot password?
-						</a>
-					</div>
+				</Field>
+				<Field
+					label={
+						<span className="d-flex items-center justify-between">
+							Password
+							<a
+								href="/forgot-password"
+								className="fs-xs text-secondary"
+								onClick={(e) => { e.preventDefault(); navigate("/forgot-password"); }}
+							>
+								Forgot password?
+							</a>
+						</span>
+					}
+					htmlFor="password"
+				>
 					<div className="pos-relative">
-						<input
+						<Input
 							id="password"
 							type={showPassword ? "text" : "password"}
-							className="input pr-xl"
+							className="pr-xl"
 							placeholder="••••••••"
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
@@ -71,10 +74,10 @@ export default function LoginPage(): JSX.Element {
 							<Icon name={showPassword ? "eye-off" : "eye"} size={18} />
 						</button>
 					</div>
-				</div>
-				<button type="submit" className="btn btn-primary w-100 justify-center">
+				</Field>
+				<Button type="submit" fullWidth>
 					Sign in
-				</button>
+				</Button>
 			</form>
 			<div className="d-flex items-center gap-md my-lg text-muted fs-xs">
 				<span className="flex-grow-1 bordered-t" />
@@ -83,10 +86,12 @@ export default function LoginPage(): JSX.Element {
 			</div>
 			<a
 				href="/register"
-				className="btn btn-secondary w-100 justify-center"
+				className="text-none"
 				onClick={(e) => { e.preventDefault(); navigate("/register"); }}
 			>
-				Create an account
+				<Button variant="secondary" fullWidth>
+					Create an account
+				</Button>
 			</a>
 			<p className="m-0 mt-lg text-center text-muted fs-xs">
 				Demo mode — any email and password signs you in locally. Use{" "}

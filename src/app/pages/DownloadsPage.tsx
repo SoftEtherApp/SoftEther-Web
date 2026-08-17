@@ -3,15 +3,16 @@
    ════════════════════════════════════ */
 
 import { type JSX } from "react";
-import { Accordion, Alert, Skeleton } from "@devstroop/react-ui";
+import { Accordion, Alert, Skeleton, Tabs } from "@devstroop/react-ui";
 import { useLatestRelease } from "../hooks/useLatestRelease";
 import { groupAssets, displayNameFor, iconFor, variantFor, archFor, formatSize, KNOWN_GROUPS } from "../lib/downloads";
 import Icon from "../components/Icon";
 import ReleaseNotes from "../lib/ReleaseNotes";
+import type { ReleaseAsset } from "../../shared/types";
 
 /* Rows are rendered as a GitHub-style release asset list: icon + identity
    + size, with the download action on the right. */
-function AssetRow({ asset }: { asset: { name: string; platform: string; size: number; downloadUrl: string; r2Key: string } }) {
+function AssetRow({ asset }: { asset: ReleaseAsset }) {
 	const arch = archFor(asset.platform);
 	const variant = variantFor(asset.platform);
 
@@ -39,6 +40,25 @@ function AssetRow({ asset }: { asset: { name: string; platform: string; size: nu
 				Download
 			</a>
 		</li>
+	);
+}
+
+/* One platform group block — shared by the "All platforms" tab and the
+   per-platform tabs. */
+function DownloadGroups({ groups }: { groups: Array<{ group: string; items: ReleaseAsset[] }> }) {
+	return (
+		<>
+			{groups.map(({ group, items }) => (
+				<div className="dl-group" key={group}>
+					<h3 className="download-group-title">{group}</h3>
+					<ul className="asset-list">
+						{items.map((asset) => (
+							<AssetRow key={asset.r2Key} asset={asset} />
+						))}
+					</ul>
+				</div>
+			))}
+		</>
 	);
 }
 
@@ -143,18 +163,24 @@ export default function DownloadsPage(): JSX.Element {
 						</div>
 					)}
 
-					{release &&
-						!loading &&
-						groupAssets(release.assets).map(({ group, items }) => (
-							<div className="dl-group" key={group}>
-								<h3 className="download-group-title">{group}</h3>
-								<ul className="asset-list">
-									{items.map((asset) => (
-										<AssetRow key={asset.r2Key} asset={asset} />
-									))}
-								</ul>
-							</div>
-						))}
+					{release && !loading && release.assets.length > 0 && (
+						<Tabs
+							variant="pills"
+							defaultValue="all"
+							items={[
+								{ key: "all", label: "All platforms", content: <DownloadGroups groups={groupAssets(release.assets)} /> },
+								...KNOWN_GROUPS.map((group) => ({
+									key: group,
+									label: group,
+									content: (
+										<DownloadGroups
+											groups={groupAssets(release.assets).filter((g) => g.group === group)}
+										/>
+									),
+								})),
+							]}
+						/>
+					)}
 				</div>
 
 				<div className="d-flex justify-center mt-2xl">

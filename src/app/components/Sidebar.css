@@ -1,24 +1,7 @@
 /* ════════════════════════════════════
-   Sidebar — mobile nav drawer
+   Sidebar — mobile nav modal content
    ════════════════════════════════════ */
 
-.sidebar {
-	position: fixed;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	width: 260px;
-	z-index: 200;
-	background: var(--surface-900);
-	border-right: 0.5px solid var(--surface-600);
-	display: flex;
-	flex-direction: column;
-	transform: translateX(-100%);
-	transition: transform var(--transition-base);
-}
-.sidebar--open {
-	transform: translateX(0);
-}
 .sidebar-header {
 	display: flex;
 	align-items: center;
@@ -43,11 +26,4 @@
 }
 .sidebar-footer .theme-btn {
 	margin-left: 0;
-}
-
-.sidebar-backdrop {
-	position: fixed;
-	inset: 0;
-	z-index: 199;
-	background: rgba(0,0,0,0.4);
 }

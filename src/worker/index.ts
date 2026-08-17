@@ -315,6 +315,24 @@ app.post("/api/webhook/release", async (c) => {
 
 /* ── Admin API (D1) ── */
 
+// Admin routes are gated behind a bearer token (ADMIN_API_TOKEN secret).
+// Fail closed: without the token configured, everyone gets 401 — the
+// demo admin pages don't call these yet; the real session flow (epic
+// #16) will send this token once wired.
+app.use("/api/admin/*", async (c, next) => {
+	const token = c.env.ADMIN_API_TOKEN;
+	const auth = c.req.header("Authorization");
+	const authorized =
+		token !== undefined &&
+		auth !== undefined &&
+		auth.startsWith("Bearer ") &&
+		constantTimeEqual(auth.slice(7), token);
+	if (!authorized) {
+		return c.json({ error: "Unauthorized" }, 401);
+	}
+	await next();
+});
+
 app.get("/api/admin/stats", async (c) => {
 	try {
 		const db = getDb(c.env.DB);

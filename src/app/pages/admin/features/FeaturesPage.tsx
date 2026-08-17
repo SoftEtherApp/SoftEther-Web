@@ -3,7 +3,7 @@
    ════════════════════════════════════ */
 
 import { useState, type JSX } from "react";
-import { Badge, Button, Card, Switch, Table } from "@devstroop/react-ui";
+import { Alert, Badge, Button, Card, Switch, Table, useToast } from "@devstroop/react-ui";
 import Icon from "../../../components/Icon";
 
 interface FeatureFlag {
@@ -24,15 +24,14 @@ const INITIAL: FeatureFlag[] = [
 
 export default function FeaturesPage(): JSX.Element {
 	const [flags, setFlags] = useState<FeatureFlag[]>(INITIAL);
-	const [saved, setSaved] = useState(false);
+	const { toast } = useToast();
 
 	const toggle = (key: string) => {
 		setFlags((prev) => prev.map((f) => (f.key === key ? { ...f, enabled: !f.enabled } : f)));
 	};
 
 	const save = () => {
-		setSaved(true);
-		setTimeout(() => setSaved(false), 3000);
+		toast({ title: "Features saved", description: "Local only — not persisted.", tone: "success" });
 	};
 
 	return (
@@ -49,7 +48,6 @@ export default function FeaturesPage(): JSX.Element {
 						<Icon name="check" size={16} />
 						Save
 					</Button>
-					{saved && <span className="fs-sm text-muted">Saved (local only).</span>}
 				</div>
 
 				<Card variant="outlined" className="overflow-x-auto">
@@ -84,10 +82,7 @@ export default function FeaturesPage(): JSX.Element {
 					/>
 				</Card>
 
-				<div className="admin-empty">
-					<Icon name="flag" size={16} />
-					<span>Flags will be evaluated server-side and delivered to clients via a config endpoint.</span>
-				</div>
+				<Alert tone="info">Flags will be evaluated server-side and delivered to clients via a config endpoint.</Alert>
 			</div>
 		</section>
 	);

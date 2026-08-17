@@ -3,8 +3,7 @@
    ════════════════════════════════════ */
 
 import { type JSX } from "react";
-import { Card, Stat } from "@devstroop/react-ui";
-import Icon from "../../../components/Icon";
+import { Alert, Card, Progress, Stat } from "@devstroop/react-ui";
 
 const METRICS: { label: string; value: string; delta: string; up: boolean }[] = [
 	{ label: "Downloads (30d)", value: "48,210", delta: "+12.4%", up: true },
@@ -59,12 +58,7 @@ export default function AnalyticsPage(): JSX.Element {
 							{PLATFORMS.map((p) => (
 								<div key={p.platform} className="d-flex items-center gap-md">
 									<span className="fs-sm flex-1 text-secondary">{p.platform}</span>
-									<div className="flex-1 pos-relative overflow-hidden bg-surface-700 rounded-sm" style={{ height: 8 }}>
-										<div
-											className="pos-absolute h-100 rounded-sm"
-											style={{ left: 0, top: 0, width: p.share, background: "var(--blurple)" }}
-										/>
-									</div>
+									<Progress className="flex-1" value={parseInt(p.share, 10)} max={100} tone="primary" />
 									<span className="fs-xs fw-600" style={{ width: 48, textAlign: "right" }}>{p.share}</span>
 								</div>
 							))}
@@ -80,10 +74,7 @@ export default function AnalyticsPage(): JSX.Element {
 							</div>
 						}
 					>
-						<div className="admin-empty m-0">
-							<Icon name="trending-up" size={16} />
-							<span>Charts will render here once a telemetry endpoint and event pipeline are in place.</span>
-						</div>
+						<Alert tone="info">Charts will render here once a telemetry endpoint and event pipeline are in place.</Alert>
 					</Card>
 				</div>
 			</div>

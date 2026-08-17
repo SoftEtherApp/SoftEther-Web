@@ -3,7 +3,7 @@
    ════════════════════════════════════ */
 
 import { type JSX } from "react";
-import { Card, Stat } from "@devstroop/react-ui";
+import { Alert, Card, Stat } from "@devstroop/react-ui";
 import Icon, { type IconName } from "../../../components/Icon";
 import { navigate } from "../../../App";
 
@@ -49,12 +49,9 @@ export default function DashboardPage(): JSX.Element {
 					</button>
 				</div>
 
-				<div className="admin-empty">
-					<Icon name="alert-triangle" size={16} />
-					<span>
-						Demo data — values below are placeholders until the admin API is connected.
-					</span>
-				</div>
+				<Alert tone="warning" className="mb-lg">
+					Demo data — values below are placeholders until the admin API is connected.
+				</Alert>
 
 				<div className="d-grid gap-md mb-lg" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
 					{STATS.map((s) => (

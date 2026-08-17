@@ -1,10 +1,11 @@
 /* ════════════════════════════════════
-   Sidebar — controlled mobile nav drawer shell
+   Sidebar — controlled mobile nav modal
    The layout owns `open`; onClose fires from the
-   backdrop, close button, or Escape.
+   close button, backdrop, or Escape (native <dialog>).
    ════════════════════════════════════ */
 
 import { type JSX, type ReactNode } from "react";
+import { Dialog } from "@devstroop/react-ui";
 import "./Sidebar.css";
 
 interface SidebarProps {
@@ -15,17 +16,8 @@ interface SidebarProps {
 
 export default function Sidebar({ open, onClose, children }: SidebarProps): JSX.Element {
 	return (
-		<>
-			{/* Mobile sidebar overlay — outside <aside> to avoid backdrop-filter clipping on iOS */}
-			{open && <div className="sidebar-backdrop" onClick={onClose} />}
-			<aside
-				className={`sidebar ${open ? "sidebar--open" : ""}`}
-				role="dialog"
-				aria-modal={open ? "true" : undefined}
-				aria-label="Navigation menu"
-			>
-				{children}
-			</aside>
-		</>
+		<Dialog open={open} onClose={onClose} title="Menu" size="sm">
+			{children}
+		</Dialog>
 	);
 }

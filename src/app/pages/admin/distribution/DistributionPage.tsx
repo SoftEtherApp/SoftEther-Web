@@ -3,7 +3,7 @@
    ════════════════════════════════════ */
 
 import { useState, type JSX } from "react";
-import { Badge, Button, Card, Table } from "@devstroop/react-ui";
+import { Alert, Badge, Button, Card, Table, Tooltip, useToast } from "@devstroop/react-ui";
 import Icon from "../../../components/Icon";
 
 interface Channel {
@@ -42,10 +42,14 @@ const TARGETS: Target[] = [
 
 export default function DistributionPage(): JSX.Element {
 	const [publishing, setPublishing] = useState<string | null>(null);
+	const { toast } = useToast();
 
 	const handlePublish = (channel: string) => {
 		setPublishing(channel);
-		setTimeout(() => setPublishing(null), 1500);
+		window.setTimeout(() => {
+			setPublishing(null);
+			toast({ title: `Published to ${channel}`, description: "Stub — release pipeline not wired.", tone: "success" });
+		}, 1500);
 	};
 
 	return (
@@ -75,26 +79,30 @@ export default function DistributionPage(): JSX.Element {
 								<div className="fs-sm fw-600 text-blurple">
 									<Icon name="tag" size={14} className="text-blurple" /> {c.version}
 								</div>
-								<Button
-									type="button"
-									variant="secondary"
-									fullWidth
-									disabled={c.status === "staging"}
-									title={c.status === "staging" ? "Canary builds are published automatically" : "Stub — triggers the release pipeline"}
-									onClick={() => handlePublish(c.name)}
+								<Tooltip
+									content={c.status === "staging" ? "Canary builds are published automatically" : "Stub — triggers the release pipeline"}
+									className="d-block"
 								>
-									{publishing === c.name ? (
-										<>
-											<Icon name="refresh-cw" size={16} />
-											Publishing…
-										</>
-									) : (
-										<>
-											<Icon name="package" size={16} />
-											Publish now
-										</>
-									)}
-								</Button>
+									<Button
+										type="button"
+										variant="secondary"
+										fullWidth
+										disabled={c.status === "staging"}
+										onClick={() => handlePublish(c.name)}
+									>
+										{publishing === c.name ? (
+											<>
+												<Icon name="refresh-cw" size={16} />
+												Publishing…
+											</>
+										) : (
+											<>
+												<Icon name="package" size={16} />
+												Publish now
+											</>
+										)}
+									</Button>
+								</Tooltip>
 							</div>
 						</Card>
 					))}
@@ -128,10 +136,7 @@ export default function DistributionPage(): JSX.Element {
 					/>
 				</Card>
 
-				<div className="admin-empty">
-					<Icon name="radio" size={16} />
-					<span>Connect the release webhook in Settings to enable real publishing and rollbacks.</span>
-				</div>
+				<Alert tone="info">Connect the release webhook in Settings to enable real publishing and rollbacks.</Alert>
 			</div>
 		</section>
 	);

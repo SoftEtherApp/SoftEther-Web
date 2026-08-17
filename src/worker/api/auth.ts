@@ -22,8 +22,13 @@ import type { Context } from "hono";
 import { getDb } from "../db/client";
 import * as schema from "../db/schema";
 import { sendEmail } from "../email/sender";
-import { verificationEmail } from "../email/templates";
-import { mintEmailToken, verifyEmailToken, type EmailTokenKind } from "../email/tokens";
+import { resetPasswordEmail, verificationEmail } from "../email/templates";
+import {
+	invalidateUserTokens,
+	mintEmailToken,
+	verifyEmailToken,
+	type EmailTokenKind,
+} from "../email/tokens";
 import { hashPassword } from "../auth/password";
 import { checkPassword, normalizeEmail, normalizeName } from "../auth/validate";
 import type { AppEnv } from "../env";
@@ -172,5 +177,109 @@ authRoutes.post("/verify-email", async (c) => {
 	}
 
 	await audit(c, "auth.verify-email", `email=${user.email}`);
+	return c.json({ ok: true });
+});
+
+/* ── POST /api/auth/forgot-password ── */
+
+authRoutes.post("/forgot-password", async (c) => {
+	const ip = clientIp(c);
+	if (await rateLimitHit(c.env.RELEASE_META, `forgot:${ip}`, 5, 60)) {
+		return c.json({ error: "Too many attempts. Try again in a minute." }, 429);
+	}
+
+	// Always answers {ok:true} — no leak, no enumeration (not even for
+	// malformed input; the form's own validation handles that).
+	let body: { email?: string };
+	try {
+		body = await c.req.json();
+	} catch {
+		return c.json({ ok: true });
+	}
+
+	const email = normalizeEmail(body.email ?? "");
+	if (!email) return c.json({ ok: true });
+
+	const db = getDb(c.env.DB);
+	const [user] = await db
+		.select({ id: schema.users.id, name: schema.users.name, email: schema.users.email })
+		.from(schema.users)
+		.where(eq(schema.users.email, email));
+	if (!user) {
+		await audit(c, "auth.forgot-password.unknown", `email=${email}`);
+		return c.json({ ok: true });
+	}
+
+	let token: string;
+	try {
+		token = await mintEmailToken(c.env.DB, { userId: user.id, kind: "reset_password" });
+	} catch (err) {
+		console.error("Reset token mint failed:", err);
+		await audit(c, "auth.forgot-password.mint-failed", `email=${email}`);
+		return c.json({ ok: true });
+	}
+
+	const resetUrl = `${new URL(c.req.url).origin}/reset-password?token=${encodeURIComponent(token)}`;
+	const mail = resetPasswordEmail(user.name, resetUrl);
+	const result = await sendEmail(c.env, {
+		to: user.email,
+		subject: mail.subject,
+		text: mail.text,
+		html: mail.html,
+	});
+	await audit(c, "auth.forgot-password", `email=${email} mail=${result.ok ? "sent" : "failed"}`);
+
+	return c.json({ ok: true });
+});
+
+/* ── POST /api/auth/reset-password ── */
+
+authRoutes.post("/reset-password", async (c) => {
+	const ip = clientIp(c);
+	if (await rateLimitHit(c.env.RELEASE_META, `reset:${ip}`, 10, 60)) {
+		return c.json({ error: "Too many attempts. Try again in a minute." }, 429);
+	}
+
+	let body: { token?: string; password?: string };
+	try {
+		body = await c.req.json();
+	} catch {
+		return c.json({ error: "Invalid request body." }, 400);
+	}
+
+	const token = body.token ?? "";
+	if (typeof token !== "string" || !TOKEN_RE.test(token)) {
+		return c.json({ error: "Invalid or expired reset link." }, 400);
+	}
+	if (!checkPassword(body.password ?? "")) {
+		return c.json({ error: "Password must be at least 8 characters." }, 400);
+	}
+
+	const db = getDb(c.env.DB);
+	const verified = await verifyEmailToken(c.env.DB, token, "reset_password" satisfies EmailTokenKind);
+	if (!verified) {
+		return c.json({ error: "Invalid or expired reset link." }, 400);
+	}
+
+	let passwordHash: string;
+	try {
+		passwordHash = await hashPassword(body.password as string);
+	} catch (err) {
+		console.error("Password hash failed:", err);
+		return c.json({ error: "Internal server error." }, 500);
+	}
+
+	const [user] = await db
+		.update(schema.users)
+		.set({ passwordHash })
+		.where(eq(schema.users.id, verified.userId))
+		.returning({ id: schema.users.id, email: schema.users.email });
+	if (!user) {
+		return c.json({ error: "Invalid or expired reset link." }, 400);
+	}
+
+	// One reset invalidates every other outstanding reset link.
+	await invalidateUserTokens(c.env.DB, user.id, "reset_password");
+	await audit(c, "auth.reset-password", `email=${user.email}`);
 	return c.json({ ok: true });
 });

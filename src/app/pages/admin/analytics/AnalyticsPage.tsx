@@ -3,6 +3,7 @@
    ════════════════════════════════════ */
 
 import { type JSX } from "react";
+import { Card, Stat } from "@devstroop/react-ui";
 import Icon from "../../../components/Icon";
 
 const METRICS: { label: string; value: string; delta: string; up: boolean }[] = [
@@ -33,20 +34,27 @@ export default function AnalyticsPage(): JSX.Element {
 
 				<div className="d-grid gap-md mb-lg" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
 					{METRICS.map((m) => (
-						<div key={m.label} className="stat-card">
-							<div className="stat-card-label">{m.label}</div>
-							<div className="stat-card-value text-primary">{m.value}</div>
-							<div className={`fs-xs fw-600 ${m.up ? "text-blurple" : "text-muted"}`}>
-								{m.delta}
-							</div>
-						</div>
+						<Card key={m.label} variant="outlined">
+							<Stat
+								label={m.label}
+								value={m.value}
+								delta={m.delta}
+								deltaTone={m.up ? "success" : "neutral"}
+							/>
+						</Card>
 					))}
 				</div>
 
 				<div className="d-grid gap-md mb-lg" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" }}>
-					<div className="admin-card m-0">
-						<h2 className="admin-card-title text-primary">Downloads by platform</h2>
-						<p className="admin-card-desc">Share of installers fetched in the last 30 days.</p>
+					<Card
+						variant="outlined"
+						header={
+							<div>
+								<div className="fw-700 fs-md text-primary">Downloads by platform</div>
+								<p className="fs-sm text-muted m-0">Share of installers fetched in the last 30 days.</p>
+							</div>
+						}
+					>
 						<div className="d-flex flex-col gap-sm">
 							{PLATFORMS.map((p) => (
 								<div key={p.platform} className="d-flex items-center gap-md">
@@ -61,16 +69,22 @@ export default function AnalyticsPage(): JSX.Element {
 								</div>
 							))}
 						</div>
-					</div>
+					</Card>
 
-					<div className="admin-card m-0">
-						<h2 className="admin-card-title text-primary">Telemetry</h2>
-						<p className="admin-card-desc">Anonymous usage events reported by the client.</p>
+					<Card
+						variant="outlined"
+						header={
+							<div>
+								<div className="fw-700 fs-md text-primary">Telemetry</div>
+								<p className="fs-sm text-muted m-0">Anonymous usage events reported by the client.</p>
+							</div>
+						}
+					>
 						<div className="admin-empty m-0">
 							<Icon name="trending-up" size={16} />
 							<span>Charts will render here once a telemetry endpoint and event pipeline are in place.</span>
 						</div>
-					</div>
+					</Card>
 				</div>
 			</div>
 		</section>

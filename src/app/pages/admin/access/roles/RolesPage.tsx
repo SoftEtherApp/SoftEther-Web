@@ -3,6 +3,7 @@
    ════════════════════════════════════ */
 
 import { type JSX } from "react";
+import { Badge, Card } from "@devstroop/react-ui";
 import Icon from "../../../../components/Icon";
 
 interface Role {
@@ -38,18 +39,25 @@ export default function RolesPage(): JSX.Element {
 
 				<div className="d-grid gap-md mb-lg" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
 					{ROLES.map((r) => (
-						<div key={r.name} className="admin-card d-flex flex-col m-0">
-							<div className="d-flex items-center justify-between gap-sm mb-xs">
-								<h2 className="admin-card-title m-0 text-primary">{r.name}</h2>
-								<span className="badge badge--info">{r.members} member{r.members === 1 ? "" : "s"}</span>
+						<Card
+							key={r.name}
+							variant="outlined"
+							header={
+								<div className="d-flex items-center justify-between gap-sm">
+									<div className="fw-700 fs-md text-primary">{r.name}</div>
+									<Badge tone="primary">{r.members} member{r.members === 1 ? "" : "s"}</Badge>
+								</div>
+							}
+						>
+							<div className="d-flex flex-col" style={{ gap: "var(--se-space-3)", minHeight: 84 }}>
+								<p className="fs-sm text-secondary m-0" style={{ lineHeight: 1.6 }}>{r.desc}</p>
+								<div className="d-flex flex-wrap gap-xs mt-auto">
+									{r.permissions.map((p) => (
+										<Badge key={p} variant="outline">{p}</Badge>
+									))}
+								</div>
 							</div>
-							<p className="fs-sm text-secondary mb-md" style={{ lineHeight: 1.6 }}>{r.desc}</p>
-							<div className="d-flex flex-wrap gap-xs mt-auto">
-								{r.permissions.map((p) => (
-									<span key={p} className="badge">{p}</span>
-								))}
-							</div>
-						</div>
+						</Card>
 					))}
 				</div>
 

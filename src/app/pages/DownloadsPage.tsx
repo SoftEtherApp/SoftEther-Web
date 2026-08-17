@@ -2,7 +2,8 @@
    Downloads — installers for each platform
    ════════════════════════════════════ */
 
-import { useState, type JSX } from "react";
+import { type JSX } from "react";
+import { Accordion, Alert, Skeleton } from "@devstroop/react-ui";
 import { useLatestRelease } from "../hooks/useLatestRelease";
 import { groupAssets, displayNameFor, iconFor, variantFor, archFor, formatSize, KNOWN_GROUPS } from "../lib/downloads";
 import Icon from "../components/Icon";
@@ -43,36 +44,36 @@ function AssetRow({ asset }: { asset: { name: string; platform: string; size: nu
 
 /* Loading skeleton mirrors the final layout — one group block per known
    platform so the page keeps its height instead of collapsing. */
-function Skeleton() {
+function LoadingGroups() {
 	return (
 		<>
 			<div className="dl-group">
-				<div className="skeleton skeleton-line skeleton-line--title skeleton-line--sm" />
+				<Skeleton variant="text" width="25%" className="mb-sm" />
 				<ul className="asset-list" aria-hidden="true">
 					{[0, 1, 2].map((i) => (
 						<li key={i} className="asset-row">
-							<div className="skeleton skeleton-icon" />
+							<Skeleton variant="rect" width={44} height={44} />
 							<div className="asset-info">
-								<div className="skeleton skeleton-line skeleton-line--title" />
-								<div className="skeleton skeleton-line skeleton-line--meta" />
+								<Skeleton variant="text" width="60%" className="mb-xs" />
+								<Skeleton variant="text" width="40%" />
 							</div>
-							<div className="skeleton skeleton-badge" />
+							<Skeleton variant="rect" width={72} height={28} />
 						</li>
 					))}
 				</ul>
 			</div>
 			{KNOWN_GROUPS.slice(1).map((group) => (
 				<div className="dl-group" key={group}>
-					<div className="skeleton skeleton-line skeleton-line--sm" />
+					<Skeleton variant="text" width="25%" className="mb-sm" />
 					<ul className="asset-list" aria-hidden="true">
 						{[0, 1].map((i) => (
 							<li key={i} className="asset-row">
-								<div className="skeleton skeleton-icon" />
+								<Skeleton variant="rect" width={44} height={44} />
 								<div className="asset-info">
-									<div className="skeleton skeleton-line skeleton-line--title" />
-									<div className="skeleton skeleton-line skeleton-line--meta" />
+									<Skeleton variant="text" width="60%" className="mb-xs" />
+									<Skeleton variant="text" width="40%" />
 								</div>
-								<div className="skeleton skeleton-badge" />
+								<Skeleton variant="rect" width={72} height={28} />
 							</li>
 						))}
 					</ul>
@@ -83,7 +84,6 @@ function Skeleton() {
 }
 
 export default function DownloadsPage(): JSX.Element {
-	const [showNotes, setShowNotes] = useState(false);
 	const { release, loading, error, reload } = useLatestRelease();
 
 	return (
@@ -100,37 +100,32 @@ export default function DownloadsPage(): JSX.Element {
 						<span>{release.tag}</span>
 						<span className="dl-version-sep">&middot;</span>
 						<span>{new Date(release.publishedAt).toLocaleDateString()}</span>
-						<button
-							className="dl-notes-toggle"
-							onClick={() => setShowNotes(!showNotes)}
-							aria-expanded={showNotes ? "true" : "false"}
-						>
-							<Icon name={showNotes ? "chevron-up" : "chevron-down"} size={14} />
-							{showNotes ? "Hide" : "View"} release notes
-						</button>
 					</div>
 				)}
-				{release && showNotes && release.body && (
-					<ReleaseNotes body={release.body} className="dl-notes" lineClassName="dl-notes-line" />
+				{release && release.body && (
+					<Accordion
+						className="dl-notes-accordion"
+						items={[
+							{
+								key: "notes",
+								title: "Release notes",
+								content: <ReleaseNotes body={release.body} className="dl-notes" lineClassName="dl-notes-line" />,
+							},
+						]}
+					/>
 				)}
 
 				{error && (
-					<div className="download-error">
-						<div className="download-error-content">
-							<span className="download-error-icon">!</span>
-							<div>
-								<p className="download-error-title">Could not load releases</p>
-								<p className="download-error-desc">{error}</p>
-							</div>
-						</div>
-						<button className="btn btn-secondary" onClick={reload}>
+					<Alert tone="danger" title="Could not load releases" className="mb-lg">
+						<p className="m-0 fs-sm">{error}</p>
+						<button type="button" className="btn btn-secondary mt-sm" onClick={reload}>
 							Retry
 						</button>
-					</div>
+					</Alert>
 				)}
 
 				<div className="download-list">
-					{loading && <Skeleton />}
+					{loading && <LoadingGroups />}
 
 					{release && !loading && release.assets.length === 0 && (
 						<div className="download-empty">

@@ -23,19 +23,6 @@
 	background: var(--surface-600);
 }
 
-.user-menu-avatar {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 34px;
-	height: 34px;
-	border-radius: var(--rad-full);
-	background: var(--blurple-soft);
-	color: var(--blurple);
-	font-size: 0.78rem;
-	font-weight: 700;
-}
-
 .user-menu-chevron {
 	color: var(--text-secondary);
 	transition: transform var(--transition-fast);

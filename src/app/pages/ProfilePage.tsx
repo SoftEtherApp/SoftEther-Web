@@ -5,19 +5,10 @@
    ════════════════════════════════════ */
 
 import { type JSX } from "react";
-import { Badge, Button, Card } from "@devstroop/react-ui";
+import { Avatar, Badge, Button, Card } from "@devstroop/react-ui";
 import Icon from "../components/Icon";
 import { navigate } from "../App";
 import { useAuth } from "../auth/useAuth";
-
-function initials(name: string): string {
-	return name
-		.split(/\s+/)
-		.filter(Boolean)
-		.slice(0, 2)
-		.map((p) => p[0]!.toUpperCase())
-		.join("");
-}
 
 export default function ProfilePage(): JSX.Element | null {
 	const { user, session, signOut } = useAuth();
@@ -33,7 +24,7 @@ export default function ProfilePage(): JSX.Element | null {
 		<section className="py-2xl px-lg sm:py-2xl sm:px-md">
 			<div className="m-auto mw-1040">
 				<div className="d-flex items-center gap-md mb-lg">
-					<span className="admin-avatar" aria-hidden="true">{initials(user.name)}</span>
+					<Avatar name={user.name} size="lg" />
 					<div>
 						<h1 className="m-0 fs-lg fw-700 text-primary">Your account</h1>
 						<p className="m-0 text-muted fs-sm">{user.email}</p>

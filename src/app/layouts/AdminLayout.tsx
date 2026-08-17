@@ -5,6 +5,7 @@
    ════════════════════════════════════ */
 
 import { useEffect, useState, type JSX } from "react";
+import { Avatar, Tooltip } from "@devstroop/react-ui";
 import Icon, { type IconName } from "../components/Icon";
 import { navigate } from "../App";
 import { useAuth } from "../auth/useAuth";
@@ -51,15 +52,6 @@ const NAV: NavGroup[] = [
 		links: [{ href: "/admin/settings", label: "Settings", icon: "settings" }],
 	},
 ];
-
-function initials(name: string): string {
-	return name
-		.split(/\s+/)
-		.filter(Boolean)
-		.slice(0, 2)
-		.map((p) => p[0]!.toUpperCase())
-		.join("");
-}
 
 export default function AdminLayout({ children }: LayoutProps): JSX.Element {
 	const { user, signOut } = useAuth();
@@ -116,10 +108,12 @@ export default function AdminLayout({ children }: LayoutProps): JSX.Element {
 				<div className="flex-grow-1" />
 				<div className="admin-sidebar-footer">
 					{user && (
-						<div className="admin-user" title={user.email}>
-							<span className="admin-avatar">{initials(user.name)}</span>
-							<span className="admin-user-name">{user.name}</span>
-						</div>
+						<Tooltip content={user.email}>
+							<div className="admin-user">
+								<Avatar name={user.name} size="sm" />
+								<span className="admin-user-name">{user.name}</span>
+							</div>
+						</Tooltip>
 					)}
 					<button className="admin-signout" onClick={handleSignOut}>
 						<Icon name="log-out" size={16} />

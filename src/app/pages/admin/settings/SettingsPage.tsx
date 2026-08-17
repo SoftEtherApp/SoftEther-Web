@@ -3,22 +3,21 @@
    ════════════════════════════════════ */
 
 import { useState, type FormEvent, type JSX } from "react";
-import { Button, Card, Field, Input, Select, Switch } from "@devstroop/react-ui";
+import { Alert, Button, Card, Field, Input, Select, Switch, useToast } from "@devstroop/react-ui";
 import Icon from "../../../components/Icon";
 
 export default function SettingsPage(): JSX.Element {
+	const { toast } = useToast();
 	const [siteName, setSiteName] = useState("SoftEther App");
 	const [siteUrl, setSiteUrl] = useState("https://softether.app");
 	const [defaultTheme, setDefaultTheme] = useState("dark");
 	const [sessionTimeout, setSessionTimeout] = useState("24");
 	const [enforce2fa, setEnforce2fa] = useState(false);
 	const [publicSignup, setPublicSignup] = useState(true);
-	const [saved, setSaved] = useState(false);
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		setSaved(true);
-		setTimeout(() => setSaved(false), 3000);
+		toast({ title: "Settings saved", description: "Local only — not persisted.", tone: "success" });
 	};
 
 	return (
@@ -99,10 +98,7 @@ export default function SettingsPage(): JSX.Element {
 							</div>
 						}
 					>
-						<div className="admin-empty m-0">
-							<Icon name="key" size={16} />
-							<span>API tokens and webhook secrets will live here once the backend is connected.</span>
-						</div>
+						<Alert tone="info">API tokens and webhook secrets will live here once the backend is connected.</Alert>
 					</Card>
 
 					<div className="d-flex items-center gap-md">
@@ -110,7 +106,6 @@ export default function SettingsPage(): JSX.Element {
 							<Icon name="check" size={16} />
 							Save changes
 						</Button>
-						{saved && <span className="fs-sm text-muted">Saved (local only — not persisted).</span>}
 					</div>
 				</form>
 			</div>

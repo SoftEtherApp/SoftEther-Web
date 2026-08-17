@@ -3,7 +3,7 @@
    ════════════════════════════════════ */
 
 import { useState, type JSX } from "react";
-import { Badge, Card, EmptyState, Input, Table } from "@devstroop/react-ui";
+import { Alert, Avatar, Badge, Card, EmptyState, Input, Table, Tooltip } from "@devstroop/react-ui";
 import Icon from "../../../../components/Icon";
 
 interface AdminUser {
@@ -29,15 +29,6 @@ const STATUS_BADGE: Record<AdminUser["status"], "success" | "warning" | "danger"
 	suspended: "danger",
 };
 
-function initials(name: string): string {
-	return name
-		.split(/\s+/)
-		.filter(Boolean)
-		.slice(0, 2)
-		.map((p) => p[0]!.toUpperCase())
-		.join("");
-}
-
 export default function UsersPage(): JSX.Element {
 	const [query, setQuery] = useState("");
 
@@ -57,10 +48,12 @@ export default function UsersPage(): JSX.Element {
 							Manage accounts and their roles across the site.
 						</p>
 					</div>
-					<button type="button" className="btn btn-primary" disabled title="Wired up once the API lands">
-						<Icon name="user-plus" size={16} />
-						Invite user
-					</button>
+					<Tooltip content="Wired up once the API lands">
+						<button type="button" className="btn btn-primary" disabled>
+							<Icon name="user-plus" size={16} />
+							Invite user
+						</button>
+					</Tooltip>
 				</div>
 
 				<div className="d-flex items-center gap-md flex-wrap mb-md">
@@ -86,7 +79,7 @@ export default function UsersPage(): JSX.Element {
 								header: "User",
 								render: (u) => (
 									<div className="d-flex items-center gap-sm">
-										<span className="admin-avatar">{initials(u.name)}</span>
+										<Avatar name={u.name} size="sm" />
 										<div>
 											<div className="fw-600 text-primary">{u.name}</div>
 											<div className="fs-xs text-muted">{u.email}</div>
@@ -119,10 +112,7 @@ export default function UsersPage(): JSX.Element {
 					/>
 				</Card>
 
-				<div className="admin-empty">
-					<Icon name="alert-triangle" size={16} />
-					<span>Placeholder data — user management is enabled for the UI but not yet connected to a backend.</span>
-				</div>
+				<Alert tone="warning">Placeholder data — user management is enabled for the UI but not yet connected to a backend.</Alert>
 			</div>
 		</section>
 	);

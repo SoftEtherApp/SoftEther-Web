@@ -6,8 +6,8 @@
    ════════════════════════════════════ */
 
 import { type JSX } from "react";
+import { Alert } from "@devstroop/react-ui";
 import { useScrollToHash } from "../hooks/useScrollToHash";
-import Icon from "../components/Icon";
 
 // Fixed revision date — bump it manually whenever this policy actually changes.
 const LAST_UPDATED = "2026-08-06";
@@ -23,14 +23,11 @@ export default function PrivacyPage(): JSX.Element {
 					Last updated: {LAST_UPDATED}
 				</p>
 
-						<div className="confirm-note">
-							<Icon name="book" size={16} />
-							<span>
-								This policy is intentionally short. Where a statement depends on
-								the app's exact behavior (update checks, telemetry), the wording
-								is flagged in-brackets for review until verified.
-							</span>
-						</div>
+						<Alert tone="info" className="mb-xl">
+							This policy is intentionally short. Where a statement depends on
+							the app's exact behavior (update checks, telemetry), the wording
+							is flagged in-brackets for review until verified.
+						</Alert>
 
 						<article className="trust-card">
 													<h2 className="trust-h">The short version</h2>

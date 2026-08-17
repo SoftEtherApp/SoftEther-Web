@@ -4,19 +4,11 @@
    ════════════════════════════════════ */
 
 import { useEffect, useRef, useState, type JSX } from "react";
+import { Avatar } from "@devstroop/react-ui";
 import Icon from "./Icon";
 import { navigate } from "../App";
 import { useAuth } from "../auth/useAuth";
 import "./UserMenu.css";
-
-function initials(name: string): string {
-	return name
-		.split(/\s+/)
-		.filter(Boolean)
-		.slice(0, 2)
-		.map((p) => p[0]!.toUpperCase())
-		.join("");
-}
 
 export default function UserMenu(): JSX.Element | null {
 	const { user, signOut } = useAuth();
@@ -58,7 +50,7 @@ export default function UserMenu(): JSX.Element | null {
 				aria-expanded={open}
 				aria-label={`Account menu for ${user.name}`}
 			>
-				<span className="user-menu-avatar">{initials(user.name)}</span>
+				<Avatar name={user.name} size="sm" />
 				<Icon name="chevron-down" size={14} className="user-menu-chevron" />
 			</button>
 			{open && (

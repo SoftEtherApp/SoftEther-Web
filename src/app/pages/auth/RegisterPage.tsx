@@ -4,7 +4,7 @@
    ════════════════════════════════════ */
 
 import { useState, type FormEvent, type JSX } from "react";
-import { Button, Field, Input } from "@devstroop/react-ui";
+import { Alert, Button, Field, Input } from "@devstroop/react-ui";
 import Icon from "../../components/Icon";
 import { navigate } from "../../App";
 
@@ -142,7 +142,7 @@ export default function RegisterPage(): JSX.Element {
 				<Button type="submit" fullWidth disabled={submitting}>
 					{submitting ? "Creating account…" : "Create account"}
 				</Button>
-				{error && <p className="m-0 fs-sm text-danger">{error}</p>}
+				{error && <Alert tone="danger">{error}</Alert>}
 			</form>
 			<p className="m-0 mt-lg text-center text-muted fs-xs">
 				We&apos;ll send a one-time verification link to your email address.

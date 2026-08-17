@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Tooltip } from "@devstroop/react-ui";
 import Icon from "./Icon";
 import "./ThemeToggle.css";
 
@@ -16,13 +17,14 @@ export default function ThemeToggle() {
     };
 
     return (
-        <button
-            className="theme-btn"
-            onClick={toggle}
-            aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
-            title={dark ? "Light mode" : "Dark mode"}
-        >
-            <Icon name={dark ? "moon" : "sun"} size={18} />
-        </button>
+        <Tooltip content={dark ? "Light mode" : "Dark mode"}>
+            <button
+                className="theme-btn"
+                onClick={toggle}
+                aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+            >
+                <Icon name={dark ? "moon" : "sun"} size={18} />
+            </button>
+        </Tooltip>
     );
 }

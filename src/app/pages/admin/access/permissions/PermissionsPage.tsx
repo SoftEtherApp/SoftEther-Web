@@ -3,7 +3,7 @@
    ════════════════════════════════════ */
 
 import { useState, type JSX } from "react";
-import { Button, Card, Switch } from "@devstroop/react-ui";
+import { Alert, Button, Card, Switch, useToast } from "@devstroop/react-ui";
 import Icon from "../../../../components/Icon";
 
 interface PermissionGroup {
@@ -39,7 +39,7 @@ const INITIAL: PermissionGroup[] = [
 
 export default function PermissionsPage(): JSX.Element {
 	const [groups, setGroups] = useState<PermissionGroup[]>(INITIAL);
-	const [saved, setSaved] = useState(false);
+	const { toast } = useToast();
 
 	const toggle = (groupKey: string, permKey: string) => {
 		setGroups((prev) =>
@@ -54,8 +54,7 @@ export default function PermissionsPage(): JSX.Element {
 	const reset = () => setGroups(INITIAL);
 
 	const save = () => {
-		setSaved(true);
-		setTimeout(() => setSaved(false), 3000);
+		toast({ title: "Permissions saved", description: "Local only — not persisted.", tone: "success" });
 	};
 
 	return (
@@ -76,7 +75,6 @@ export default function PermissionsPage(): JSX.Element {
 							<Icon name="check" size={16} />
 							Save
 						</Button>
-						{saved && <span className="fs-sm text-muted">Saved (local only).</span>}
 					</div>
 				</div>
 
@@ -102,10 +100,7 @@ export default function PermissionsPage(): JSX.Element {
 					))}
 				</div>
 
-				<div className="admin-empty">
-					<Icon name="key" size={16} />
-					<span>Permission evaluation happens server-side in the real system; these switches preview the UI only.</span>
-				</div>
+				<Alert tone="info">Permission evaluation happens server-side in the real system; these switches preview the UI only.</Alert>
 			</div>
 		</section>
 	);

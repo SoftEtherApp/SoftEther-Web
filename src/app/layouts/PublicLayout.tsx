@@ -193,8 +193,10 @@ export default function PublicLayout({ children }: LayoutProps): JSX.Element {
 								SoftEther.app
 							</a>
 							<a href="/library">Library</a>
+							<a href="/docs">Docs</a>
 							<a href="/changelog">Changelog</a>
 							<a href="/privacy">Privacy</a>
+							<a href="/terms">Terms</a>
 							<a href="/security">Security</a>
 						</div>
 					</div>

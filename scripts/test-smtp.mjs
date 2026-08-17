@@ -11,7 +11,7 @@ import net from "node:net";
 import { Readable, Writable } from "node:stream";
 
 import { SmtpClient, SmtpError } from "../src/worker/email/client.ts";
-import { verificationEmail, resetPasswordEmail, welcomeEmail, securityAlertEmail, releaseNotifyEmail } from "../src/worker/email/templates.ts";
+import { renderEmail, TEMPLATE_DEFAULTS, verificationEmail, resetPasswordEmail, welcomeEmail, securityAlertEmail, releaseNotifyEmail } from "../src/worker/email/templates.ts";
 
 let failures = 0;
 
@@ -261,6 +261,28 @@ const baseConfig = {
   const s = securityAlertEmail("Jane", "sign-in from new device");
   const n = releaseNotifyEmail("Jane", "v2.5.0", "v2.5.0", "Highlights: everything.", "https://softether.app/download");
   check("reset/welcome/security/release templates render", [r, w, s, n].every((e) => e.subject && e.text.includes("Hi Jane") && e.html.includes("SOFTETHER APP")));
+}
+
+// 7b. Composability: token resolution + per-call defaults overrides
+{
+  const e = welcomeEmail("Jane", { brand: "Acme VPN", supportEmail: "help@acme.example", subjectPrefix: "[Acme]" });
+  check("brand override propagates to html label", e.html.includes("ACME VPN"));
+  check("brand override propagates to text", e.text.includes("Acme VPN"));
+  check("downloadUrl token resolved", e.text.includes("Download client: https://softether.app/download"));
+  check("tagline token resolved", e.text.includes(TEMPLATE_DEFAULTS.tagline));
+  check("supportEmail token resolved", e.html.includes("help@acme.example"));
+  check("subjectPrefix prepended", e.subject === "[Acme] Welcome to SoftEther App", e.subject);
+
+  const custom = renderEmail("Custom", [
+    { kind: "greeting", name: "Bob" },
+    { kind: "paragraph", segs: [{ text: "Plain " }, { text: "bold", strong: true }] },
+    { kind: "link", url: "https://example.com/x", label: "Example" },
+    { kind: "spacer" },
+    { kind: "note", text: "n" },
+  ]);
+  check("custom block list renders text", custom.text.includes("Plain bold") && custom.text.includes("Example: https://example.com/x"));
+  check("custom block list renders html", custom.html.includes("<strong>bold</strong>") && custom.html.includes('href="https://example.com/x"'));
+  check("unresolved token left intact", custom.html.includes("{name}") === false && custom.text.includes("Hi Bob,"));
 }
 
 // 8. Dev-mode sender: no SMTP config → logs, returns ok:true dev:true

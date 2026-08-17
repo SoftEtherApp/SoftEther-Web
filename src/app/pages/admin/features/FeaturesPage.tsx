@@ -1,37 +1,48 @@
 /* ════════════════════════════════════
-   Features — feature flags (toggles are local state)
+   Features — feature flags, backed by /api/admin/features
+   Toggles persist immediately via PATCH.
    ════════════════════════════════════ */
 
-import { useState, type JSX } from "react";
-import { Alert, Badge, Button, Card, Switch, Table, useToast } from "@devstroop/react-ui";
-import Icon from "../../../components/Icon";
-
-interface FeatureFlag {
-	key: string;
-	label: string;
-	desc: string;
-	enabled: boolean;
-	channel: string;
-}
-
-const INITIAL: FeatureFlag[] = [
-	{ key: "new-onboarding", label: "New onboarding flow", desc: "Interactive walkthrough on first launch.", enabled: true, channel: "beta" },
-	{ key: "wireguard-support", label: "WireGuard protocol", desc: "Experimental WireGuard tunnel support.", enabled: false, channel: "canary" },
-	{ key: "split-tunneling", label: "Split tunneling", desc: "Route only selected apps through the VPN.", enabled: false, channel: "canary" },
-	{ key: "auto-update", label: "Automatic updates", desc: "Silently install stable releases.", enabled: true, channel: "all" },
-	{ key: "telemetry", label: "Usage telemetry", desc: "Anonymous crash and usage reporting.", enabled: false, channel: "all" },
-];
+import { useCallback, useEffect, useState, type JSX } from "react";
+import { Alert, Badge, Button, Card, Skeleton, Switch, Table, useToast } from "@devstroop/react-ui";
+import { adminApi, AdminApiError, type AdminFeatureFlag } from "../../../lib/admin-api";
 
 export default function FeaturesPage(): JSX.Element {
-	const [flags, setFlags] = useState<FeatureFlag[]>(INITIAL);
 	const { toast } = useToast();
+	const [flags, setFlags] = useState<AdminFeatureFlag[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 
-	const toggle = (key: string) => {
-		setFlags((prev) => prev.map((f) => (f.key === key ? { ...f, enabled: !f.enabled } : f)));
-	};
+	const load = useCallback(async () => {
+		setLoading(true);
+		setError(null);
+		try {
+			setFlags(await adminApi.getFeatures());
+		} catch (err) {
+			setError(err instanceof AdminApiError ? err.message : "Could not load feature flags");
+		} finally {
+			setLoading(false);
+		}
+	}, []);
 
-	const save = () => {
-		toast({ title: "Features saved", description: "Local only — not persisted.", tone: "success" });
+	useEffect(() => {
+		void load();
+	}, [load]);
+
+	const toggle = async (flag: AdminFeatureFlag) => {
+		const next = !flag.enabled;
+		setFlags((prev) => prev.map((f) => (f.key === flag.key ? { ...f, enabled: next } : f)));
+		try {
+			await adminApi.toggleFeature(flag.key, next);
+			toast({ title: next ? "Flag enabled" : "Flag disabled", description: flag.name, tone: "success" });
+		} catch (err) {
+			setFlags((prev) => prev.map((f) => (f.key === flag.key ? { ...f, enabled: !next } : f)));
+			toast({
+				title: "Toggle failed",
+				description: err instanceof AdminApiError ? err.message : "Unknown error",
+				tone: "danger",
+			});
+		}
 	};
 
 	return (
@@ -41,48 +52,71 @@ export default function FeaturesPage(): JSX.Element {
 					<div>
 						<h1 className="m-0 fs-lg fw-700 text-primary">Features</h1>
 						<p className="m-0 mt-xs fs-sm text-muted">
-							Feature flags shipped with each release. Toggles are local to this session.
+							Feature flags evaluated server-side. Toggles persist immediately.
 						</p>
 					</div>
-					<Button onClick={save}>
-						<Icon name="check" size={16} />
-						Save
-					</Button>
 				</div>
 
-				<Card variant="outlined" className="overflow-x-auto">
-					<Table<FeatureFlag>
-						columns={[
-							{
-								key: "feature",
-								header: "Feature",
-								render: (f) => (
-									<div>
-										<div className="fw-600 text-primary">{f.label}</div>
-										<div className="fs-xs text-muted">{f.desc}</div>
-									</div>
-								),
-							},
-							{
-								key: "channel",
-								header: "Channel",
-								render: (f) => <Badge tone={f.channel === "all" ? "primary" : "warning"}>{f.channel}</Badge>,
-							},
-							{
-								key: "enabled",
-								header: "Enabled",
-								align: "end",
-								render: (f) => (
-									<Switch checked={f.enabled} onChange={() => toggle(f.key)} aria-label={`Toggle ${f.label}`} />
-								),
-							},
-						]}
-						rows={flags}
-						rowKey={(f) => f.key}
-					/>
-				</Card>
+				{error && (
+					<Alert tone="danger" title="Could not load feature flags" className="mb-md">
+						<p className="m-0 fs-sm">{error}</p>
+						<Button variant="secondary" size="sm" className="mt-sm" onClick={() => void load()}>
+							Retry
+						</Button>
+					</Alert>
+				)}
 
-				<Alert tone="info">Flags will be evaluated server-side and delivered to clients via a config endpoint.</Alert>
+				{loading && !error && (
+					<Card variant="outlined">
+						<div className="d-flex flex-col" style={{ gap: 14 }}>
+							{[0, 1, 2, 3].map((i) => (
+								<div key={i} className="d-flex items-center gap-md">
+									<div className="flex-1">
+										<Skeleton variant="text" width="35%" className="mb-xs" />
+										<Skeleton variant="text" width="60%" />
+									</div>
+									<Skeleton variant="rect" width={44} height={24} />
+								</div>
+							))}
+						</div>
+					</Card>
+				)}
+
+				{!loading && !error && (
+					<Card variant="outlined" className="overflow-x-auto">
+						<Table<AdminFeatureFlag>
+							columns={[
+								{
+									key: "feature",
+									header: "Feature",
+									render: (f) => (
+										<div>
+											<div className="fw-600 text-primary">{f.name}</div>
+											<div className="fs-xs text-muted">{f.description || f.key}</div>
+										</div>
+									),
+								},
+								{
+									key: "key",
+									header: "Key",
+									render: (f) => <Badge variant="outline">{f.key}</Badge>,
+								},
+								{
+									key: "enabled",
+									header: "Enabled",
+									align: "end",
+									render: (f) => (
+										<Switch checked={f.enabled} onChange={() => void toggle(f)} aria-label={`Toggle ${f.name}`} />
+									),
+								},
+							]}
+							rows={flags}
+							rowKey={(f) => f.key}
+						/>
+					</Card>
+				)}
+
+				<Alert tone="info">Flags are evaluated server-side and delivered to clients via a config endpoint.</Alert>
 			</div>
 		</section>
 	);

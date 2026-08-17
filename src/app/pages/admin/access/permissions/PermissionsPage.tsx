@@ -1,61 +1,75 @@
 /* ════════════════════════════════════
-   Permissions — admin access control (toggles are local state)
+   Permissions — admin access control, backed by /api/admin/permissions
+   Grouped by the key prefix ("users.read" → Users). Switches are a
+   local preview — permission evaluation is server-side and there is
+   no write endpoint yet.
    ════════════════════════════════════ */
 
-import { useState, type JSX } from "react";
-import { Alert, Button, Card, Switch, useToast } from "@devstroop/react-ui";
-import Icon from "../../../../components/Icon";
+import { useCallback, useEffect, useState, type JSX } from "react";
+import { Alert, Button, Card, Skeleton, Switch } from "@devstroop/react-ui";
+import { adminApi, AdminApiError, type AdminPermission } from "../../../../lib/admin-api";
 
 interface PermissionGroup {
 	group: string;
-	perms: { key: string; label: string; enabled: boolean }[];
+	perms: AdminPermission[];
 }
 
-const INITIAL: PermissionGroup[] = [
-	{
-		group: "Users",
-		perms: [
-			{ key: "users:read", label: "View users", enabled: true },
-			{ key: "users:invite", label: "Invite users", enabled: true },
-			{ key: "users:suspend", label: "Suspend users", enabled: false },
-		],
-	},
-	{
-		group: "Releases",
-		perms: [
-			{ key: "releases:read", label: "View releases", enabled: true },
-			{ key: "releases:publish", label: "Publish releases", enabled: false },
-			{ key: "releases:rollback", label: "Rollback releases", enabled: false },
-		],
-	},
-	{
-		group: "Settings",
-		perms: [
-			{ key: "settings:read", label: "View settings", enabled: true },
-			{ key: "settings:write", label: "Edit settings", enabled: false },
-		],
-	},
-];
+function groupKey(key: string): string {
+	const prefix = key.split(".")[0] ?? key;
+	return prefix.charAt(0).toUpperCase() + prefix.slice(1);
+}
+
+function groupPermissions(perms: AdminPermission[]): PermissionGroup[] {
+	const map = new Map<string, AdminPermission[]>();
+	for (const p of perms) {
+		const g = groupKey(p.key);
+		if (!map.has(g)) map.set(g, []);
+		map.get(g)!.push(p);
+	}
+	return [...map.entries()].map(([group, items]) => ({ group, perms: items }));
+}
 
 export default function PermissionsPage(): JSX.Element {
-	const [groups, setGroups] = useState<PermissionGroup[]>(INITIAL);
-	const { toast } = useToast();
+	const [groups, setGroups] = useState<PermissionGroup[]>([]);
+	const [snapshot, setSnapshot] = useState<PermissionGroup[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 
-	const toggle = (groupKey: string, permKey: string) => {
+	const load = useCallback(async () => {
+		setLoading(true);
+		setError(null);
+		try {
+			const perms = await adminApi.getPermissions();
+			const grouped = groupPermissions(perms);
+			setGroups(grouped);
+			setSnapshot(grouped);
+		} catch (err) {
+			setError(err instanceof AdminApiError ? err.message : "Could not load permissions");
+		} finally {
+			setLoading(false);
+		}
+	}, []);
+
+	useEffect(() => {
+		void load();
+	}, [load]);
+
+	const toggle = (group: string, permKey: string) => {
 		setGroups((prev) =>
 			prev.map((g) =>
-				g.group === groupKey
-					? { ...g, perms: g.perms.map((p) => (p.key === permKey ? { ...p, enabled: !p.enabled } : p)) }
+				g.group === group
+					? {
+							...g,
+							perms: g.perms.map((p) =>
+								p.key === permKey ? { ...p, enabled: !(p.enabled ?? false) } : p,
+							),
+						}
 					: g,
 			),
 		);
 	};
 
-	const reset = () => setGroups(INITIAL);
-
-	const save = () => {
-		toast({ title: "Permissions saved", description: "Local only — not persisted.", tone: "success" });
-	};
+	const reset = () => setGroups(snapshot);
 
 	return (
 		<section>
@@ -64,41 +78,58 @@ export default function PermissionsPage(): JSX.Element {
 					<div>
 						<h1 className="m-0 fs-lg fw-700 text-primary">Permissions</h1>
 						<p className="m-0 mt-xs fs-sm text-muted">
-							Capabilities that roles can grant. Toggles are local to this session.
+							Capabilities that roles can grant. Switches are a local preview.
 						</p>
 					</div>
-					<div className="d-flex items-center gap-sm">
-						<Button variant="secondary" onClick={reset}>
-							Reset
-						</Button>
-						<Button onClick={save}>
-							<Icon name="check" size={16} />
-							Save
-						</Button>
-					</div>
+					<Button variant="secondary" onClick={reset} disabled={loading}>
+						Reset
+					</Button>
 				</div>
 
-				<div className="d-grid gap-md mb-lg" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}>
-					{groups.map((g) => (
-						<Card
-							key={g.group}
-							variant="outlined"
-							header={<div className="fw-700 fs-md text-primary">{g.group}</div>}
-						>
-							<div className="d-flex flex-col">
-								{g.perms.map((p) => (
-									<div key={p.key} className="d-flex items-center justify-between gap-md py-sm bordered-b">
-										<div>
-											<div className="fw-500 fs-sm text-primary">{p.label}</div>
-											<div className="fs-xs text-muted">{p.key}</div>
+				{error && (
+					<Alert tone="danger" title="Could not load permissions" className="mb-md">
+						<p className="m-0 fs-sm">{error}</p>
+						<Button variant="secondary" size="sm" className="mt-sm" onClick={() => void load()}>
+							Retry
+						</Button>
+					</Alert>
+				)}
+
+				{loading && !error && (
+					<div className="d-grid gap-md" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}>
+						{[0, 1, 2].map((i) => (
+							<Card key={i} variant="outlined">
+								<Skeleton variant="text" width="35%" className="mb-sm" />
+								<Skeleton variant="text" width="90%" className="mb-xs" />
+								<Skeleton variant="text" width="80%" />
+							</Card>
+						))}
+					</div>
+				)}
+
+				{!loading && !error && (
+					<div className="d-grid gap-md mb-lg" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}>
+						{groups.map((g) => (
+							<Card
+								key={g.group}
+								variant="outlined"
+								header={<div className="fw-700 fs-md text-primary">{g.group}</div>}
+							>
+								<div className="d-flex flex-col">
+									{g.perms.map((p) => (
+										<div key={p.key} className="d-flex items-center justify-between gap-md py-sm bordered-b">
+											<div>
+												<div className="fw-500 fs-sm text-primary">{p.name}</div>
+												<div className="fs-xs text-muted">{p.description || p.key}</div>
+											</div>
+											<Switch checked={p.enabled ?? false} onChange={() => toggle(g.group, p.key)} aria-label={`Toggle ${p.name}`} />
 										</div>
-										<Switch checked={p.enabled} onChange={() => toggle(g.group, p.key)} aria-label={`Toggle ${p.label}`} />
-									</div>
-								))}
-							</div>
-						</Card>
-					))}
-				</div>
+									))}
+								</div>
+							</Card>
+						))}
+					</div>
+				)}
 
 				<Alert tone="info">Permission evaluation happens server-side in the real system; these switches preview the UI only.</Alert>
 			</div>

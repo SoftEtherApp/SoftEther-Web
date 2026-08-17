@@ -12,7 +12,7 @@
     "publish": true
   },
   "dependencies": {
-    "@devstroop/react-ui": "github:devstroop/react-ui#v0.1.0",
+    "@devstroop/react-ui": "git+https://codeberg.org/devstroop/react-ui.git#v0.2.0",
     "drizzle-orm": "^0.45.2",
     "hono": "4.13.2",
     "react": "19.2.1",

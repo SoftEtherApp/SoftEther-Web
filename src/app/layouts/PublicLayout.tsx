@@ -52,16 +52,6 @@ export default function PublicLayout({ children }: LayoutProps): JSX.Element {
 		};
 	}, []);
 
-	// Escape to close sidebar
-	useEffect(() => {
-		if (!open) return;
-		const onKey = (e: KeyboardEvent) => {
-			if (e.key === "Escape") setOpen(false);
-		};
-		window.addEventListener("keydown", onKey);
-		return () => window.removeEventListener("keydown", onKey);
-	}, [open]);
-
 	return (
 		<>
 			<Header>

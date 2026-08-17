@@ -14,6 +14,7 @@
 
 import { spawn } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { readdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -27,14 +28,23 @@ const ROUTES = ["/", "/library", "/privacy", "/security", "/changelog", "/nope"]
 /* ── locate the cached headless Chromium ── */
 
 function findChromium() {
+  // 1) Playwright cache: any installed build, not a hardcoded one.
   const cache = `${homestd()}/.cache/ms-playwright`;
   const candidates = [];
-  for (const dir of ["chromium_headless_shell-1208", "chromium-1208"]) {
-    candidates.push(`${cache}/${dir}/chrome-headless-shell-linux64/chrome-headless-shell`);
-    candidates.push(`${cache}/${dir}/chrome-linux/chrome`);
+  for (const dir of ["chromium_headless_shell-*", "chromium-*"]) {
+    let entries = [];
+    try { entries = readdirSync(cache).filter((d) => d.startsWith(dir.slice(0, -1))); } catch { /* no cache dir */ }
+    for (const e of entries.sort()) {
+      candidates.push(`${cache}/${e}/chrome-headless-shell-linux64/chrome-headless-shell`);
+      candidates.push(`${cache}/${e}/chrome-linux/chrome`);
+    }
   }
   for (const c of candidates) if (existsSync(c)) return c;
-  throw new Error("No cached headless Chromium found under ~/.cache/ms-playwright");
+  // 2) System Chrome/Chromium (GitHub Actions runners ship Google Chrome).
+  for (const c of ["/usr/bin/google-chrome", "/usr/bin/chromium", "/usr/bin/chromium-browser"]) {
+    if (existsSync(c)) return c;
+  }
+  throw new Error("No Chromium found: checked ~/.cache/ms-playwright and system binaries");
 }
 function homestd() {
   return process.env.HOME || "/root";

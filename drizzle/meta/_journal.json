@@ -15,6 +15,13 @@
       "when": 1786900126398,
       "tag": "0001_drop-billing-tables",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1786936864947,
+      "tag": "0002_tiny_pete_wisdom",
+      "breakpoints": true
     }
   ]
 }

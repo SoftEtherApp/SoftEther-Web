@@ -49,7 +49,8 @@
     "test:deeplinks": "bash scripts/test-deeplinks.sh",
     "test:releasenotes": "node --experimental-strip-types scripts/test-releasenotes.mjs",
     "test:responsive": "node scripts/responsive.mjs",
-    "test:smtp": "node --experimental-strip-types scripts/test-smtp.mjs"
+    "test:smtp": "node --experimental-strip-types scripts/test-smtp.mjs",
+    "test:tokens": "node --experimental-strip-types scripts/test-tokens.mjs"
   },
   "type": "module"
 }

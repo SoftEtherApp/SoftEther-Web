@@ -20,3 +20,4 @@ jobs:
       - run: npm run build
       - run: npm run test:deeplinks
       - run: npm run test:releasenotes
+      - run: npm run test:smtp

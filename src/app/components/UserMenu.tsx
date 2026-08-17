@@ -84,7 +84,7 @@ export default function UserMenu(): JSX.Element | null {
 							onClick={() => go("/admin")}
 						>
 							<Icon name="dashboard" size={16} />
-							Admin panel
+							Administration
 						</button>
 					)}
 					<div className="user-menu-divider" />

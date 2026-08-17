@@ -95,6 +95,7 @@ interface Store {
 	insertToken(row: { userId: number; kind: string; tokenHash: string; expiresAt: number }): Promise<void>;
 	selectToken(hash: string, kind: string): Promise<EmailTokenRow | null>;
 	claimToken(id: number, at: number): Promise<boolean>;
+	invalidateUserTokens(userId: number, kind: string, at: number): Promise<number>;
 	deleteExpired(now: number, kind?: string): Promise<number>;
 }
 
@@ -133,6 +134,20 @@ async function storeFor(db: D1Database): Promise<Store> {
 					.where(and(eq(emailTokens.id, id), isNull(emailTokens.usedAt)))
 					.returning({ id: emailTokens.id });
 				return claimed.length === 1;
+			},
+			async invalidateUserTokens(userId, kind, at) {
+				const invalidated = await d
+					.update(emailTokens)
+					.set({ usedAt: at })
+					.where(
+						and(
+							eq(emailTokens.userId, userId),
+							eq(emailTokens.kind, kind),
+							isNull(emailTokens.usedAt),
+						),
+					)
+					.returning({ id: emailTokens.id });
+				return invalidated.length;
 			},
 			async deleteExpired(now, kind) {
 				const cond = kind
@@ -196,6 +211,14 @@ export async function verifyEmailToken(
 	if (!claimed) return null;
 
 	return { userId: row.userId, kind: row.kind as EmailTokenKind };
+}
+
+/** Mark every outstanding (unused) token for a user+kind as used — a
+ *  password reset invalidates all other outstanding reset links.
+ *  Returns the number invalidated. */
+export async function invalidateUserTokens(db: D1Database, userId: number, kind: EmailTokenKind): Promise<number> {
+	const s = await storeFor(db);
+	return s.invalidateUserTokens(userId, kind, Math.floor(Date.now() / 1000));
 }
 
 /** Delete expired rows (all kinds, or one kind). Returns rows deleted. */

@@ -1,6 +1,7 @@
 /* ════════════════════════════════════
-   ResetPassword — set a new password from a reset link.
-   Demo mode: shows a success state (nothing is persisted).
+   ResetPassword — sets a new password from a reset link
+   (/?token=...). Single-use token; a successful reset invalidates
+   every other outstanding reset link.
    ════════════════════════════════════ */
 
 import { useState, type FormEvent, type JSX } from "react";
@@ -8,14 +9,43 @@ import Icon from "../../components/Icon";
 import { navigate } from "../../App";
 
 export default function ResetPasswordPage(): JSX.Element {
+	const [token] = useState(() => new URLSearchParams(window.location.search).get("token"));
 	const [password, setPassword] = useState("");
 	const [confirm, setConfirm] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+	const [submitting, setSubmitting] = useState(false);
 	const [submitted, setSubmitted] = useState(false);
 
-	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		setSubmitted(true);
+		if (password !== confirm) {
+			setError("Passwords do not match.");
+			return;
+		}
+		if (!token) {
+			setError("This reset link is missing its token.");
+			return;
+		}
+		setError(null);
+		setSubmitting(true);
+		try {
+			const res = await fetch("/api/auth/reset-password", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ token, password }),
+			});
+			const data = await res.json().catch(() => ({}));
+			if (res.ok) {
+				setSubmitted(true);
+			} else {
+				setError(typeof data.error === "string" ? data.error : "Something went wrong. Please try again.");
+			}
+		} catch {
+			setError("Network error — please try again.");
+		} finally {
+			setSubmitting(false);
+		}
 	};
 
 	if (submitted) {
@@ -37,9 +67,24 @@ export default function ResetPasswordPage(): JSX.Element {
 				>
 					Sign in
 				</a>
-				<p className="m-0 mt-lg text-center text-muted fs-xs">
-					Demo mode — nothing is persisted yet.
+			</div>
+		);
+	}
+
+	if (!token) {
+		return (
+			<div>
+				<h1 className="m-0 mb-sm fs-lg fw-700 text-primary">Invalid reset link</h1>
+				<p className="m-0 mb-xl text-muted fs-sm">
+					This reset link is missing its token — request a new one.
 				</p>
+				<button
+					type="button"
+					className="btn btn-primary w-100 justify-center"
+					onClick={() => navigate("/forgot-password")}
+				>
+					Request a new link
+				</button>
 			</div>
 		);
 	}
@@ -62,6 +107,8 @@ export default function ResetPasswordPage(): JSX.Element {
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
 							autoComplete="new-password"
+							required
+							minLength={8}
 						/>
 						<button
 							type="button"
@@ -84,6 +131,7 @@ export default function ResetPasswordPage(): JSX.Element {
 							value={confirm}
 							onChange={(e) => setConfirm(e.target.value)}
 							autoComplete="new-password"
+							required
 						/>
 						<button
 							type="button"
@@ -95,8 +143,9 @@ export default function ResetPasswordPage(): JSX.Element {
 						</button>
 					</div>
 				</div>
-				<button type="submit" className="btn btn-primary w-100 justify-center">
-					Update password
+				{error && <p className="m-0 fs-sm" style={{ color: "#ff6b6b" }}>{error}</p>}
+				<button type="submit" className="btn btn-primary w-100 justify-center" disabled={submitting}>
+					{submitting ? "Updating…" : "Update password"}
 				</button>
 			</form>
 			<p className="m-0 mt-lg text-center text-muted fs-sm">

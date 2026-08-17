@@ -1,26 +1,70 @@
 /* ════════════════════════════════════
-   Register — new account.
-   Demo mode: creates a local session (no backend yet).
+   Register — creates a pending account server-side; the verification
+   email link activates it. No local session until verification.
    ════════════════════════════════════ */
 
 import { useState, type FormEvent, type JSX } from "react";
 import Icon from "../../components/Icon";
 import { navigate } from "../../App";
-import { useAuth } from "../../auth/useAuth";
 
 export default function RegisterPage(): JSX.Element {
-	const { signIn } = useAuth();
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirm, setConfirm] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+	const [submitting, setSubmitting] = useState(false);
+	const [done, setDone] = useState(false);
 
-	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		signIn({ id: btoa(email.toLowerCase()), name: name || "Member", email, role: "user" });
-		navigate("/profile");
+		if (password !== confirm) {
+			setError("Passwords do not match.");
+			return;
+		}
+		setError(null);
+		setSubmitting(true);
+		try {
+			const res = await fetch("/api/auth/register", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ name, email, password }),
+			});
+			const data = await res.json().catch(() => ({}));
+			if (res.ok) {
+				setDone(true);
+			} else {
+				setError(typeof data.error === "string" ? data.error : "Something went wrong. Please try again.");
+			}
+		} catch {
+			setError("Network error — please try again.");
+		} finally {
+			setSubmitting(false);
+		}
 	};
+
+	if (done) {
+		return (
+			<div>
+				<h1 className="m-0 mb-sm fs-lg fw-700 text-primary">Check your email</h1>
+				<p className="m-0 mb-xl text-muted fs-sm">
+					We sent a verification link to <strong>{email}</strong>. Click it to activate your account —
+					the link expires in 1 hour and works once.
+				</p>
+				<p className="m-0 mt-lg text-center text-muted fs-sm">
+					Already verified?{" "}
+					<a
+						href="/login"
+						className="text-secondary"
+						onClick={(e) => { e.preventDefault(); navigate("/login"); }}
+					>
+						Sign in
+					</a>
+				</p>
+			</div>
+		);
+	}
 
 	return (
 		<div>
@@ -37,6 +81,7 @@ export default function RegisterPage(): JSX.Element {
 						value={name}
 						onChange={(e) => setName(e.target.value)}
 						autoComplete="name"
+						required
 					/>
 				</div>
 				<div>
@@ -49,6 +94,7 @@ export default function RegisterPage(): JSX.Element {
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
 						autoComplete="email"
+						required
 					/>
 				</div>
 				<div>
@@ -62,6 +108,8 @@ export default function RegisterPage(): JSX.Element {
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
 							autoComplete="new-password"
+							required
+							minLength={8}
 						/>
 						<button
 							type="button"
@@ -84,6 +132,7 @@ export default function RegisterPage(): JSX.Element {
 							value={confirm}
 							onChange={(e) => setConfirm(e.target.value)}
 							autoComplete="new-password"
+							required
 						/>
 						<button
 							type="button"
@@ -95,12 +144,13 @@ export default function RegisterPage(): JSX.Element {
 						</button>
 					</div>
 				</div>
-				<button type="submit" className="btn btn-primary w-100 justify-center">
-					Create account
+				{error && <p className="m-0 fs-sm" style={{ color: "#ff6b6b" }}>{error}</p>}
+				<button type="submit" className="btn btn-primary w-100 justify-center" disabled={submitting}>
+					{submitting ? "Creating account…" : "Create account"}
 				</button>
 			</form>
 			<p className="m-0 mt-lg text-center text-muted fs-xs">
-				Demo mode — creates a local member account with no backend.
+				We&apos;ll send a one-time verification link to your email address.
 			</p>
 			<p className="m-0 mt-sm text-center text-muted fs-sm">
 				Already have an account?{" "}

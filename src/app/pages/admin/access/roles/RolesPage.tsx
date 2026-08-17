@@ -3,7 +3,7 @@
    ════════════════════════════════════ */
 
 import { type JSX } from "react";
-import { Badge, Card } from "@devstroop/react-ui";
+import { Alert, Badge, Card, Tooltip } from "@devstroop/react-ui";
 import Icon from "../../../../components/Icon";
 
 interface Role {
@@ -31,10 +31,12 @@ export default function RolesPage(): JSX.Element {
 							Permission sets assigned to users.
 						</p>
 					</div>
-					<button type="button" className="btn btn-primary" disabled title="Wired up once the API lands">
-						<Icon name="shield" size={16} />
-						Create role
-					</button>
+					<Tooltip content="Wired up once the API lands">
+						<button type="button" className="btn btn-primary" disabled>
+							<Icon name="shield" size={16} />
+							Create role
+						</button>
+					</Tooltip>
 				</div>
 
 				<div className="d-grid gap-md mb-lg" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
@@ -61,10 +63,7 @@ export default function RolesPage(): JSX.Element {
 					))}
 				</div>
 
-				<div className="admin-empty">
-					<Icon name="alert-triangle" size={16} />
-					<span>Placeholder data — roles are rendered from the UI only and are not yet backed by an API.</span>
-				</div>
+				<Alert tone="warning">Placeholder data — roles are rendered from the UI only and are not yet backed by an API.</Alert>
 			</div>
 		</section>
 	);

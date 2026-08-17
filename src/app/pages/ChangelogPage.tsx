@@ -4,6 +4,7 @@
    ════════════════════════════════════ */
 
 import { useCallback, useEffect, useState, type JSX } from "react";
+import { Alert } from "@devstroop/react-ui";
 import { useScrollToHash } from "../hooks/useScrollToHash";
 import Icon from "../components/Icon";
 import ReleaseNotes from "../lib/ReleaseNotes";
@@ -94,18 +95,16 @@ export default function ChangelogPage(): JSX.Element {
 				</p>
 
 				{error && (
-					<div className="download-error">
-						<div className="download-error-content">
-							<span className="download-error-icon">!</span>
-							<div>
-								<p className="download-error-title">Could not load releases</p>
-								<p className="download-error-desc">{error}</p>
-							</div>
-						</div>
-						<button className="btn btn-secondary" onClick={() => { setLoading(true); setError(null); load(); }}>
+					<Alert tone="danger" title="Could not load releases" className="mb-lg">
+						<p className="m-0 fs-sm">{error}</p>
+						<button
+							type="button"
+							className="btn btn-secondary mt-sm"
+							onClick={() => { setLoading(true); setError(null); load(); }}
+						>
 							Retry
 						</button>
-					</div>
+					</Alert>
 				)}
 
 				{loading && !latest && (
@@ -149,10 +148,9 @@ export default function ChangelogPage(): JSX.Element {
 				)}
 
 				{historyError && (
-					<div className="confirm-note">
-						<Icon name="book" size={16} />
-						<span>Release history could not be loaded ({historyError}). The latest release above is still current.</span>
-					</div>
+					<Alert tone="info">
+						Release history could not be loaded ({historyError}). The latest release above is still current.
+					</Alert>
 				)}
 
 				{history && history.length > 0 && (

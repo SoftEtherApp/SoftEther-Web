@@ -3,7 +3,7 @@
    ════════════════════════════════════ */
 
 import { useState, type JSX } from "react";
-import { Badge, Card, EmptyState, Input, Table } from "@devstroop/react-ui";
+import { Alert, Badge, Card, EmptyState, Input, Table, Tooltip } from "@devstroop/react-ui";
 import Icon from "../../../../components/Icon";
 
 interface AdminUser {
@@ -57,10 +57,12 @@ export default function UsersPage(): JSX.Element {
 							Manage accounts and their roles across the site.
 						</p>
 					</div>
-					<button type="button" className="btn btn-primary" disabled title="Wired up once the API lands">
-						<Icon name="user-plus" size={16} />
-						Invite user
-					</button>
+					<Tooltip content="Wired up once the API lands">
+						<button type="button" className="btn btn-primary" disabled>
+							<Icon name="user-plus" size={16} />
+							Invite user
+						</button>
+					</Tooltip>
 				</div>
 
 				<div className="d-flex items-center gap-md flex-wrap mb-md">
@@ -119,10 +121,7 @@ export default function UsersPage(): JSX.Element {
 					/>
 				</Card>
 
-				<div className="admin-empty">
-					<Icon name="alert-triangle" size={16} />
-					<span>Placeholder data — user management is enabled for the UI but not yet connected to a backend.</span>
-				</div>
+				<Alert tone="warning">Placeholder data — user management is enabled for the UI but not yet connected to a backend.</Alert>
 			</div>
 		</section>
 	);

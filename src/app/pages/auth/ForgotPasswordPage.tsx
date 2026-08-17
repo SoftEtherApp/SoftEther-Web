@@ -5,7 +5,7 @@
    ════════════════════════════════════ */
 
 import { useState, type FormEvent, type JSX } from "react";
-import { Button, Field, Input } from "@devstroop/react-ui";
+import { Alert, Button, Field, Input } from "@devstroop/react-ui";
 import Icon from "../../components/Icon";
 import { navigate } from "../../App";
 
@@ -82,7 +82,7 @@ export default function ForgotPasswordPage(): JSX.Element {
 						required
 					/>
 				</Field>
-				{error && <p className="m-0 fs-sm" style={{ color: "#ff6b6b" }}>{error}</p>}
+				{error && <Alert tone="danger">{error}</Alert>}
 				<Button type="submit" fullWidth disabled={submitting}>
 					{submitting ? "Sending…" : "Send reset link"}
 				</Button>

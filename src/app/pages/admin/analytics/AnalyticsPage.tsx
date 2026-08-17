@@ -3,8 +3,7 @@
    ════════════════════════════════════ */
 
 import { type JSX } from "react";
-import { Card, Stat } from "@devstroop/react-ui";
-import Icon from "../../../components/Icon";
+import { Alert, Card, Stat } from "@devstroop/react-ui";
 
 const METRICS: { label: string; value: string; delta: string; up: boolean }[] = [
 	{ label: "Downloads (30d)", value: "48,210", delta: "+12.4%", up: true },
@@ -80,10 +79,7 @@ export default function AnalyticsPage(): JSX.Element {
 							</div>
 						}
 					>
-						<div className="admin-empty m-0">
-							<Icon name="trending-up" size={16} />
-							<span>Charts will render here once a telemetry endpoint and event pipeline are in place.</span>
-						</div>
+						<Alert tone="info">Charts will render here once a telemetry endpoint and event pipeline are in place.</Alert>
 					</Card>
 				</div>
 			</div>

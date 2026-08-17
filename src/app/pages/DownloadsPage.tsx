@@ -3,6 +3,7 @@
    ════════════════════════════════════ */
 
 import { useState, type JSX } from "react";
+import { Alert } from "@devstroop/react-ui";
 import { useLatestRelease } from "../hooks/useLatestRelease";
 import { groupAssets, displayNameFor, iconFor, variantFor, archFor, formatSize, KNOWN_GROUPS } from "../lib/downloads";
 import Icon from "../components/Icon";
@@ -115,18 +116,12 @@ export default function DownloadsPage(): JSX.Element {
 				)}
 
 				{error && (
-					<div className="download-error">
-						<div className="download-error-content">
-							<span className="download-error-icon">!</span>
-							<div>
-								<p className="download-error-title">Could not load releases</p>
-								<p className="download-error-desc">{error}</p>
-							</div>
-						</div>
-						<button className="btn btn-secondary" onClick={reload}>
+					<Alert tone="danger" title="Could not load releases" className="mb-lg">
+						<p className="m-0 fs-sm">{error}</p>
+						<button type="button" className="btn btn-secondary mt-sm" onClick={reload}>
 							Retry
 						</button>
-					</div>
+					</Alert>
 				)}
 
 				<div className="download-list">

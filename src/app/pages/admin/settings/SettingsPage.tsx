@@ -3,6 +3,7 @@
    ════════════════════════════════════ */
 
 import { useState, type FormEvent, type JSX } from "react";
+import { Button, Card, Field, Input, Select, Switch } from "@devstroop/react-ui";
 import Icon from "../../../components/Icon";
 
 export default function SettingsPage(): JSX.Element {
@@ -31,69 +32,84 @@ export default function SettingsPage(): JSX.Element {
 				</div>
 
 				<form onSubmit={handleSubmit} noValidate>
-					<div className="admin-card">
-						<h2 className="admin-card-title text-primary">General</h2>
-						<p className="admin-card-desc">Branding shown on the public site.</p>
+					<Card
+						variant="outlined"
+						header={
+							<div>
+								<div className="fw-700 fs-md text-primary">General</div>
+								<p className="fs-sm text-muted m-0">Branding shown on the public site.</p>
+							</div>
+						}
+					>
 						<div className="d-grid gap-md" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))" }}>
-							<div>
-								<label className="label" htmlFor="siteName">Site name</label>
-								<input id="siteName" className="input" value={siteName} onChange={(e) => setSiteName(e.target.value)} />
-							</div>
-							<div>
-								<label className="label" htmlFor="siteUrl">Site URL</label>
-								<input id="siteUrl" className="input" value={siteUrl} onChange={(e) => setSiteUrl(e.target.value)} />
-							</div>
-							<div>
-								<label className="label" htmlFor="defaultTheme">Default theme</label>
-								<select id="defaultTheme" className="input" value={defaultTheme} onChange={(e) => setDefaultTheme(e.target.value)}>
-									<option value="dark">Dark</option>
-									<option value="light">Light</option>
-								</select>
-							</div>
+							<Field label="Site name" htmlFor="siteName">
+								<Input id="siteName" value={siteName} onChange={(e) => setSiteName(e.target.value)} />
+							</Field>
+							<Field label="Site URL" htmlFor="siteUrl">
+								<Input id="siteUrl" value={siteUrl} onChange={(e) => setSiteUrl(e.target.value)} />
+							</Field>
+							<Field label="Default theme" htmlFor="defaultTheme">
+								<Select
+									id="defaultTheme"
+									value={defaultTheme}
+									onChange={(e) => setDefaultTheme(e.target.value)}
+									options={[
+										{ value: "dark", label: "Dark" },
+										{ value: "light", label: "Light" },
+									]}
+								/>
+							</Field>
 						</div>
-					</div>
+					</Card>
 
-					<div className="admin-card">
-						<h2 className="admin-card-title text-primary">Security</h2>
-						<p className="admin-card-desc">Session and account policies.</p>
+					<Card
+						variant="outlined"
+						header={
+							<div>
+								<div className="fw-700 fs-md text-primary">Security</div>
+								<p className="fs-sm text-muted m-0">Session and account policies.</p>
+							</div>
+						}
+					>
 						<div className="d-flex flex-col gap-md">
 							<div className="d-flex items-center gap-md flex-wrap">
 								<div className="mw-420 flex-1">
-									<label className="label" htmlFor="sessionTimeout">Session timeout (hours)</label>
-									<input id="sessionTimeout" className="input" value={sessionTimeout} onChange={(e) => setSessionTimeout(e.target.value)} />
+									<Field label="Session timeout (hours)" htmlFor="sessionTimeout">
+										<Input id="sessionTimeout" value={sessionTimeout} onChange={(e) => setSessionTimeout(e.target.value)} />
+									</Field>
 								</div>
-								<div className="d-flex items-center gap-md" style={{ paddingTop: 22 }}>
-									<label className="switch">
-										<input type="checkbox" checked={enforce2fa} onChange={(e) => setEnforce2fa(e.target.checked)} />
-										<span className="switch-slider" />
-									</label>
+								<label className="d-flex items-center gap-md" style={{ paddingTop: 22 }}>
+									<Switch checked={enforce2fa} onChange={(e) => setEnforce2fa(e.target.checked)} />
 									<span className="fs-sm text-secondary">Enforce 2FA for admins</span>
-								</div>
-							</div>
-							<div className="d-flex items-center gap-md">
-								<label className="switch">
-									<input type="checkbox" checked={publicSignup} onChange={(e) => setPublicSignup(e.target.checked)} />
-									<span className="switch-slider" />
 								</label>
-								<span className="fs-sm text-secondary">Allow public account creation</span>
 							</div>
+							<label className="d-flex items-center gap-md">
+								<Switch checked={publicSignup} onChange={(e) => setPublicSignup(e.target.checked)} />
+								<span className="fs-sm text-secondary">Allow public account creation</span>
+							</label>
 						</div>
-					</div>
+					</Card>
 
-					<div className="admin-card">
-						<h2 className="admin-card-title text-primary">API</h2>
-						<p className="admin-card-desc">Endpoints consumed by the client and release pipeline.</p>
+					<Card
+						variant="outlined"
+						header={
+							<div>
+								<div className="fw-700 fs-md text-primary">API</div>
+								<p className="fs-sm text-muted m-0">Endpoints consumed by the client and release pipeline.</p>
+							</div>
+						}
+					>
 						<div className="admin-empty m-0">
 							<Icon name="key" size={16} />
 							<span>API tokens and webhook secrets will live here once the backend is connected.</span>
 						</div>
-					</div>
+					</Card>
 
 					<div className="d-flex items-center gap-md">
-						<button type="submit" className="btn btn-primary">
+						<Button type="submit">
 							<Icon name="check" size={16} />
 							Save changes
-						</button>
+						</Button>
 						{saved && <span className="fs-sm text-muted">Saved (local only — not persisted).</span>}
 					</div>
 				</form>

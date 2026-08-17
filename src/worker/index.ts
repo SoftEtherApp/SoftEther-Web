@@ -4,21 +4,12 @@ import { Hono } from "hono";
 import { getDb } from "./db/client";
 import * as schema from "./db/schema";
 import type { ReleaseAsset, Release } from "../shared/types";
+import { authRoutes } from "./api/auth";
+import type { AppEnv } from "./env";
 
-/* ── Types ── */
+/* ── App ── */
 
-interface AppEnv extends Env {
-	RELEASES: R2Bucket;
-	RELEASE_META: KVNamespace;
-	DB: D1Database;
-	WEBHOOK_SECRET: string;
-	ENVIRONMENT?: string;
-	SMTP_HOST?: string;
-	SMTP_PORT?: string;
-	SMTP_USER?: string;
-	SMTP_PASS?: string;
-	EMAIL_FROM?: string;
-}
+const app = new Hono<{ Bindings: AppEnv }>();
 
 /* ── Helpers ── */
 
@@ -50,10 +41,6 @@ function detectPlatform(filename: string): string {
 	if (filename.includes("android") || filename.includes("apk")) return "android";
 	return "other";
 }
-
-/* ── App ── */
-
-const app = new Hono<{ Bindings: AppEnv }>();
 
 /* ── Security headers middleware ── */
 app.use("*", async (c, next) => {
@@ -111,6 +98,9 @@ app.use("*", async (c, next) => {
 
 /* ── Health ── */
 app.get("/api/", (c) => c.json({ name: "SoftEther App API", version: "1.0.0" }));
+
+/* ── Auth ── */
+app.route("/api/auth", authRoutes);
 
 /* ── GET /download/:tag/:filename — stream file from R2 (MUST be before * wildcard) ── */
 app.get("/download/:tag/:filename", async (c) => {
@@ -425,6 +415,7 @@ const SPA_ROUTES = new Set([
 	"/docs",
 	"/login",
 	"/register",
+	"/verify-email",
 	"/forgot-password",
 	"/reset-password",
 	"/profile",

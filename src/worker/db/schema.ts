@@ -44,6 +44,8 @@ export const users = sqliteTable(
 		name: text("name").notNull(),
 		role: text("role").notNull().default("user"),
 		status: text("status").notNull().default("active"),
+		/** PBKDF2-SHA256 hash ("pbkdf2-sha256$iters$salt$key"), set at registration. */
+		passwordHash: text("password_hash"),
 		createdAt: integer("created_at").notNull().default(sql`(unixepoch())`),
 	},
 	(t) => [index("users_role_idx").on(t.role)],
@@ -95,4 +97,29 @@ export const activityLog = sqliteTable(
 		createdAt: integer("created_at").notNull().default(sql`(unixepoch())`),
 	},
 	(t) => [index("activity_created_idx").on(t.createdAt)],
+);
+
+export const emailTokens = sqliteTable(
+	"email_tokens",
+	{
+		id: integer("id").primaryKey({ autoIncrement: true }),
+		userId: integer("user_id")
+			.notNull()
+			.references(() => users.id, { onDelete: "cascade" }),
+		/** 'verify_email' | 'reset_password' — kind column is not constrained to
+		 *  keep the migration simple; tokens.ts validates values. */
+		kind: text("kind").notNull(),
+		/** SHA-256 hex of the raw token — plaintext is never stored. */
+		tokenHash: text("token_hash").notNull(),
+		/** Unix seconds; 1h by default. */
+		expiresAt: integer("expires_at").notNull(),
+		/** Set on first successful verify — enforces single-use atomically. */
+		usedAt: integer("used_at"),
+		createdAt: integer("created_at").notNull().default(sql`(unixepoch())`),
+	},
+	(t) => [
+		index("email_tokens_user_idx").on(t.userId),
+		index("email_tokens_kind_idx").on(t.kind),
+		index("email_tokens_expires_idx").on(t.expiresAt),
+	],
 );

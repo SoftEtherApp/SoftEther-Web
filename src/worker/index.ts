@@ -13,6 +13,11 @@ interface AppEnv extends Env {
 	DB: D1Database;
 	WEBHOOK_SECRET: string;
 	ENVIRONMENT?: string;
+	SMTP_HOST?: string;
+	SMTP_PORT?: string;
+	SMTP_USER?: string;
+	SMTP_PASS?: string;
+	EMAIL_FROM?: string;
 }
 
 /* ── Helpers ── */

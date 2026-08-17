@@ -48,7 +48,8 @@
     "preview": "npm run build && vite preview",
     "test:deeplinks": "bash scripts/test-deeplinks.sh",
     "test:releasenotes": "node --experimental-strip-types scripts/test-releasenotes.mjs",
-    "test:responsive": "node scripts/responsive.mjs"
+    "test:responsive": "node scripts/responsive.mjs",
+    "test:smtp": "node --experimental-strip-types scripts/test-smtp.mjs"
   },
   "type": "module"
 }

@@ -4,6 +4,7 @@
    ════════════════════════════════════ */
 
 import { useState, type FormEvent, type JSX } from "react";
+import { Button, Field, Input } from "@devstroop/react-ui";
 import Icon from "../../components/Icon";
 import { navigate } from "../../App";
 
@@ -70,40 +71,35 @@ export default function RegisterPage(): JSX.Element {
 		<div>
 			<h1 className="m-0 mb-sm fs-lg fw-700 text-primary">Create account</h1>
 			<p className="m-0 mb-xl text-muted fs-sm">Create your new account.</p>
-			<form onSubmit={handleSubmit} noValidate className="d-flex flex-col gap-md">
-				<div>
-					<label className="label" htmlFor="name">Display name</label>
-					<input
+<form onSubmit={handleSubmit} noValidate className="d-flex flex-col gap-md">
+				<Field label="Display name" htmlFor="name">
+					<Input
 						id="name"
 						type="text"
-						className="input"
 						placeholder="Jane Doe"
 						value={name}
 						onChange={(e) => setName(e.target.value)}
 						autoComplete="name"
 						required
 					/>
-				</div>
-				<div>
-					<label className="label" htmlFor="email">Email</label>
-					<input
+				</Field>
+				<Field label="Email" htmlFor="email">
+					<Input
 						id="email"
 						type="email"
-						className="input"
 						placeholder="you@example.com"
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
 						autoComplete="email"
 						required
 					/>
-				</div>
-				<div>
-					<label className="label" htmlFor="password">Password</label>
+				</Field>
+				<Field label="Password" htmlFor="password">
 					<div className="pos-relative">
-						<input
+						<Input
 							id="password"
 							type={showPassword ? "text" : "password"}
-							className="input pr-xl"
+							className="pr-xl"
 							placeholder="At least 8 characters"
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
@@ -120,14 +116,13 @@ export default function RegisterPage(): JSX.Element {
 							<Icon name={showPassword ? "eye-off" : "eye"} size={18} />
 						</button>
 					</div>
-				</div>
-				<div>
-					<label className="label" htmlFor="confirm">Confirm password</label>
+				</Field>
+				<Field label="Confirm password" htmlFor="confirm">
 					<div className="pos-relative">
-						<input
+						<Input
 							id="confirm"
 							type={showPassword ? "text" : "password"}
-							className="input pr-xl"
+							className="pr-xl"
 							placeholder="Repeat your password"
 							value={confirm}
 							onChange={(e) => setConfirm(e.target.value)}
@@ -143,11 +138,11 @@ export default function RegisterPage(): JSX.Element {
 							<Icon name={showPassword ? "eye-off" : "eye"} size={18} />
 						</button>
 					</div>
-				</div>
-				{error && <p className="m-0 fs-sm" style={{ color: "#ff6b6b" }}>{error}</p>}
-				<button type="submit" className="btn btn-primary w-100 justify-center" disabled={submitting}>
+				</Field>
+				<Button type="submit" fullWidth disabled={submitting}>
 					{submitting ? "Creating account…" : "Create account"}
-				</button>
+				</Button>
+				{error && <p className="m-0 fs-sm text-danger">{error}</p>}
 			</form>
 			<p className="m-0 mt-lg text-center text-muted fs-xs">
 				We&apos;ll send a one-time verification link to your email address.

@@ -3,6 +3,7 @@
    ════════════════════════════════════ */
 
 import { useState, type JSX } from "react";
+import { Button, Card, Switch } from "@devstroop/react-ui";
 import Icon from "../../../../components/Icon";
 
 interface PermissionGroup {
@@ -68,21 +69,24 @@ export default function PermissionsPage(): JSX.Element {
 						</p>
 					</div>
 					<div className="d-flex items-center gap-sm">
-						<button type="button" className="btn btn-secondary" onClick={reset}>
+						<Button variant="secondary" onClick={reset}>
 							Reset
-						</button>
-						<button type="button" className="btn btn-primary" onClick={save}>
+						</Button>
+						<Button onClick={save}>
 							<Icon name="check" size={16} />
 							Save
-						</button>
+						</Button>
 						{saved && <span className="fs-sm text-muted">Saved (local only).</span>}
 					</div>
 				</div>
 
 				<div className="d-grid gap-md mb-lg" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}>
 					{groups.map((g) => (
-						<div key={g.group} className="admin-card m-0">
-							<h2 className="admin-card-title text-primary mb-md">{g.group}</h2>
+						<Card
+							key={g.group}
+							variant="outlined"
+							header={<div className="fw-700 fs-md text-primary">{g.group}</div>}
+						>
 							<div className="d-flex flex-col">
 								{g.perms.map((p) => (
 									<div key={p.key} className="d-flex items-center justify-between gap-md py-sm bordered-b">
@@ -90,14 +94,11 @@ export default function PermissionsPage(): JSX.Element {
 											<div className="fw-500 fs-sm text-primary">{p.label}</div>
 											<div className="fs-xs text-muted">{p.key}</div>
 										</div>
-										<label className="switch">
-											<input type="checkbox" checked={p.enabled} onChange={() => toggle(g.group, p.key)} />
-											<span className="switch-slider" />
-										</label>
+										<Switch checked={p.enabled} onChange={() => toggle(g.group, p.key)} aria-label={`Toggle ${p.label}`} />
 									</div>
 								))}
 							</div>
-						</div>
+						</Card>
 					))}
 				</div>
 

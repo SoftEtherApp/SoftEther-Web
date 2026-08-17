@@ -60,7 +60,7 @@ export default function DashboardPage(): JSX.Element {
 					{STATS.map((s) => (
 						<Card key={s.label} variant="outlined">
 							<div className="d-flex items-center gap-md">
-								<div className="stat-card-icon">
+								<div className="icon-chip">
 									<Icon name={s.icon} size={18} />
 								</div>
 								<Stat label={s.label} value={s.value} hint={s.note} />
@@ -77,7 +77,7 @@ export default function DashboardPage(): JSX.Element {
 								className="text-none d-flex items-center gap-md"
 								onClick={(e) => { e.preventDefault(); navigate(q.href); }}
 							>
-								<div className="stat-card-icon">
+								<div className="icon-chip">
 									<Icon name={q.icon} size={18} />
 								</div>
 								<div className="flex-1">
@@ -95,7 +95,7 @@ export default function DashboardPage(): JSX.Element {
 						<div className="d-flex items-center justify-between gap-md flex-wrap">
 							<div>
 								<div className="fw-700 fs-md text-primary">Recent activity</div>
-								<p className="admin-card-desc m-0">Latest events across the admin area.</p>
+								<p className="fs-sm text-muted m-0">Latest events across the admin area.</p>
 							</div>
 							<a
 								href="/admin/access/users"
@@ -110,7 +110,7 @@ export default function DashboardPage(): JSX.Element {
 					<div className="d-flex flex-col">
 						{ACTIVITY.map((a, i) => (
 							<div key={i} className="d-flex items-center gap-md py-sm bordered-b">
-								<div className="stat-card-icon">
+								<div className="icon-chip">
 									<Icon name="clock" size={15} />
 								</div>
 								<span className="flex-1 fs-sm text-secondary">{a.text}</span>

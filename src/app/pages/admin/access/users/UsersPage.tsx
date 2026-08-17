@@ -3,6 +3,7 @@
    ════════════════════════════════════ */
 
 import { useState, type JSX } from "react";
+import { Badge, Card, EmptyState, Input, Table } from "@devstroop/react-ui";
 import Icon from "../../../../components/Icon";
 
 interface AdminUser {
@@ -22,10 +23,10 @@ const USERS: AdminUser[] = [
 	{ name: "Tom Chen", email: "tom@example.com", role: "Member", status: "active", lastActive: "1d ago" },
 ];
 
-const STATUS_BADGE: Record<AdminUser["status"], string> = {
-	active: "badge--success",
-	invited: "badge--warning",
-	suspended: "badge--danger",
+const STATUS_BADGE: Record<AdminUser["status"], "success" | "warning" | "danger"> = {
+	active: "success",
+	invited: "warning",
+	suspended: "danger",
 };
 
 function initials(name: string): string {
@@ -64,9 +65,9 @@ export default function UsersPage(): JSX.Element {
 
 				<div className="d-flex items-center gap-md flex-wrap mb-md">
 					<div className="pos-relative" style={{ maxWidth: 320 }}>
-						<input
+						<Input
 							type="search"
-							className="input pl-lg"
+							className="pl-lg"
 							placeholder="Search by name or email"
 							value={query}
 							onChange={(e) => setQuery(e.target.value)}
@@ -77,43 +78,46 @@ export default function UsersPage(): JSX.Element {
 					<span className="fs-xs text-muted">Showing {filtered.length} of {USERS.length}</span>
 				</div>
 
-				<div className="admin-card overflow-x-auto">
-					<table className="admin-table">
-						<thead>
-							<tr>
-								<th>User</th>
-								<th>Role</th>
-								<th>Status</th>
-								<th>Last active</th>
-							</tr>
-						</thead>
-						<tbody>
-							{filtered.map((u) => (
-								<tr key={u.email}>
-									<td>
-										<div className="d-flex items-center gap-sm">
-											<span className="admin-avatar">{initials(u.name)}</span>
-											<div>
-												<div className="fw-600 text-primary">{u.name}</div>
-												<div className="fs-xs text-muted">{u.email}</div>
-											</div>
+				<Card variant="outlined" className="overflow-x-auto">
+					<Table<AdminUser>
+						columns={[
+							{
+								key: "user",
+								header: "User",
+								render: (u) => (
+									<div className="d-flex items-center gap-sm">
+										<span className="admin-avatar">{initials(u.name)}</span>
+										<div>
+											<div className="fw-600 text-primary">{u.name}</div>
+											<div className="fs-xs text-muted">{u.email}</div>
 										</div>
-									</td>
-									<td><span className="badge badge--info">{u.role}</span></td>
-									<td><span className={`badge ${STATUS_BADGE[u.status]}`}>{u.status}</span></td>
-									<td className="fs-xs">{u.lastActive}</td>
-								</tr>
-							))}
-							{filtered.length === 0 && (
-								<tr>
-									<td colSpan={4} className="text-center text-muted py-xl">
-										No users match &quot;{query}&quot;.
-									</td>
-								</tr>
-							)}
-						</tbody>
-					</table>
-				</div>
+									</div>
+								),
+							},
+							{
+								key: "role",
+								header: "Role",
+								render: (u) => <Badge tone="primary">{u.role}</Badge>,
+							},
+							{
+								key: "status",
+								header: "Status",
+								render: (u) => <Badge tone={STATUS_BADGE[u.status]}>{u.status}</Badge>,
+							},
+							{
+								key: "lastActive",
+								header: "Last active",
+								align: "end",
+								render: (u) => <span className="fs-xs">{u.lastActive}</span>,
+							},
+						]}
+						rows={filtered}
+						rowKey={(u) => u.email}
+						empty={
+							<EmptyState title="No users match" description={`No users match "${query}".`} />
+						}
+					/>
+				</Card>
 
 				<div className="admin-empty">
 					<Icon name="alert-triangle" size={16} />

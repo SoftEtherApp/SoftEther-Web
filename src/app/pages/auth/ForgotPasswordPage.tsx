@@ -5,6 +5,7 @@
    ════════════════════════════════════ */
 
 import { useState, type FormEvent, type JSX } from "react";
+import { Button, Field, Input } from "@devstroop/react-ui";
 import Icon from "../../components/Icon";
 import { navigate } from "../../App";
 
@@ -41,7 +42,7 @@ export default function ForgotPasswordPage(): JSX.Element {
 		return (
 			<div>
 				<div className="d-flex items-center gap-sm mb-sm">
-					<div className="stat-card-icon">
+					<div className="icon-chip">
 						<Icon name="check" size={18} />
 					</div>
 					<h1 className="m-0 fs-lg fw-700 text-primary">Check your email</h1>
@@ -52,10 +53,12 @@ export default function ForgotPasswordPage(): JSX.Element {
 				</p>
 				<a
 					href="/login"
-					className="btn btn-secondary w-100 justify-center"
+					className="text-none"
 					onClick={(e) => { e.preventDefault(); navigate("/login"); }}
 				>
-					Back to sign in
+					<Button fullWidth variant="secondary">
+						Back to sign in
+					</Button>
 				</a>
 			</div>
 		);
@@ -68,23 +71,21 @@ export default function ForgotPasswordPage(): JSX.Element {
 				Enter the email linked to your account and we'll send you a reset link.
 			</p>
 			<form onSubmit={handleSubmit} noValidate className="d-flex flex-col gap-md">
-				<div>
-					<label className="label" htmlFor="email">Email</label>
-					<input
+				<Field label="Email" htmlFor="email">
+					<Input
 						id="email"
 						type="email"
-						className="input"
 						placeholder="you@example.com"
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
 						autoComplete="email"
 						required
 					/>
-				</div>
+				</Field>
 				{error && <p className="m-0 fs-sm" style={{ color: "#ff6b6b" }}>{error}</p>}
-				<button type="submit" className="btn btn-primary w-100 justify-center" disabled={submitting}>
+				<Button type="submit" fullWidth disabled={submitting}>
 					{submitting ? "Sending…" : "Send reset link"}
-				</button>
+				</Button>
 			</form>
 			<p className="m-0 mt-lg text-center text-muted fs-sm">
 				Remembered it?{" "}

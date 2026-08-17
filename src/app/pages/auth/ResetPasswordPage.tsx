@@ -5,6 +5,7 @@
    ════════════════════════════════════ */
 
 import { useState, type FormEvent, type JSX } from "react";
+import { Button, Field, Input } from "@devstroop/react-ui";
 import Icon from "../../components/Icon";
 import { navigate } from "../../App";
 
@@ -52,7 +53,7 @@ export default function ResetPasswordPage(): JSX.Element {
 		return (
 			<div>
 				<div className="d-flex items-center gap-sm mb-sm">
-					<div className="stat-card-icon">
+					<div className="icon-chip">
 						<Icon name="check" size={18} />
 					</div>
 					<h1 className="m-0 fs-lg fw-700 text-primary">Password updated</h1>
@@ -62,10 +63,10 @@ export default function ResetPasswordPage(): JSX.Element {
 				</p>
 				<a
 					href="/login"
-					className="btn btn-primary w-100 justify-center"
+					className="text-none"
 					onClick={(e) => { e.preventDefault(); navigate("/login"); }}
 				>
-					Sign in
+					<Button fullWidth>Sign in</Button>
 				</a>
 			</div>
 		);
@@ -78,13 +79,9 @@ export default function ResetPasswordPage(): JSX.Element {
 				<p className="m-0 mb-xl text-muted fs-sm">
 					This reset link is missing its token — request a new one.
 				</p>
-				<button
-					type="button"
-					className="btn btn-primary w-100 justify-center"
-					onClick={() => navigate("/forgot-password")}
-				>
+				<Button fullWidth onClick={() => navigate("/forgot-password")}>
 					Request a new link
-				</button>
+				</Button>
 			</div>
 		);
 	}
@@ -96,13 +93,12 @@ export default function ResetPasswordPage(): JSX.Element {
 				Choose a strong new password for your account.
 			</p>
 			<form onSubmit={handleSubmit} noValidate className="d-flex flex-col gap-md">
-				<div>
-					<label className="label" htmlFor="password">New password</label>
+				<Field label="New password" htmlFor="password">
 					<div className="pos-relative">
-						<input
+						<Input
 							id="password"
 							type={showPassword ? "text" : "password"}
-							className="input pr-xl"
+							className="pr-xl"
 							placeholder="At least 8 characters"
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
@@ -119,14 +115,13 @@ export default function ResetPasswordPage(): JSX.Element {
 							<Icon name={showPassword ? "eye-off" : "eye"} size={18} />
 						</button>
 					</div>
-				</div>
-				<div>
-					<label className="label" htmlFor="confirm">Confirm new password</label>
+				</Field>
+				<Field label="Confirm new password" htmlFor="confirm">
 					<div className="pos-relative">
-						<input
+						<Input
 							id="confirm"
 							type={showPassword ? "text" : "password"}
-							className="input pr-xl"
+							className="pr-xl"
 							placeholder="Repeat your new password"
 							value={confirm}
 							onChange={(e) => setConfirm(e.target.value)}
@@ -142,11 +137,11 @@ export default function ResetPasswordPage(): JSX.Element {
 							<Icon name={showPassword ? "eye-off" : "eye"} size={18} />
 						</button>
 					</div>
-				</div>
+				</Field>
 				{error && <p className="m-0 fs-sm" style={{ color: "#ff6b6b" }}>{error}</p>}
-				<button type="submit" className="btn btn-primary w-100 justify-center" disabled={submitting}>
+				<Button type="submit" fullWidth disabled={submitting}>
 					{submitting ? "Updating…" : "Update password"}
-				</button>
+				</Button>
 			</form>
 			<p className="m-0 mt-lg text-center text-muted fs-sm">
 				Remembered it?{" "}

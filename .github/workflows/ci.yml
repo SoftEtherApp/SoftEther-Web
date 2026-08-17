@@ -21,6 +21,8 @@ jobs:
       - run: npm run test:deeplinks
       - run: npm run test:releasenotes
       - run: npm run test:smtp
+      - run: npm run test:tokens
+      - run: npm run test:auth
       - name: Responsive overflow check
         run: |
           npx vite preview --port 8791 --strictPort &
